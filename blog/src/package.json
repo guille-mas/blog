@@ -1,0 +1,20 @@
+{
+  "name": "guilledevel-blog",
+  "version": "1.0.0",
+  "description": "A blog with thoughts about software design, infrastructure as code, webapps, and software development",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "blog",
+    "software",
+    "design",
+    "development",
+    "infrastructure",
+    "devops",
+    "teams"
+  ],
+  "author": "guilledevel@gmail.com",
+  "license": "UNLICENSED"
+}

@@ -1,0 +1,27 @@
+version: '3'
+services:
+  matrix_apache:
+    image: guilledevel/blog
+    container_name: blog
+    volumes:
+      - ./server:/home/node/server
+      - ./blog:/home/node/blog
+      - ./logs/server:/root/.npm/_logs
+    working_dir: /home/node/server/src
+    command: "npm start"
+    environment: 
+      - NODE_ENV=development
+    expose:
+      - "8081"
+    networks:
+      blog_net: {}
+    ports:
+      - 8081:8081
+
+networks:
+  blog_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.1.0.0/16

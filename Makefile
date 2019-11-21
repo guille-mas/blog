@@ -12,6 +12,6 @@ run:
 	@read -p "Write a command to run inside your docker environment: " command; \
 	docker-compose run blog sh -c "$$command"
 
-start:
-	docker-compose run blog sh -c "npm install && gatsby develop"
+setup:
+	docker-compose run blog npm install
 

@@ -13,5 +13,6 @@ Project structure:
 
 Commands:
 
-- `docker-compose up` starts the local development environment at http://0.0.0.0:8000
 - `make build` build guillermomaschwitz/blog:1 and push it to https://hub.docker.com/r/guillermomaschwitz/blog
+- `make setup` install npm vendors
+- `docker-compose up` starts the local development environment at http://0.0.0.0:8000

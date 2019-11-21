@@ -4,15 +4,17 @@ services:
     image: guillermomaschwitz/blog:1
     container_name: blog
     volumes:
-      - ./src:/home/node/blog
+      - ./blog:/home/node/blog
       - ./logs/node:/root/.npm/_logs
     working_dir: /home/node/blog
     environment: 
       - NODE_ENV=development
     networks:
       blog_net: {}
+    expose: ["${WEB_PORT}"]
     ports:
-      - ${WEB_PORT}:8000
+      - "${WEB_PORT}:8000"
+    command: "gatsby develop -H 0.0.0.0 --port ${WEB_PORT}"
 
 networks:
   blog_net:

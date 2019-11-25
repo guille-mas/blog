@@ -1,12 +1,11 @@
 version: '3'
 services:
   blog:
-    image: guillermomaschwitz/blog:1
+    image: guillermomaschwitz/blog:${PROJECT_VERSION}-development
     container_name: blog
     volumes:
       - ./blog:/home/node/blog
       - ./logs/node:/root/.npm/_logs
-    working_dir: /home/node/blog
     environment: 
       - NODE_ENV=development
     networks:
@@ -14,7 +13,6 @@ services:
     expose: ["${WEB_PORT}"]
     ports:
       - "${WEB_PORT}:8000"
-    command: "gatsby develop -H 0.0.0.0 --port ${WEB_PORT}"
 
 networks:
   blog_net:

@@ -1,7 +1,7 @@
 {
   "name": "blog",
-  "version": "1",
   "description": "A blog about webapps, software design, architecture, infrastructure as code, and software development",
+  "version": "1.0.0",
   "keywords": [
     "blog",
     "software",

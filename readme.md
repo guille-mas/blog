@@ -1,6 +1,6 @@
 # blog
 
-Starting here a blog with thoughts about software design, infrastructure as code, webapps, software development, industry best practices and devops processes from a developers point of view.
+Thoughts on software design, infrastructure as code, webapps, software development, industry best practices and devops processes from a developers point of view.
 
 Project structure:
 

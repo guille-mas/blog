@@ -7,13 +7,13 @@ services:
       - ./blog:/home/node/blog
       - ./logs/node:/root/.npm/_logs
     networks:
-      blog_net: {}
+      net: {}
     expose: ["${WEB_PORT}"]
     ports:
       - "${WEB_PORT}:8000"
 
 networks:
-  blog_net:
+  net:
     driver: bridge
     ipam:
       driver: default

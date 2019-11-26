@@ -6,8 +6,6 @@ services:
     volumes:
       - ./blog:/home/node/blog
       - ./logs/node:/root/.npm/_logs
-    environment: 
-      - NODE_ENV=development
     networks:
       blog_net: {}
     expose: ["${WEB_PORT}"]

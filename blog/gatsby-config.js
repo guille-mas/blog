@@ -1,8 +1,8 @@
 module.exports = {
   siteMetadata: {
-    title: `Guille Maschwitz`,
+    title: `Cloud Software Design & Development`,
     description: `Thoughts on software design, infrastructure as code, webapps, software development, industry best practices and devops processes from a developers point of view`,
-    author: `guilledevel@gmail.com`,
+    author: `Guillermo Maschwitz <guilledevel@gmail.com>`,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
@@ -30,6 +30,8 @@ module.exports = {
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
-    `gatsby-plugin-mdx`
+    `gatsby-plugin-mdx`,
+    `gatsby-theme-blog`,
+    `gatsby-theme-waves`
   ],
 }

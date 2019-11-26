@@ -13,6 +13,13 @@ Project structure:
 
 Commands:
 
-- `make build` build guillermomaschwitz/blog:1 and push it to https://hub.docker.com/r/guillermomaschwitz/blog
-- `make setup` install npm vendors
-- `docker-compose up` starts the local development environment at http://0.0.0.0:8000
+- `make build` \
+Build inmutable Docker images and push them to [my Dockerhub account](https://hub.docker.com/r/guillermomaschwitz/blog)
+- `make setup` \
+Execute a set of steps required by the local dev environment to work smoothly
+- `docker-compose up` \
+Starts a containerized local development environment at http://0.0.0.0:8000
+- `docker-compose down` \
+Stops your local development environment
+- `make run` \
+Runs any command inside the container from within blog/ folder

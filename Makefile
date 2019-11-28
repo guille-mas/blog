@@ -3,10 +3,12 @@ include .env
 export DOCKER_BUILDKIT=1
 
 build:
-	docker login -u guillermomaschwitz
 	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION} --target blog-core ./blog
 	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION}-production --target blog-production ./blog
 	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION}-development --target blog-development ./blog
+
+push:
+	docker login -u guillermomaschwitz
 	docker push guillermomaschwitz/blog
 
 clean:

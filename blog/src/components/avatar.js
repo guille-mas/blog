@@ -8,8 +8,10 @@ const Avatar = () => {
     query {
       placeholderImage: file(relativePath: { eq: "avatar-icon.png" }) {
         childImageSharp {
-          fixed(width: 100, height: 100) {
-            ...GatsbyImageSharpFixed
+          # Specify a fluid image and fragment
+          # The default maxWidth is 800 pixels
+          fluid {
+            ...GatsbyImageSharpFluid
           }
         }
       }
@@ -18,7 +20,7 @@ const Avatar = () => {
 
   return (
     <div className="avatar">
-      <Img fixed={data.placeholderImage.childImageSharp.fixed} />
+      <Img fluid={data.placeholderImage.childImageSharp.fluid} />
     </div>
     )
 }

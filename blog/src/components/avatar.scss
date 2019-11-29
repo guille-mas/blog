@@ -5,5 +5,13 @@
   border-radius: 10rem;
   display: inline-block;
   overflow: hidden;
-  max-height: 100px;
+  height: 120px;
+  width: 120px;
+}
+
+@media (min-width: 800px) {
+  .avatar {
+    height: 100px;
+    width: 100px;
+  }
 }

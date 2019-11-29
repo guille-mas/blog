@@ -27,8 +27,6 @@
 }
 
 #iam > div {
-  margin-right: 2rem;
-  
   &:nth-child(1) {
     text-align: center;
   }
@@ -40,6 +38,7 @@
     max-width: 522px;
   }
   #iam > div {
+    margin-right: 2rem;
     float: left;
     min-height: 100%;
     text-align: left;

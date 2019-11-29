@@ -16,7 +16,11 @@ const Avatar = () => {
     }
   `)
 
-  return <Img fixed={data.placeholderImage.childImageSharp.fixed} />
+  return (
+    <div className="avatar">
+      <Img fixed={data.placeholderImage.childImageSharp.fixed} />
+    </div>
+    )
 }
 
 export default Avatar

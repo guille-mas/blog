@@ -51,7 +51,7 @@ table {
 
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 10px;
+  font-size: 16px;
 	-webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   color: $black;
@@ -102,38 +102,24 @@ section.wrapper {
   padding: 0px 1rem 1.5rem;
 }
 
-@media (min-width: 360px) {
-  body {
-    font-size: 10px;
-  }
-}
-
 @media (min-width: 480px) {
   section.wrapper {
-    max-width: 400px;
-  }
-
-  body {
-    font-size: 14px;
+    max-width: 460px;
   }
 }
 
 @media (min-width: 800px) {
-  section.wrapper {
-    max-width: 720px;
-  }
-
   body {
-    font-size: 16px;
+    font-size: 18px;
+
+    section.wrapper {
+      max-width: 780px;
+    }
   }
 }
 
 @media (min-width: 1024px) {
   section.wrapper {
     max-width: 960px;
-  }
-
-  body {
-    font-size: 18px;
   }
 }

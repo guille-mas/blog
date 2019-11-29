@@ -3,10 +3,13 @@
 /* IAM Section */
 
 #iam {
-  height: 9rem;
   margin: auto;
-  border-bottom: 1px solid #ccc;
   padding: 1rem 2rem;
+  text-align: center;
+
+  img {
+    text-align: center;
+  }
 
   a {
     padding: 0;
@@ -19,9 +22,23 @@
 }
 
 #iam > div {
-  float: left;
   margin-right: 2rem;
-  min-height: 100%;
+  
+  &:nth-child(1) {
+    text-align: center;
+  }
+}
+
+@media (min-width: 800px) {
+  #iam {
+    height: 9rem;
+    max-width: 522px;
+  }
+  #iam > div {
+    float: left;
+    min-height: 100%;
+    text-align: left;
+  }
 }
 
 #iam > div:nth-child(2) {

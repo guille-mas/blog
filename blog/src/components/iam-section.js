@@ -1,10 +1,14 @@
 import React from "react"
 import Avatar from "./avatar"
+import { Link } from "gatsby"
+import "./iam-section.scss"
 
 const IamSection = () => (
   <section id="iam">
     <div>
-      <Avatar></Avatar>
+      <Link to="/">
+        <Avatar></Avatar>
+      </Link>
     </div>
     <div>
       <h1>Guillermo Maschwitz</h1>

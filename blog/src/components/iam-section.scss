@@ -1,0 +1,24 @@
+
+/* IAM Section */
+
+#iam {
+  height: 9rem;
+  margin: auto;
+  border-bottom: 1px solid #ccc;
+  padding: 1rem 2rem;
+
+  a {
+    padding: 0;
+  }
+}
+
+#iam > div {
+  float: left;
+  margin-right: 2rem;
+  min-height: 100%;
+}
+
+#iam > div:nth-child(2) {
+  padding-top: .8rem;
+}
+

@@ -6,9 +6,9 @@ import { Link } from "gatsby"
  */
 const ContextualMenu = () => (
   <nav>
-    <Link to="/">Projects</Link>
+    <Link to="/">About</Link>
+    <Link to="/projects">Projects</Link>
     <Link to="/blog">Blog</Link>
-    <Link to="/about">About</Link>
   </nav>
 )
 

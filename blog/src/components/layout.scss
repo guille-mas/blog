@@ -1,3 +1,5 @@
+@import './variables.scss';
+
 /* Reset */
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video {
   border: 0;
@@ -54,28 +56,6 @@ body {
 	text-rendering: optimizeLegibility;
 }
 
-
-/* Colors */
-
-.red {
-  color: #e27d60;
-}
-
-.blue {
-  color: rgb(105,207,202);
-}
-
-.yellow {
-  color: #e8a87c;
-}
-
-.orange {
-  color: #c38d9e;
-}
-
-.green {
-  color: #41b3a3;
-}
 
 
 /* Title */
@@ -155,39 +135,3 @@ section.wrapper {
     font-size: 18px;
   }
 }
-
-
-
-
-/**
- * Components
- */
-
-/* Avatar */
-
-.avatar {
-  border-radius: 10rem;
-  display: inline-block;
-  overflow: hidden;
-  max-height: 100px;
-}
-
-/* IAM Section */
-
-#iam {
-  height: 9rem;
-  margin: auto;
-  border-bottom: 1px solid #ccc;
-  padding: 1rem 2rem;
-}
-
-#iam > div {
-  float: left;
-  margin-right: 2rem;
-  min-height: 100%;
-}
-
-#iam > div:nth-child(2) {
-  padding-top: .8rem;
-}
-

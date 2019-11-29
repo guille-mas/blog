@@ -12,7 +12,12 @@ const IamSection = () => (
     </div>
     <div>
       <h1>Guillermo Maschwitz</h1>
-      <h2>Tech Lead at Gun.io</h2>
+      <h2>
+        Tech Lead working at{" "}
+        <a href="https://gun.io" target="_blank" rel="noopener noreferrer">
+          Gun.io
+        </a>
+      </h2>
     </div>
   </section>
 )

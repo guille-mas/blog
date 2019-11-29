@@ -53,7 +53,8 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 10px;
 	-webkit-font-smoothing: antialiased;
-	text-rendering: optimizeLegibility;
+  text-rendering: optimizeLegibility;
+  color: $black;
 }
 
 
@@ -71,6 +72,7 @@ h1 {
 
 h2 {
   font-size: 1.4rem;
+  color: $grey;
 }
 
 h3 {
@@ -84,9 +86,9 @@ h4, h5, h6 {
 /* Links */
 
 a {
-  display: inline-block;
   padding: .5rem;
   text-decoration: none;
+  color: $green;
 }
 
 a:hover {

@@ -1,7 +1,8 @@
 import React from "react"
+import "./contact-menu.scss"
 
 const ContactMenu = () => (
-  <nav className="contact">
+  <nav id="contact">
     <a
       target="_blank"
       rel="noopener noreferrer"

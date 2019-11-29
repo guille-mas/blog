@@ -102,3 +102,31 @@ a:hover {
   cursor: pointer;
 }
 
+/* paragraphs */
+
+p {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  text-align: justify;
+}
+
+br {
+  line-height: 1rem;
+}
+
+/*
+.wrapper.main {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#header,
+#footer {
+    flex-shrink: 0;
+}
+
+main {
+    flex-grow: 1;
+}
+*/

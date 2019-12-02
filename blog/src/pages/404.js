@@ -2,7 +2,7 @@ import React from "react"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import Helmet from "react-helmet"
-import "./about-page.scss"
+import "./error-page.scss"
 
 const NotFoundPage = () => (
   <Layout>

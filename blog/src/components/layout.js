@@ -27,14 +27,16 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      <ContactMenu></ContactMenu>
-      <Header siteTitle={data.site.siteMetadata.title} />
-      <section className="wrapper main">
-        <main>{children}</main>
-      </section>
-      <section className="wrapper">
-        <Footer></Footer>
-      </section>
+      <div id="container">
+        <ContactMenu></ContactMenu>
+        <Header siteTitle={data.site.siteMetadata.title} />
+        <section className="wrapper main">
+          <main>{children}</main>
+        </section>
+        <section className="wrapper">
+          <Footer></Footer>
+        </section>
+      </div>
     </>
   )
 }

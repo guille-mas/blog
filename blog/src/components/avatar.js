@@ -6,7 +6,7 @@ import "./avatar.scss"
 const Avatar = () => {
   const data = useStaticQuery(graphql`
     query {
-      placeholderImage: file(relativePath: { eq: "avatar-icon.png" }) {
+      placeholderImage: file(relativePath: { eq: "avatar.png" }) {
         childImageSharp {
           # Specify a fluid image and fragment
           # The default maxWidth is 800 pixels

@@ -90,6 +90,26 @@ h4, h5, h6 {
   }
 }
 
+section.wrapper.main {
+  h3 {
+    color: $red;
+  }
+}
+
+body.error {
+  section.wrapper.main {
+    h3, h4, h5, h6 {
+      color: $red;
+    }
+    h3 {
+      font-size: 2rem;
+    }
+    h4 {
+      font-size: 1.6rem;
+    }
+  }  
+}
+
 /* Links */
 
 a {
@@ -113,20 +133,3 @@ p {
 br {
   line-height: 1rem;
 }
-
-/*
-.wrapper.main {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-#header,
-#footer {
-    flex-shrink: 0;
-}
-
-main {
-    flex-grow: 1;
-}
-*/

@@ -1,2 +1,28 @@
 @import "../variables.scss";
 
+
+article.blog-post {
+    header {
+        display: block;
+        text-align: left;
+        h3 {
+            line-height: 1.8rem;
+        }
+    }
+
+    aside {
+        .avatar {
+            height: 1.5rem;
+            width: 1.5rem;
+            float: left;
+        }
+        address {
+            line-height: 1.5rem;
+            display: inline-block;
+            margin-left: .5rem;
+        }
+        small {
+            margin-left: .5rem;
+        } 
+    }
+}

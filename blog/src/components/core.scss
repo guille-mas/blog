@@ -32,6 +32,11 @@ table {
   box-sizing: border-box;
 }
 
+small {
+  font-size: .8rem;
+  color: $light-grey;
+  font-weight: 600;
+}
 
 /* Helper classes */
 .clearfix:after {

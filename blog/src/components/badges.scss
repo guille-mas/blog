@@ -1,0 +1,16 @@
+@import "shadows.scss";
+
+@mixin badge($color) {
+  color: $white;
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.05rem;
+  background-color: $color;
+  padding: 0.25rem;
+  margin-top: 1rem;
+  margin-right: 0.5rem;
+  display: inline-flex;
+  border: 1px solid $color;
+  border-radius: 4%/0%;
+  @extend .box-shadow-small;
+}

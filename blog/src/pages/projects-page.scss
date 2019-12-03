@@ -1,0 +1,25 @@
+@import "../components/variables.scss";
+@import "../components/badges.scss";
+
+body.projects {
+  section.wrapper.main {
+    article.project {
+        header {
+            display: block;
+            text-align: left;
+            border-left: 1px solid $grey;
+            padding-left: 1rem;
+
+            div, h3 {
+                line-height: 1.8rem;
+            }
+        }
+
+        aside {
+            span {
+                @include badge($grey);
+            }
+        }
+    }
+  }  
+}

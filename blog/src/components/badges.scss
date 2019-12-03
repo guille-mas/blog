@@ -13,6 +13,10 @@
   border: 1px solid $border_color;
   border-radius: 4%/0%;
   cursor: default;
-  user-select: none;
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Chrome, Opera and Firefox */
   @include box-shadow-big($border_color);
 }

@@ -17,7 +17,7 @@ body.projects {
 
         aside {
             span {
-                @include badge($grey);
+                @include badge($white, $light-grey);
             }
         }
     }

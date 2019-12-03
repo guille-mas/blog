@@ -52,7 +52,6 @@ table {
 
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 16px;
 	-webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   color: $black;
@@ -112,11 +111,21 @@ a:hover {
 /* paragraphs */
 
 p {
-  font-size: 1rem;
+  font-size: .9rem;
   line-height: 1.5rem;
   text-align: justify;
+
+  @media ($media-small) {
+    font-size: 1rem;
+    line-height: 1.8rem;
+  }
 }
 
 br {
   line-height: 1rem;
 }
+
+article {
+  margin-top: 2.5rem;
+}
+

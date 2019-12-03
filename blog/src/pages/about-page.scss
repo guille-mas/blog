@@ -1,1 +1,15 @@
 @import "../components/variables.scss";
+
+body.about {
+    article {
+        header {
+            display: block;
+            text-align: left;
+            padding-left: .5rem;
+
+            div, h3 {
+                line-height: 1.8rem;
+            }
+        }
+    }
+}

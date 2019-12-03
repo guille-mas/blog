@@ -2,34 +2,41 @@
 
 /* contact-menu component */
 
-nav#contact {
-    text-align: center;
-    font-size: .9em;
-    margin-top: 1rem;
-
-
-    @media ($media-small) {
-        text-align: right;
-        margin: 1rem;
-        font-size: 1rem;
+.wrapper.contact {
+    @media ($media-medium) {
+        max-width: 100%;
     }
 
-    a {
-        margin-right: 0;
-        padding: .3rem;
-        line-height: 1rem;
-
-        &:hover {
-            color: $red;
-            border-bottom: 1px solid $red;
-        }
+    nav#contact {
+        text-align: center;
+        font-size: .9em;
+        margin-top: 1rem;
 
         @media ($media-small) {
-            margin-right: .5rem;
+            font-size: 1rem;
         }
 
         @media ($media-medium) {
-            margin: 1rem;
+            text-align: right;
+        }
+
+        a {
+            margin-right: 0;
+            padding: .3rem;
+            line-height: 1rem;
+
+            &:hover {
+                color: $red;
+                border-bottom: 1px solid $red;
+            }
+
+            @media ($media-small) {
+                margin-right: .5rem;
+            }
+
+            @media ($media-medium) {
+                margin-right: 1rem;
+            }
         }
     }
 }

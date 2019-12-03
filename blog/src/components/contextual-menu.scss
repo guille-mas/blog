@@ -2,16 +2,12 @@
 
 #contextual-menu {
     margin: 1rem 0;
+    text-align: left;
     a {
+        font-size: 1.4rem;
         margin-right: 1rem;
         &:hover {
             border-bottom: 1px solid $blue;
         }
-    }
-}
-
-@media ($media-medium) {
-    #contextual-menu {
-        text-align: left;
     }
 }

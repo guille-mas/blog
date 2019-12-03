@@ -2,34 +2,23 @@
 
 section.wrapper {
   margin: 0px auto;
-  padding: 0px 1rem 1rem;
+  padding: 0 1rem;
+  max-width: 99%;
+  margin-top: 1rem;
 
   @media ($media-small) {
-    padding: 0px 1rem 1.5rem;
+    max-width: 95%;
+  }
+
+  @media ($media-medium) {
+    max-width: 90%;
+  }
+
+  @media ($media-wide) {
+    max-width: 70%;
   }
 }
 
-@media ($media-small) {
-  section.wrapper {
-    max-width: 99%;
-  }
-}
-
-@media ($media-medium) {
-  body {
-    font-size: 18px;
-
-    section.wrapper {
-      max-width: 95%;
-    }
-  }
-}
-
-@media ($media-wide) {
-  section.wrapper {
-    max-width: 80%;
-  }
-}
 
 main {
   margin-top: 1rem;

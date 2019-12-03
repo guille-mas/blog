@@ -11,7 +11,9 @@ const AboutPage = () => (
       <body className="about" />
     </Helmet>
     <article>
-      <h3>About Me</h3>
+      <header>
+        <h3>About Me</h3>
+      </header>
       <p>
       I am a human oriented full stack developer, inspired by devops principles. 
       <br/>

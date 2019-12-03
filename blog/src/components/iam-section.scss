@@ -4,6 +4,7 @@
 
 #iam {
   margin: auto;
+  margin-top: 1rem;
   padding: 1rem 2rem;
   text-align: center;
 
@@ -32,7 +33,7 @@
   }
 }
 
-@media (min-width: 800px) {
+@media ($media-medium) {
   #iam {
     height: 9rem;
     max-width: 522px;

@@ -2,34 +2,36 @@
 
 section.wrapper {
   margin: 0px auto;
-  padding: 0px 1rem 1.5rem;
-}
+  padding: 0px 1rem 1rem;
 
-@media (min-width: 480px) {
-  section.wrapper {
-    max-width: 460px;
+  @media ($media-small) {
+    padding: 0px 1rem 1.5rem;
   }
 }
 
-@media (min-width: 800px) {
+@media ($media-small) {
+  section.wrapper {
+    max-width: 99%;
+  }
+}
+
+@media ($media-medium) {
   body {
     font-size: 18px;
 
     section.wrapper {
-      max-width: 780px;
+      max-width: 95%;
     }
   }
 }
 
-@media (min-width: 1024px) {
+@media ($media-wide) {
   section.wrapper {
-    max-width: 960px;
+    max-width: 80%;
   }
 }
 
-
-/* main */
-
 main {
-  
+  margin-top: 1rem;
 }
+

@@ -10,7 +10,7 @@
     }
 }
 
-@media (min-width: 800px) {
+@media ($media-medium) {
     #contextual-menu {
         text-align: left;
     }

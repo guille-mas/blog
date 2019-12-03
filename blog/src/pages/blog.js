@@ -18,12 +18,22 @@ const IndexPage = () => (
     />
 
     <Post
+      title="Devops from a developer perspective"
+      date="Dec 2019"
+    />
+
+    <Post
       title="Clean, portable development environments using Docker and Docker Compose"
       date="Dec 2019"
     />
 
     <Post
       title="Agile, stable deployments with Git Flow"
+      date="Dec 2019"
+    />
+
+    <Post
+      title="Automating the deployment of a static website to AWS S3 with Terraform"
       date="Dec 2019"
     />
 
@@ -43,7 +53,7 @@ const IndexPage = () => (
     />
 
     <Post
-      title="Clean code and code docummentation as critical communication channels"
+      title="Clean code and code docummentation are critical communication channels"
       date="Dec 2019"
     />
 

@@ -7,6 +7,11 @@
   margin-top: 1rem;
   padding: 1rem 2rem;
   text-align: center;
+  display: inline-block;
+
+  @media ($media-medium) {
+    height: 9rem;
+  }
 
   img {
     text-align: center;
@@ -25,28 +30,23 @@
   h2 {
     color: $light-grey;
   }
-}
 
-#iam > div {
-  &:nth-child(1) {
-    text-align: center;
-  }
-}
+  > div {
 
-@media ($media-medium) {
-  #iam {
-    height: 9rem;
-    max-width: 522px;
-  }
-  #iam > div {
-    margin-right: 2rem;
-    float: left;
-    min-height: 100%;
-    text-align: left;
-  }
-}
+    @media ($media-medium) {
+      margin-right: 2rem;
+      float: left;
+      min-height: 100%;
+      text-align: left;
+    }
 
-#iam > div:nth-child(2) {
-  padding-top: .8rem;
+    &:nth-child(1) {
+      text-align: center;
+    }
+
+    &:nth-child(2) {
+      padding-top: .8rem;
+    }
+  }
 }
 

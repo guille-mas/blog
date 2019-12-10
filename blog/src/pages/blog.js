@@ -16,82 +16,59 @@ const IndexPage = ({data}) => {
       </Helmet>
 
       {data.allFile.edges.map(({ node }, index) => (
-        <Post
-          key={index}
-          title={node.name}
-          date={node.birthTime}
-        />
+        <Post key={index} title={node.name} date={node.modifiedTime} />
       ))}
 
-      <Post 
-        title="7 Habits of highly effective development teams" 
+      <Post
+        title="7 Habits of highly effective development teams"
         date="Dec 2019"
       />
 
-      <Post
-        title="Devops from a developer perspective"
-        date="Dec 2019"
-      />
+      <Post title="Devops from a developer perspective" date="Dec 2019" />
 
       <Post
         title="Clean, portable development environments using Docker and Docker Compose"
         date="Dec 2019"
       />
 
-      <Post
-        title="Agile, stable deployments with Git Flow"
-        date="Dec 2019"
-      />
+      <Post title="Agile, stable deployments with Git Flow" date="Dec 2019" />
 
       <Post
         title="Automating the deployment of a static website to AWS S3 with Terraform"
         date="Dec 2019"
       />
 
-      <Post
-        title="Javascript refactoring tips - RequireJS"
-        date="Dec 2019"
-      />
+      <Post title="Javascript refactoring tips - RequireJS" date="Dec 2019" />
 
-      <Post
-        title="An introduction to RxJs"
-        date="Dec 2019"
-      />
+      <Post title="An introduction to RxJs" date="Dec 2019" />
 
-      <Post
-        title="PHP refactoring tips - Generators"
-        date="Dec 2019"
-      />
+      <Post title="PHP refactoring tips - Generators" date="Dec 2019" />
 
       <Post
         title="Clean code and code docummentation are critical communication channels"
         date="Dec 2019"
       />
 
-      <Post
-        title="Optimize your code for humans first"
-        date="Dec 2019"
-      />
-
+      <Post title="Optimize your code for humans first" date="Dec 2019" />
     </Layout>
   )
 }
 
 export const query = graphql`
-  query BlogPosts {
-    allFile(filter: {
-      relativeDirectory: {
-        eq: "blog"
-      }
-    }) {
-      edges {
-        node {
-          name
-          birthTime(fromNow: true)
-        }
-      }
-    }
-  }
-`
+         query BlogPosts {
+           allFile(filter: { relativeDirectory: { eq: "blog" } }) {
+             edges {
+               node {
+                 modifiedTime(fromNow: true)
+                 childMarkdownRemark {
+                   frontmatter {
+                     title
+                   }
+                 }
+               }
+             }
+           }
+         }
+       `
 
 export default IndexPage

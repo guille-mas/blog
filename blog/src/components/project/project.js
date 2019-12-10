@@ -3,9 +3,9 @@ import "./project.scss"
 
 class Project extends React.Component {
     render() {
-        const tech_stack = (this.props.tools || []).map( (tool) => {
+        const tech_stack = (this.props.tools || []).map( (tool, index) => {
             return (
-                <span>{tool}</span>
+                <span key={index}>{tool}</span>
             );
         });
 

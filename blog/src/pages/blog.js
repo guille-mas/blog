@@ -16,10 +16,39 @@ const IndexPage = ({data}) => {
       </Helmet>
 
       {data.allFile.edges.map(({ node }, index) => (
-        <Post key={index} title={node.name} date={node.modifiedTime} />
+        <Post
+          key={index}
+          title={node.childMarkdownRemark.frontmatter.title}
+          date={node.childMarkdownRemark.frontmatter.date}
+          slug={node.childMarkdownRemark.frontmatter.slug}
+        />
       ))}
+    </Layout>
+  )
+}
 
-      <Post
+export const query = graphql`
+         query BlogPosts {
+           allFile(filter: { relativeDirectory: { eq: "blog" } }) {
+             edges {
+               node {
+                 childMarkdownRemark {
+                   frontmatter {
+                     title
+                     date
+                     slug
+                   }
+                 }
+               }
+             }
+           }
+         }
+       `
+
+export default IndexPage
+
+/*
+<Post
         title="7 Habits of highly effective development teams"
         date="Dec 2019"
       />
@@ -50,25 +79,5 @@ const IndexPage = ({data}) => {
       />
 
       <Post title="Optimize your code for humans first" date="Dec 2019" />
-    </Layout>
-  )
-}
+*/
 
-export const query = graphql`
-         query BlogPosts {
-           allFile(filter: { relativeDirectory: { eq: "blog" } }) {
-             edges {
-               node {
-                 modifiedTime(fromNow: true)
-                 childMarkdownRemark {
-                   frontmatter {
-                     title
-                   }
-                 }
-               }
-             }
-           }
-         }
-       `
-
-export default IndexPage

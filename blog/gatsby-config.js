@@ -46,6 +46,13 @@ module.exports = {
         icon: `src/images/avatar.png`, // This path is relative to the root of the site.
       },
     },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `src`,
+        path: `${__dirname}/src/data`,
+      },
+    },
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
@@ -55,10 +62,10 @@ module.exports = {
       options: {
         useResolveUrlLoader: {
           options: {
-            sourceMap: true
-          }
-        }
-      }
-    }
-  ]
+            sourceMap: true,
+          },
+        },
+      },
+    },
+  ],
 }

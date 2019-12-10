@@ -15,8 +15,9 @@ const IndexPage = ({data}) => {
         <body className="blog" />
       </Helmet>
 
-      {data.allFile.edges.map(({ node }) => (
+      {data.allFile.edges.map(({ node }, index) => (
         <Post
+          key={index}
           title={node.name}
           date={node.birthTime}
         />

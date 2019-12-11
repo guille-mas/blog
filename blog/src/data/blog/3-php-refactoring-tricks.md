@@ -1,7 +1,8 @@
 ---
-title: "A few php refactoring tips"
+title: "A few tips to refactor a PHP project"
 slug: "php-refactoring-tips"
 date: "12-28-2019"
+publish: true
 ---
 <section class="intro">
     <p>In this post I'll share with you a few php tricks and points of view that will help you fix performance bottlenecks,

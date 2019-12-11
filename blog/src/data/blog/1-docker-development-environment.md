@@ -2,6 +2,7 @@
 title: "Build a portable development environment to share with your team"
 slug: "portable-docker-compose-development-environment-tutorial"
 date: "12-10-2019"
+publish: true
 ---
 <section class="intro">
     <p>A gentle walkthrough of what I did to create the development environment for this blog</p>
@@ -9,6 +10,7 @@ date: "12-10-2019"
 <aside class="tech-stack">
     <span>docker</span>
     <span>docker-compose</span>
+    <span>gnu-make</span>
 </aside>
 <section class="body">
     <h3>First title</h3>

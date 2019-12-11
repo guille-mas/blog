@@ -13,7 +13,7 @@ publish: true
     <span>aws-s3</span>
 </aside>
 <section class="body">
-    <h3>First title</h3>
+    <h4>First title</h4>
     <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit,
         sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -37,7 +37,7 @@ publish: true
         quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas
         nulla pariatur?
     </p>
-    <h3>Second title</h3>
+    <h4>Second title</h4>
     <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit,
         sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -61,7 +61,7 @@ publish: true
         quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas
         nulla pariatur?
     </p>
-    <h3>Third title</h3>
+    <h4>Third title</h4>
     <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit,
         sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

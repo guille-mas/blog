@@ -2,7 +2,7 @@
 title: "Automate deployments of static websites with Terraform and AWS S3"
 slug: "automated-deployment-of-static-website-with-terraform"
 date: "12-28-2019"
-publish: true
+publish: false
 ---
 <section class="intro">
     <p>In this post I'll show you how you can automate deployments of static websites to AWS S3 with Terraform</p>

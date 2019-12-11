@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import {graphql} from "gatsby"
@@ -6,9 +6,15 @@ import Helmet from "react-helmet"
 import Post from "../components/blog/post"
 import "../pages/blog-page.scss"
 import "../components/blog/post.scss"
-
+//import the Prism package
+import Prism from "prismjs"
 
 export default ({ data }) => {
+  
+  useEffect(() => {
+    Prism.highlightAll()
+  }, []);
+
   return (
     <Layout>
       <SEO title="Blog" />

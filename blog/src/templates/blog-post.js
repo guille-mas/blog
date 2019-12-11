@@ -5,6 +5,8 @@ import {graphql} from "gatsby"
 import Helmet from "react-helmet"
 import Post from "../components/blog/post"
 import "../pages/blog-page.scss"
+import "../components/blog/post.scss"
+
 
 export default ({ data }) => {
   return (

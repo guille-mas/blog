@@ -1,28 +1,32 @@
 @import "../variables.scss";
-
+@import "../shadows.scss";
 
 article.blog-post {
-    header {
-        display: block;
-        text-align: left;
-        h3 {
-            line-height: 1.8rem;
-        }
+  aside {
+    .avatar {
+      height: 1.5rem;
+      width: 1.5rem;
+      float: left;
+      margin-left: 0.5rem;
     }
 
-    aside {
-        .avatar {
-            height: 1.5rem;
-            width: 1.5rem;
-            float: left;
-        }
-        address {
-            line-height: 1.5rem;
-            display: inline-block;
-            margin-left: .5rem;
-        }
-        small {
-            margin-left: .5rem;
-        } 
+    &.tech-stack {
+      span:hover {
+        @include box-shadow-big($black);
+      }
     }
+  }
+
+  aside {
+    display: inline-block;
+  }
+
+  section.intro {
+    margin-top: 1.5rem;
+    p {
+      font-size: 1.1rem;
+      font-style: italic;
+      color: $grey;
+    }
+  }
 }

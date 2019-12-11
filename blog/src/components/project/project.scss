@@ -1,21 +1,13 @@
 @import "../variables.scss";
-@import "../badges.scss";
 
 article.project {
     header {
-        display: block;
         text-align: left;
         border-left: 2px solid $yellow;
-        padding-left: .5rem;
+        padding-left: 1rem;
 
-        div, h3 {
-            line-height: 1.8rem;
-        }
-    }
-
-    aside {
-        span {
-            @include badge($white, $light-grey);
+        time {
+            margin-left: 0;
         }
     }
 }

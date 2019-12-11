@@ -10,14 +10,14 @@ class Project extends React.Component {
         });
 
         return (
-            <article className="project">
-                <header>
-                    <div className="date">{this.props.date}</div>
-                    <h3>{this.props.title}</h3>
-                </header>
-                {this.props.body}
-                <aside className="tech-stack">{tech_stack}</aside>
-            </article>
+          <article className="project">
+            <header>
+              <time className="date">{this.props.date}</time>
+              <h3>{this.props.title}</h3>
+            </header>
+            {this.props.body}
+            <aside className="tech-stack">{tech_stack}</aside>
+          </article>
         )
     }
 }

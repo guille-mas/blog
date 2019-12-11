@@ -7,7 +7,6 @@ import Post from "../components/blog/post"
 import { graphql } from "gatsby"
 
 const IndexPage = ({data}) => {
-  console.log(data)
   return (
     <Layout>
       <SEO title="Blog" />

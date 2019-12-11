@@ -1,8 +1,88 @@
 @import "./variables.scss";
-
+@import "./badges.scss";
 
 /* Reset */
-html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video {
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
   border: 0;
   font-size: 100%;
   font: inherit;
@@ -10,39 +90,55 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
   margin: 0;
   padding: 0;
 }
-article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
   display: block;
 }
 body {
   line-height: 1;
 }
-blockquote, q {
+blockquote,
+q {
   quotes: none;
 }
-blockquote:before, blockquote:after, q:before, q:after {
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
   content: none;
 }
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 
 small {
-  font-size: .8rem;
+  font-size: 0.8rem;
   color: $light-grey;
   font-weight: 600;
 }
 
 /* Helper classes */
 .clearfix:after {
-	content: "";
-	display: table;
-	clear: both;
+  content: "";
+  display: table;
+  clear: both;
 }
 
 .hide {
@@ -57,16 +153,19 @@ small {
 
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	-webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   color: $black;
 }
 
-
-
 /* Title */
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   letter-spacing: 0.015rem;
   margin-bottom: 1rem;
   line-height: 1.3em;
@@ -81,30 +180,30 @@ h2 {
 }
 
 h3 {
-  font-size: 1.4rem
+  font-size: 1.4rem;
 }
 
-h4, h5, h6 {
+h4,
+h5,
+h6 {
   font-size: 1.2rem;
 }
 
 @media ($media-medium) {
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     line-height: 1em;
   }
 }
 
-section.wrapper.main {
-  h3 {
-    color: $red;
-  }
-}
-
-
 /* Links */
 
 a {
-  padding: .5rem;
+  padding: 0.5rem;
   text-decoration: none;
   color: $green;
 }
@@ -116,7 +215,7 @@ a:hover {
 /* paragraphs */
 
 p {
-  font-size: .9rem;
+  font-size: 0.9rem;
   line-height: 1.5rem;
   text-align: justify;
 
@@ -131,6 +230,52 @@ br {
 }
 
 article {
-  margin: 2.5rem .5rem 0 .5rem;
+  margin: 2.5rem 0.5rem 0 0.5rem;
 }
 
+article {
+  padding-left: 0.5rem;
+
+  header {
+    display: block;
+    div,
+    h3 {
+      line-height: 1.8rem;
+    }
+  }
+
+  address {
+    line-height: 1.5rem;
+    display: inline-block;
+    margin-left: 0.5rem;
+  }
+
+  time {
+    font-size: 0.8rem;
+    color: $light-grey;
+    font-weight: 600;
+    margin-left: 0.5rem;
+  }
+
+  aside.tech-stack {
+    span {
+      @include badge($white, $light-grey);
+    }
+  }
+
+  h3,h4,h5,h6 {
+    color: $red;
+  }
+
+  a {
+    color: $red;
+    padding: 0;
+  }
+
+  section {
+    margin-top: 1rem;
+    h3,h4,h5,h6 {
+      margin-top: 2rem;
+    }
+  }
+}

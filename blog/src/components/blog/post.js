@@ -20,7 +20,7 @@ class Post extends React.Component {
             <aside>
               <Avatar />
               <address>Guillermo Maschwitz</address>
-              <small>{this.props.date}</small>
+              <time>{this.props.date}</time>
             </aside>
             <div
               dangerouslySetInnerHTML={this.createMarkup(this.props.body)}

@@ -2,16 +2,16 @@
 @import "../shadows.scss";
 
 body.blog.post {
-    section.wrapper {
-      @media ($media-wide) {
-        max-width: 95%;
-      }
+  section.wrapper {
+    @media ($media-wide) {
+      max-width: 95%;
     }
-    article {
-        .body {
-            visibility: visible;
-        }
+  }
+  article {
+    .body {
+      visibility: visible;
     }
+  }
 }
 
 article.blog-post {
@@ -45,5 +45,37 @@ article.blog-post {
 
   .code-container {
     margin: 1rem 0;
+    font-size: 0.7rem;
+
+    &::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+
+    @media ($media-wide) {
+      font-size: 0.8rem;
+    }
+
+    &.left {
+      @media ($media-wide) {
+        margin: 2rem 2rem 2rem 0;
+        width: 40%;
+        float: left;
+      }
+      @media (min-width: 1440px) {
+        width: 50%;
+      }
+    }
+    &.right {
+      @media ($media-wide) {
+        margin: 2rem 0 2rem 2rem;
+        width: 40%;
+        float: right;
+      }
+      @media (min-width: 1440px) {
+        width: 50%;
+      }
+    }
   }
 }

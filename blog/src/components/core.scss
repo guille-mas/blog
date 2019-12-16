@@ -323,3 +323,13 @@ article {
   min-width: 100%; /* 2 */
 }
 
+
+.clearfix {
+  overflow: auto;
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}

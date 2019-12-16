@@ -25,7 +25,7 @@ publish: true
     </p>
 <div class="code-container right">
 
-```javascript{1-2,22}{numberLines: false}
+```javascript{1-2,22}{numberLines: true}
 // In your gatsby-config.js
 // Let's make this line very long so that our container has to scroll its overflow…
 plugins: [

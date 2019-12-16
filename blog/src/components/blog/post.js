@@ -3,6 +3,7 @@ import "./post.scss"
 import Avatar from "../avatar"
 import { Link } from "gatsby";
 import Prism from "prismjs"
+import "prismjs/themes/prism-tomorrow.css";
 
 class Post extends React.Component {
   componentDidMount() {

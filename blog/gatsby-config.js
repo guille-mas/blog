@@ -53,7 +53,47 @@ module.exports = {
         path: `${__dirname}/src/data`,
       },
     },
-    `gatsby-transformer-remark`,
+    {
+      resolve: "gatsby-transformer-remark",
+      options: {
+        plugins: [
+          `gatsby-remark-prismjs`,
+          {
+            resolve: "gatsby-remark-prismjs",
+            options: {
+              // Class prefix for <pre> tags containing syntax highlighting;
+              // defaults to 'language-' (eg <pre class="language-js">).
+              // If your site loads Prism into the browser at runtime,
+              // (eg for use with libraries like react-live),
+              // you may use this to prevent Prism from re-processing syntax.
+              // This is an uncommon use-case though;
+              // If you're unsure, it's best to use the default value.
+              classPrefix: "language-",
+              // This is used to allow setting a language for inline code
+              // (i.e. single backticks) by creating a separator.
+              // This separator is a string and will do no white-space
+              // stripping.
+              // A suggested value for English speakers is the non-ascii
+              // character '›'.
+              inlineCodeMarker: null,
+            },
+          },
+          {
+            resolve: "gatsby-remark-embed-gist",
+            options: {
+              // Optional:
+
+              // the github handler whose gists are to be accessed
+              username: "guille-mas",
+
+              // a flag indicating whether the github default gist css should be included or not
+              // default: true
+              includeDefaultCss: true,
+            },
+          },
+        ],
+      },
+    },
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
@@ -68,6 +108,5 @@ module.exports = {
         },
       },
     },
-    `gatsby-remark-prismjs`,
   ],
 }

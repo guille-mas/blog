@@ -60,22 +60,23 @@ article.blog-post {
     &.left {
       @media ($media-wide) {
         margin: 2rem 2rem 2rem 0;
-        width: 40%;
+        width: 75%;
         float: left;
       }
       @media (min-width: 1440px) {
-        width: 50%;
+        width: 60%;
       }
     }
     &.right {
       @media ($media-wide) {
         margin: 2rem 0 2rem 2rem;
-        width: 40%;
+        width: 75%;
         float: right;
       }
       @media (min-width: 1440px) {
-        width: 50%;
+        width: 60%;
       }
     }
   }
 }
+

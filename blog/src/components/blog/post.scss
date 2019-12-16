@@ -1,6 +1,19 @@
 @import "../variables.scss";
 @import "../shadows.scss";
 
+body.blog.post {
+    section.wrapper {
+      @media ($media-wide) {
+        max-width: 95%;
+      }
+    }
+    article {
+        .body {
+            visibility: visible;
+        }
+    }
+}
+
 article.blog-post {
   aside {
     .avatar {

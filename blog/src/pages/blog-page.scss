@@ -1,0 +1,13 @@
+@import "../components/variables.scss";
+
+
+body.blog {
+    article {
+        .body {
+            visibility: hidden;
+            @media ($media-wide) {
+                transition: visibility 0s linear .3s;
+            }
+        }
+    }
+}

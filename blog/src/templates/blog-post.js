@@ -19,7 +19,7 @@ export default ({ data }) => {
     <Layout>
       <SEO title="Blog" />
       <Helmet>
-        <body className="blog" />
+        <body className="blog post" />
       </Helmet>
 
       <Post

@@ -5,6 +5,7 @@ section.wrapper {
   padding: 0 1rem;
   max-width: 100%;
   margin-top: 1rem;
+  transition: max-width ease-in-out .2s;
 
   @media ($media-small) {
     max-width: 95%;

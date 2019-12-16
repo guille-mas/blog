@@ -1,16 +1,10 @@
-import React from "react"
+import React, { useEffect } from "react"
 import "./post.scss"
 import Avatar from "../avatar"
 import { Link } from "gatsby";
-import Prism from "prismjs"
 import "prismjs/themes/prism-tomorrow.css";
 
 class Post extends React.Component {
-  componentDidMount() {
-    // You can call the Prism.js API here
-    // Use setTimeout to push onto callback queue so it runs after the DOM is updated
-    setTimeout(() => Prism.highlightAll(), 0)
-  }
 
   createMarkup(markup) {
     return { __html: markup }

@@ -15,8 +15,9 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
+    "@emotion/core": "^10.0.22",
     "@mdx-js/mdx": "^1.5.1",
-    "@mdx-js/react": "^1.5.1",
+    "@mdx-js/react": "^1.5.2",
     "deepmerge": "^4.2.2",
     "gatsby": "^2.17.11",
     "gatsby-image": "^2.2.31",
@@ -26,6 +27,7 @@
     "gatsby-plugin-react-helmet": "^3.1.14",
     "gatsby-plugin-sass": "^2.1.24",
     "gatsby-plugin-sharp": "^2.2.37",
+    "gatsby-plugin-theme-ui": "^0.2.43",
     "gatsby-remark-embed-gist": "^1.1.9",
     "gatsby-remark-prismjs": "^3.3.27",
     "gatsby-source-filesystem": "^2.1.40",
@@ -36,7 +38,8 @@
     "prop-types": "^15.7.2",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
-    "react-helmet": "^5.2.1"
+    "react-helmet": "^5.2.1",
+    "theme-ui": "^0.2.52"
   },
   "devDependencies": {
     "prettier": "^1.19.1",

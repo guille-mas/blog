@@ -180,7 +180,7 @@ plugins: [
         non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </p>
 
-<div class="code-container right">
+<div class="code-container left">
 
 `gist:guille-mas/bb6676b91bab56a68f7d705f1e5c9963#generator.php`
 

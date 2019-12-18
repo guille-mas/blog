@@ -17,12 +17,12 @@ class Post extends React.Component {
           <h3>
             <Link to={this.props.slug}>{this.props.title}</Link>
           </h3>
+          <aside>
+            <Avatar />
+            <address>Guillermo Maschwitz</address>
+            <time>{this.props.date}</time>
+          </aside>
         </header>
-        <aside>
-          <Avatar />
-          <address>Guillermo Maschwitz</address>
-          <time>{this.props.date}</time>
-        </aside>
         <div
           className="body"
           dangerouslySetInnerHTML={this.createMarkup(this.props.body)}

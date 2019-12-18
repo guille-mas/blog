@@ -57,7 +57,19 @@ module.exports = {
       resolve: "gatsby-transformer-remark",
       options: {
         plugins: [
-          `gatsby-remark-prismjs`,
+          {
+            resolve: "gatsby-remark-embed-gist",
+            options: {
+              // Optional:
+
+              // the github handler whose gists are to be accessed
+              username: "guille-mas",
+
+              // a flag indicating whether the github default gist css should be included or not
+              // default: true
+              includeDefaultCss: true,
+            },
+          },
           {
             resolve: "gatsby-remark-prismjs",
             options: {
@@ -76,19 +88,6 @@ module.exports = {
               // A suggested value for English speakers is the non-ascii
               // character '›'.
               inlineCodeMarker: null,
-            },
-          },
-          {
-            resolve: "gatsby-remark-embed-gist",
-            options: {
-              // Optional:
-
-              // the github handler whose gists are to be accessed
-              username: "guille-mas",
-
-              // a flag indicating whether the github default gist css should be included or not
-              // default: true
-              includeDefaultCss: true,
             },
           },
         ],

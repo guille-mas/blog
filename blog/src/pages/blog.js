@@ -11,7 +11,7 @@ const IndexPage = ({data}) => {
     <Layout>
       <SEO title="Blog" />
       <Helmet>
-        <body className="blog" />
+        <body className="blog animate" />
       </Helmet>
 
       {data.allFile.edges.map(({ node }, index) => (

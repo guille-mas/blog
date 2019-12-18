@@ -11,7 +11,7 @@ export default ({ data }) => {
     <Layout>
       <SEO title="Blog" />
       <Helmet>
-        <body className="blog post" />
+        <body className="blog post animate" />
       </Helmet>
 
       <Post

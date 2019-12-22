@@ -1,8 +1,9 @@
-import React, { useEffect } from "react"
+import React from "react"
 import "./post.scss"
 import Avatar from "../avatar"
 import { Link } from "gatsby";
 import "prismjs/themes/prism-tomorrow.css";
+import { MDXRenderer } from "gatsby-plugin-mdx"
 
 class Post extends React.Component {
 
@@ -23,10 +24,7 @@ class Post extends React.Component {
             <time>{this.props.date}</time>
           </aside>
         </header>
-        <div
-          className="body"
-          dangerouslySetInnerHTML={this.createMarkup(this.props.body)}
-        ></div>
+        {this.props.body && <MDXRenderer className="body">{this.props.body}</MDXRenderer>}
       </article>
     )
   }

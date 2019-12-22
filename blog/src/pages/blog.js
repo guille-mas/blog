@@ -17,9 +17,9 @@ const IndexPage = ({data}) => {
       {data.allFile.edges.map(({ node }, index) => (
         <Post
           key={index}
-          title={node.childMarkdownRemark.frontmatter.title}
-          date={node.childMarkdownRemark.frontmatter.date}
-          slug={node.childMarkdownRemark.frontmatter.slug}
+          title={node.childMdx.frontmatter.title}
+          date={node.childMdx.frontmatter.date}
+          slug={node.childMdx.frontmatter.slug}
         />
       ))}
     </Layout>
@@ -30,13 +30,12 @@ export const query = graphql`
          query BlogPosts {
            allFile(
              filter: {
-               relativeDirectory: { eq: "blog" }
-               childMarkdownRemark: { frontmatter: { publish: { eq: true } } }
+               childMdx: { frontmatter: { publish: { eq: true } } }
              }
            ) {
              edges {
                node {
-                 childMarkdownRemark {
+                 childMdx {
                    frontmatter {
                      title
                      date

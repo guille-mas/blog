@@ -15,10 +15,10 @@ export default ({ data }) => {
       </Helmet>
 
       <Post
-        title={data.markdownRemark.frontmatter.title}
-        date={data.markdownRemark.frontmatter.date}
-        slug={data.markdownRemark.frontmatter.slug}
-        body={data.markdownRemark.html}
+        title={data.mdx.frontmatter.title}
+        date={data.mdx.frontmatter.date}
+        slug={data.mdx.frontmatter.slug}
+        body={data.mdx.body}
       />
     </Layout>
   )
@@ -27,8 +27,8 @@ export default ({ data }) => {
 
 export const query = graphql`
          query($slug: String!) {
-           markdownRemark(frontmatter: { slug: { eq: $slug } }) {
-             html
+           mdx(frontmatter: { slug: { eq: $slug } }) {
+             body
              frontmatter {
                title
                date

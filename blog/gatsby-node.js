@@ -1,7 +1,7 @@
 exports.createPages = async function({ actions, graphql }) {
   const { data } = await graphql(`
     query {
-      allMarkdownRemark {
+      allMdx {
         edges {
           node {
             frontmatter {
@@ -12,7 +12,7 @@ exports.createPages = async function({ actions, graphql }) {
       }
     }
   `)
-  data.allMarkdownRemark.edges.forEach(edge => {
+  data.allMdx.edges.forEach(edge => {
     const slug = edge.node.frontmatter.slug
     actions.createPage({
       path: slug,

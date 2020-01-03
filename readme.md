@@ -23,3 +23,7 @@ Starts a containerized local development environment at http://0.0.0.0:8000
 Stops your local development environment
 - `make run` \
 Runs any command inside the container from within blog/ folder
+
+How to start the environment the first time:
+
+- `make setup && docker-compose up`

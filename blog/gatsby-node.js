@@ -1,3 +1,5 @@
+const path = require('path')
+
 exports.createPages = async function({ actions, graphql }) {
   const { data } = await graphql(`
     query {
@@ -19,5 +21,16 @@ exports.createPages = async function({ actions, graphql }) {
       component: require.resolve(`./src/templates/blog-post.js`),
       context: { slug: slug },
     })
+  })
+}
+
+exports.onCreateWebpackConfig = ({ actions }) => {
+  actions.setWebpackConfig({
+    resolve: {
+      modules: [
+        path.resolve(__dirname, 'src'), 
+        'node_modules'
+      ],
+    },
   })
 }

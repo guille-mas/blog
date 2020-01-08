@@ -15,25 +15,25 @@ body.blog.post {
 }
 
 article.blog-post {
-  aside {
-    .avatar {
-      height: 1.5rem;
-      width: 1.5rem;
-      float: left;
-      margin-left: 0.5rem;
-    }
 
-    &.tech-stack {
-      span:hover {
-        @include box-shadow-big($black);
+  > header {
+    > aside {
+        display: inline-block;
+        .avatar {
+          height: 1.5rem;
+          width: 1.5rem;
+          float: left;
+          margin-left: 0.5rem;
+        }
+
+        &.tech-stack {
+          span:hover {
+            @include box-shadow-big($black);
+          }
+        }
       }
-    }
   }
-
-  aside {
-    display: inline-block;
-  }
-
+  
   section.intro {
     margin-top: 1.5rem;
     p {

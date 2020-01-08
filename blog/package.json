@@ -31,6 +31,7 @@
     "gatsby-remark-embed-gist": "^1.1.9",
     "gatsby-remark-prismjs": "^3.3.27",
     "gatsby-source-filesystem": "^2.1.40",
+    "gatsby-theme-blog": "^1.2.19",
     "gatsby-theme-waves": "^0.1.5",
     "gatsby-transformer-sharp": "^2.3.3",
     "node-sass": "^4.13.0",

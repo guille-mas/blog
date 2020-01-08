@@ -1,9 +1,9 @@
 import React from "react"
-import "./post.scss"
 import Avatar from "../avatar"
 import { Link } from "gatsby";
 import "prismjs/themes/prism-tomorrow.css";
 import { MDXRenderer } from "gatsby-plugin-mdx"
+import "./post.scss"
 
 class Post extends React.Component {
 

@@ -108,6 +108,7 @@ module.exports = {
       },
     },
     `gatsby-plugin-theme-ui`,
+    `gatsby-theme-blog`,
     `gatsby-theme-waves`,
   ],
 }

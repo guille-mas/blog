@@ -21,6 +21,6 @@ export default merge(baseTheme, {
           borderColor: "#e8a87c",
         }
       }
-    }
+    },
   }
 });

@@ -212,6 +212,35 @@ a:hover {
   cursor: pointer;
 }
 
+/* lists */
+
+dl,
+ol,
+ul {
+  margin: 1rem 0 1rem 1rem;
+}
+
+li {
+  line-height: 1.5rem;
+}
+
+ol {
+  list-style: none; 
+  counter-reset: li;
+  li::before {
+    content: counter(li); 
+    color: $red;
+    display: inline-block; 
+    width: 1rem;
+    font-weight: bold;
+    margin-left: -1rem
+  }
+  li {
+    counter-increment: li;
+  }
+}
+
+
 /* paragraphs */
 
 p {

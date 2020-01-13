@@ -277,8 +277,7 @@ velle. Bellum _liquerat nec_ quoniam coiere monstratum **vulnera** abstulit
 
 </CodeWave>
 
-
-    <p>
+<p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit,
         sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
@@ -286,7 +285,8 @@ velle. Bellum _liquerat nec_ quoniam coiere monstratum **vulnera** abstulit
         Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
         dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
         non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    </p>
+</p>
+
 <div class="code-container right">
 
 ```javascript{1-8,22}{numberLines: true}
@@ -443,11 +443,6 @@ plugins: [
         non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </p>
 
-<div class="code-container left">
-
-`gist:guille-mas/bb6676b91bab56a68f7d705f1e5c9963#generator.php`
-
-</div>
 
 <p>
   Lorem ipsum dolor sit amet, consectetur adipiscing elit,

@@ -1,16 +1,11 @@
 import React from "react"
 import Avatar from "../avatar"
-import { Link } from "gatsby";
-import "prismjs/themes/prism-tomorrow.css";
+import { Link } from "gatsby"
+import "prismjs/themes/prism-tomorrow.css"
 import { MDXRenderer } from "gatsby-plugin-mdx"
 import "./post.scss"
 
 class Post extends React.Component {
-
-  createMarkup(markup) {
-    return { __html: markup }
-  }
-
   render() {
     return (
       <article className="blog-post">

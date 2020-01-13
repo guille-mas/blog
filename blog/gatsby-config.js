@@ -59,21 +59,10 @@ module.exports = {
         extensions: [`.mdx`, `.md`],
         gatsbyRemarkPlugins: [
           {
-            resolve: "gatsby-remark-embed-gist",
-            options: {
-              // Optional:
-
-              // the github handler whose gists are to be accessed
-              username: "guille-mas",
-
-              // a flag indicating whether the github default gist css should be included or not
-              // default: true
-              includeDefaultCss: true,
-            },
-          },
-          {
             resolve: "gatsby-remark-prismjs",
             options: {
+              "languages": ["js", "jsx", "jsdoc", "sass", "docker", "yaml", "makefile", "markdown", "php", "git", "shell", "json"],
+              "theme": "tomorrow",
               // Class prefix for <pre> tags containing syntax highlighting;
               // defaults to 'language-' (eg <pre class="language-js">).
               // If your site loads Prism into the browser at runtime,
@@ -108,7 +97,13 @@ module.exports = {
       },
     },
     `gatsby-plugin-theme-ui`,
-    `gatsby-theme-blog`,
+    {
+      resolve: '@awolf81/gatsby-theme-mdx',
+      options: {
+        /* basePath: '/myCoolStuff' */
+        contentPath: 'src/data'
+      },
+    },
     `gatsby-theme-waves`,
   ],
 }

@@ -15,7 +15,6 @@ body.blog.post {
 }
 
 article.blog-post {
-
   > header {
     > aside {
         display: inline-block;
@@ -42,58 +41,4 @@ article.blog-post {
       color: $grey;
     }
   }
-
-  .code-container {
-    margin: 1rem 0;
-    font-size: 0.7rem;
-
-    &::after {
-      content: "";
-      clear: both;
-      display: table;
-    }
-
-    @media ($media-wide) {
-      font-size: 0.8rem;
-    }
-
-    &.left {
-      @media ($media-wide) {
-        margin: 2rem 2rem 2rem 0;
-        width: 75%;
-        float: left;
-      }
-      @media (min-width: 1440px) {
-        width: 60%;
-      }
-    }
-    &.right {
-      @media ($media-wide) {
-        margin: 2rem 0 2rem 2rem;
-        width: 75%;
-        float: right;
-      }
-      @media (min-width: 1440px) {
-        width: 60%;
-      }
-    }
-  }
 }
-
-
-
-.gatsby-highlight-code-line {
-  background-color: $grey;
-  display: block;
-  margin-right: -1em;
-  margin-left: -1em;
-  padding-right: 1em;
-  padding-left: 0.75em;
-  border-left: 0.3em solid $yellow;
-}
-
-/* Adjust the position of the line numbers */
-.gatsby-highlight pre[class*="language-"].line-numbers {
-  padding-left: 2.8em;
-}
-

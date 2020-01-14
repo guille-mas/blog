@@ -4,7 +4,7 @@ import SEO from "../components/seo"
 import {graphql} from "gatsby"
 import Helmet from "react-helmet"
 import Post from "../components/blog/post"
-import "../pages/blog-page.scss"
+import "./blog-post.scss"
 
 export default ({ data }) => {
   return (
@@ -13,13 +13,17 @@ export default ({ data }) => {
       <Helmet>
         <body className="blog post animate" />
       </Helmet>
-
-      <Post
-        title={data.mdx.frontmatter.title}
-        date={data.mdx.frontmatter.date}
-        slug={data.mdx.frontmatter.slug}
-        body={data.mdx.body}
-      />
+      
+      <section className="body">
+        <Post
+          title={data.mdx.frontmatter.title}
+          intro={data.mdx.frontmatter.intro}
+          date={data.mdx.frontmatter.date}
+          tools={data.mdx.frontmatter.tools}
+          slug={data.mdx.frontmatter.slug}
+          body={data.mdx.body}
+        />
+      </section>
     </Layout>
   )
 }
@@ -30,9 +34,11 @@ export const query = graphql`
            mdx(frontmatter: { slug: { eq: $slug } }) {
              body
              frontmatter {
-               title
-               date
                slug
+               title
+               intro
+               date
+               tools
              }
            }
          }

@@ -2,7 +2,6 @@ import React from "react"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import Helmet from 'react-helmet'
-import "./blog-page.scss"
 import Post from "../components/blog/post"
 import { graphql } from "gatsby"
 

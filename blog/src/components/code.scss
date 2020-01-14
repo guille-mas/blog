@@ -1,0 +1,45 @@
+@import "./variables.scss";
+
+.code-container {
+    margin: 1rem 0;
+    font-size: 0.8rem;
+
+    &::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+
+    @media ($media-wide) {
+      font-size: 1rem;
+    }
+
+    &.left {
+      @media ($media-medium) {
+        margin: 1rem 2rem 1rem 0;
+        float: left;
+        width: 75%;
+      }
+
+      &.sm {
+        @media ($media-medium) {
+          width: 50%;
+        }
+      }
+    }
+    
+    &.right {
+      @media ($media-medium) {
+        margin: 1rem 0 1rem 2rem;
+        float: right;
+        width: 75%;
+      }
+
+      &.sm {
+        @media ($media-medium) {
+          width: 50%;
+        }
+      }
+    }
+  }
+  

@@ -14,7 +14,7 @@ class Post extends React.Component {
     if(this.props.tools) {
       tech_stack_section = (
         <aside className="tech-stack">
-          {this.props.tools.split(" ").map((tool) => <span>{tool}</span>)}
+          {this.props.tools.split(" ").map((tool, idx) => <span key={idx}>{tool}</span>)}
         </aside>
       );
     }

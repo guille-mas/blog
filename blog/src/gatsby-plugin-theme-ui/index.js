@@ -4,9 +4,14 @@ import merge from "deepmerge";
 
 const baseTheme = merge(mdxTheme, wavesTheme);
 
-console.log(baseTheme);
-
-export default merge(baseTheme, {
+const baseThemeWithCustomOverrides = merge(baseTheme, {
+  ...baseTheme,
+  colors: {
+    ...baseTheme.colors,
+    text: "#333",
+    background: "#fff",
+    primary: "#e27d60",
+  },
   styles: {
     waves: {
       default: {
@@ -24,3 +29,5 @@ export default merge(baseTheme, {
     },
   }
 });
+
+export default baseThemeWithCustomOverrides;

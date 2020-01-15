@@ -156,6 +156,14 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   color: $black;
+
+  .cs-line {
+    font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+    line-height: 28px;
+    font-weight: 500;
+    white-space: pre;
+    font-size: 16px;
+  }
 }
 
 /* Title */
@@ -230,6 +238,16 @@ ol {
   }
 }
 
+ul {
+  list-style: none;
+  li::before {
+    content: "•"; 
+    color: $red;
+    display: inline-block; 
+    width: 1rem;
+    margin-left: -1rem
+  }
+}
 
 /* paragraphs */
 
@@ -304,9 +322,4 @@ article {
   display: table;
 }
 
-/** Codewave hacks */
-.cs-container {
-  font-family: "Consolas, Menlo, Monaco, source-code-pro, Courier New, monospace";
-}
-/** End of Codewave hacks */
 

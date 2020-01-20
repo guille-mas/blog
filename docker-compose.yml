@@ -5,7 +5,6 @@ services:
     container_name: blog
     volumes:
       - ./blog:/home/node/blog
-      - ./logs/node:/root/.npm/_logs
     networks:
       net: {}
     expose: ["${WEB_PORT}"]

@@ -6,8 +6,8 @@ ARG WEB_PORT
 ENV TERM=xterm-256color
 RUN npm install -g gatsby-cli
 USER node
+COPY --chown=node:node ./blog /home/node/blog
 WORKDIR /home/node/blog
-COPY --chown=node:node ./ ./
 EXPOSE "${WEB_PORT}"
 
 # Inmutable image containing optimized website files
@@ -19,7 +19,8 @@ CMD ["gatsby", "serve", "-H", "0.0.0.0", "--port", "8000"]
 
 
 # Inmutable image for development purposes
-FROM blog-production AS blog-development
+FROM blog-core AS blog-development
 ENV NODE_ENV=development
 RUN npm install
 CMD ["gatsby", "develop", "-H", "0.0.0.0", "--port", "8000"]
+

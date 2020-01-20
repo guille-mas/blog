@@ -11,6 +11,8 @@ services:
     expose: ["${WEB_PORT}"]
     ports:
       - "${WEB_PORT}:8000"
+    environment:
+      DEBUG: "gatsby:query-watcher"
 
 networks:
   net:

@@ -2,11 +2,13 @@
 
 /* footer component */
 
-footer {
-    color: $lightest-grey;
-    border-top: 1px solid;
-    padding: 1.5rem 0;
-    font-size: .8rem;
-    letter-spacing: .05rem;
-    margin-top: 3rem;
+section.wrapper {
+    footer {
+        color: $lightest-grey;
+        border-top: 1px solid;
+        padding: 1.5rem 0;
+        font-size: .8rem;
+        letter-spacing: .05rem;
+        margin-top: 3rem;
+    }
 }

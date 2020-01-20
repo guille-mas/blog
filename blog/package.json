@@ -15,7 +15,6 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@awolf81/gatsby-theme-mdx": "0.0.2-4",
     "@emotion/core": "^10.0.22",
     "@mdx-js/mdx": "^1.5.2",
     "@mdx-js/react": "^1.5.2",

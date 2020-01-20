@@ -1,5 +1,5 @@
 import wavesTheme from "gatsby-theme-waves/src/gatsby-plugin-theme-ui/index";
-import mdxTheme from "@awolf81/gatsby-theme-mdx/src/templates/default";
+import mdxTheme from "../templates/blog-post";
 import merge from "deepmerge";
 
 const baseTheme = merge(mdxTheme, wavesTheme);

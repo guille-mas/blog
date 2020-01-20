@@ -73,13 +73,6 @@ module.exports = {
       },
     },
     `gatsby-plugin-theme-ui`,
-    {
-      resolve: '@awolf81/gatsby-theme-mdx',
-      options: {
-        /* basePath: '/myCoolStuff' */
-        contentPath: 'src/data'
-      },
-    },
     `gatsby-theme-waves`,
   ],
 }

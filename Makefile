@@ -3,7 +3,7 @@ include .env
 export DOCKER_BUILDKIT=0
 
 build:
-	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION}-production --target blog-production ./
+	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION} -t guillermomaschwitz/blog:${PROJECT_VERSION}-production --target blog-production ./
 	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION}-development --target blog-development ./
 
 push:

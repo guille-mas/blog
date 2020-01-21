@@ -25,3 +25,9 @@ run:
 setup:
 	docker-compose run blog npm install
 	docker-compose run blog gatsby build
+
+standalone-prod:
+	docker run -p ${WEB_PORT}:${WEB_PORT} guillermomaschwitz/blog:${PROJECT_VERSION}-production
+
+standalone-dev:
+	docker run -p ${WEB_PORT}:${WEB_PORT} guillermomaschwitz/blog:${PROJECT_VERSION}-development

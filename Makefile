@@ -1,6 +1,6 @@
 include .env
 # speed up builds and improve build UI by enabling Docker Buildkit
-export DOCKER_BUILDKIT=1
+export DOCKER_BUILDKIT=0
 
 build:
 	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION} --target blog-core ./

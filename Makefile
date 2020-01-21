@@ -3,7 +3,6 @@ include .env
 export DOCKER_BUILDKIT=0
 
 build:
-	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION} --target blog-core ./
 	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION}-production --target blog-production ./
 	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION}-development --target blog-development ./
 
@@ -12,10 +11,7 @@ push:
 	docker push guillermomaschwitz/blog
 
 clean:
-	-docker-compose down
-	-docker-compose rm
-	docker image rm -f guillermomaschwitz/blog:${PROJECT_VERSION}-development
-	docker image rm -f guillermomaschwitz/blog:${PROJECT_VERSION}-production 
+	docker-compose down --rmi all
 	docker image rm -f guillermomaschwitz/blog:${PROJECT_VERSION}
 
 run:

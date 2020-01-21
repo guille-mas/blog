@@ -1,3 +1,14 @@
-blog/public/*
+# Logs
+blog/logs/*
+blog/*.log
+blog/npm-debug.log*
+
+# Dependency directories
+#blog/node_modules/*
+# gatsby files
 blog/.cache/*
-.git/*
+blog/public/*
+
+.gitignore
+.git
+

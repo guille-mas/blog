@@ -44,6 +44,9 @@
     "prettier": "^1.19.1",
     "resolve-url-loader": "^3.1.1"
   },
+  "peerDependencies": {
+    "@types/react": ">=16.8.0"
+  },
   "scripts": {
     "build": "gatsby build",
     "develop": "gatsby develop",

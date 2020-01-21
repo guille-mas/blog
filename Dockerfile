@@ -5,7 +5,7 @@ FROM node:13.1.0-alpine AS blog-production
 ARG WEB_PORT
 ENV TERM=xterm-256color
 ENV GATSBY_TELEMETRY_DISABLED=1
-ENV NODE_ENV=development
+ENV NODE_ENV=production
 RUN apk add --update alpine-sdk && \
     npm install -g node-gyp gatsby-cli && \
     rm -fR /var/cache/apk/*

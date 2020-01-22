@@ -1,29 +1,31 @@
-# blog
+# This blog
 
-Thoughts on software design, infrastructure as code, webapps, software development, industry best practices and devops processes from a developers point of view.
+This is the code for a blog I am writing. \
+I plan to write thoughts on software design, infrastructure as code, webapps, software development, industry best practices and devops processes from the perspective of a web developer inspired by those ideas.
 
-Project structure:
+## You could run the blog locally
 
-- `blog/` blog source and static content
-- `Dockerfile` docker image definition for development environment, available at https://hub.docker.com/r/guillermomaschwitz/blog
-- `docker-compose.yml` containerized development environment
-- `aws/` infrastructure as code with Terraform will go here
-- `logs/` where development environment logs will go when things go wrong
-- `Makefile` a place to define high level devops commands
+If you have [Docker](https://www.docker.com/get-started) installed, you can spin up an instance of this blog at http://localhost:8000 by running the following command on a terminal: `docker run guillermomaschwitz/blog:1`
 
-Commands:
+If you would like to use the development image instead, the command should be `docker run guillermomaschwitz/blog:1-development`.
 
-- `make build` \
-Build inmutable Docker images and push them to [my Dockerhub account](https://hub.docker.com/r/guillermomaschwitz/blog)
-- `make setup` \
-Execute a set of steps required by the local dev environment to work smoothly
+To wire the development environment to your local folder, run it like this: `docker-compose run blog`. Although remember to install vendors locally the first time by first running: `docker-compose run blog npm install`
+
+## Useful commands
+
+- `make standalone-prod` \
+Helper method to run a standalone local container of the production environment
+- `make standalone-prod` \
+Helper method to run a standalone local container of the development environment
 - `docker-compose up` \
-Starts a containerized local development environment at http://0.0.0.0:8000
+Starts a fully working local development environment at http://localhost:8000 \
+The first time you will have to install your own npm vendors with `docker-compose run blog npm install`
 - `docker-compose down` \
-Stops your local development environment
+Stops your local development environment, removes stopped containers and virtual networks
 - `make run` \
-Runs any command inside the container from within blog/ folder
-
-How to start the environment the first time:
-
-- `make setup && docker-compose up`
+Runs any command inside the composer development environment, from within blog/ folder
+- `make clean` removes any artifact created during build or runtime
+- `make build` \
+Build inmutable Docker images like those available at [my Dockerhub account](https://hub.docker.com/r/guillermomaschwitz/blog)
+- `make push` \
+Push locall images to docker hub

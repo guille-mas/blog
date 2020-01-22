@@ -6,9 +6,8 @@ ARG WEB_PORT
 ENV TERM=xterm-256color
 ENV GATSBY_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
-RUN apk add --update alpine-sdk && \
-    npm install -g node-gyp gatsby-cli && \
-    rm -fR /var/cache/apk/*
+RUN apk add --update --no-cache alpine-sdk gettext libtool autoconf automake make libpng-dev libjpeg-turbo-dev libc6-compat mesa-gl libx11 libxxf86vm libxi g++ nasm && \
+    npm install -g node-gyp gatsby-cli
 USER node
 COPY --chown=node:node ./blog /home/node/blog
 WORKDIR /home/node/blog

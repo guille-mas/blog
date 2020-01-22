@@ -4,11 +4,31 @@ blog/*.log
 blog/npm-debug.log*
 
 # Dependency directories
-#blog/node_modules/*
+blog/node_modules/*
 # gatsby files
 blog/.cache/*
 blog/public/*
 
 .gitignore
-.git
+.git/*
 
+# Bower dependency directory (https://bower.io/)
+blog/bower_components/*
+
+# node-waf configuration
+blog/.lock-wscript
+
+# Compiled binary addons (http://nodejs.org/api/addons.html)
+blog/build/Release/*
+
+# Dependency directories
+blog/node_modules/*
+blog/jspm_packages/*
+
+# Typescript v1 declaration files
+blog/typings/*
+
+# Optional npm cache directory
+blog/.npm/*
+
+aws/*

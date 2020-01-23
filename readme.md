@@ -5,9 +5,9 @@ I plan to write thoughts on software design, infrastructure as code, webapps, so
 
 ## You could run the blog locally
 
-If you have [Docker](https://www.docker.com/get-started) installed, you can spin up an instance of this blog at http://localhost:8000 by running the following command on a terminal: `docker run guillermomaschwitz/blog:1`
+If you have [Docker](https://www.docker.com/get-started) installed, you can spin up an instance of this blog at http://localhost:8000 by running the following command on a terminal: `docker run -p 8000:8000/tcp guillermomaschwitz/blog:1`
 
-If you would like to use the development image instead, the command should be `docker run guillermomaschwitz/blog:1-development`.
+If you would like to run the development image instead, the command should be `docker run -p 8000:8000/tcp guillermomaschwitz/blog:1-development`
 
 To wire the development environment to your local folder, run it like this: `docker-compose run blog`. Although remember to install vendors locally the first time by first running: `docker-compose run blog npm install`
 

@@ -69,3 +69,9 @@ blog/.pnp/
 blog/.pnp.js
 # Yarn Integrity file
 blog/.yarn-integrity
+
+# terraform
+**/.terraform*
+**/terraform.tfstate*
+
+dist/*

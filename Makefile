@@ -26,3 +26,21 @@ clean:
 run:
 	@read -p "Write a command to run inside your docker environment: " command; \
 	docker-compose run blog sh -c "$$command"
+
+# creates the infrastructure needed by the blog:
+# an s3 bucket where to upload the website, a cloudfront CDN, DNS certificates, etc
+aws-setup:
+	terraform apply -parallelism=100 --auto-approve
+
+deploy:
+# start production container
+	docker run -d --name blog-prod guillermomaschwitz/blog:${PROJECT_VERSION}-production
+# copy prod files from docker container to dist folder
+	docker cp blog-prod:/home/node/blog/public /tmp/guille-cloud-blog-dist
+# stop container
+	docker stop blog-prod
+# remove container
+	docker rm blog-prod
+# upload ./dist folder to s3
+	aws s3 sync /tmp/guille-cloud-blog-dist s3://website-guille-dot-cloud
+#	aws s3 sync/tmp/guille-cloud-blog-dist s3://www.guille.cloud

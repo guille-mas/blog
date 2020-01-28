@@ -29,3 +29,6 @@ Runs any command inside the composer development environment, from within blog/ 
 Build inmutable Docker images like those available at [my Dockerhub account](https://hub.docker.com/r/guillermomaschwitz/blog)
 - `make push` \
 Push locall images to docker hub
+- `make deploy` \
+Creates or updates the aws infrastructure needed for this blog, and uploads the last production build available at dockerhub to AWS S3
+

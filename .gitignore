@@ -73,5 +73,6 @@ blog/.yarn-integrity
 # terraform
 **/.terraform*
 **/terraform.tfstate*
+terraform.tfvars
 
 dist/*

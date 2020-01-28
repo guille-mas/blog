@@ -27,12 +27,11 @@ run:
 	@read -p "Write a command to run inside your docker environment: " command; \
 	docker-compose run blog sh -c "$$command"
 
-# creates the infrastructure needed by the blog:
-# an s3 bucket where to upload the website, a cloudfront CDN, DNS certificates, etc
-aws-setup:
-	terraform apply -parallelism=100 --auto-approve
-
 deploy:
+# install any missing terraform plugin
+	terraform init -var-file="./terraform.tfvars"
+# update the infrastructure if needed
+	terraform apply -parallelism=100 -var-file="./terraform.tfvars"
 # start production container
 	docker run -d --name blog-prod guillermomaschwitz/blog:${PROJECT_VERSION}-production
 # copy prod files from docker container to dist folder

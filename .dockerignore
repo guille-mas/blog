@@ -34,5 +34,6 @@ blog/.npm/*
 aws-gatsby/*
 aws.tf
 .terraform/*
+terraform.tfvars
 
 dist/*

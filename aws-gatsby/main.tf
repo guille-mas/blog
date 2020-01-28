@@ -1,9 +1,12 @@
-variable "bucket_name" {
-  default = "website-guille-dot-cloud"
+terraform {
+  required_providers {
+    aws = ">= 2.46.0"
+  }
 }
 
-variable "domain" {
-  default = "guille.cloud"
+
+provider "aws" {
+  region  = var.region
 }
 
 resource "aws_s3_bucket" "website" {

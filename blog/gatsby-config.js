@@ -67,7 +67,7 @@ module.exports = {
       options: {
         useResolveUrlLoader: {
           options: {
-            sourceMap: true,
+            sourceMap: process.env.NODE_ENV === 'development',
           },
         },
       },

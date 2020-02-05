@@ -16,7 +16,7 @@ const ContactMenu = () => (
         target="_blank"
         rel="noopener noreferrer"
         className="github"
-        href="https://github.com/guille-mas"
+        href="https://github.com/guille-mas/blog"
       >
         Github
       </a>

@@ -1,5 +1,5 @@
 ---
-slug: "portable-docker-compose-development-environment-tutorial"
+slug: "portable-docker-compose-development-environment-tutorial/index.html"
 title: "Build a portable development environment to share with your team"
 intro: "A gentle walkthrough on what I did to create the development environment for this blog"
 tools: "docker docker-compose gnu-make"

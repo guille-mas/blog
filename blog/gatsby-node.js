@@ -34,3 +34,21 @@ exports.onCreateWebpackConfig = ({ actions }) => {
     },
   })
 }
+
+exports.onCreatePage = ({ page, actions }, { suffix }) => {
+  const { createPage, deletePage } = actions;
+
+  return new Promise(resolve => {
+    const oldPage = Object.assign({}, page);
+    if(page.path.length > 1 && page.path.charAt(page.path.length-1) == "/") {
+      page.path += 'index.html';
+    }
+    if (page.path !== oldPage.path) {
+      deletePage(oldPage);
+      createPage(page);
+    }
+    resolve();
+  });
+};
+
+

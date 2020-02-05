@@ -40,7 +40,7 @@ resource "aws_s3_bucket" "website" {
 
   website {
     index_document = "index.html"
-    error_document = "index.html"
+    error_document = "404.html"
   }
 }
 
@@ -93,7 +93,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   enabled             = true
   is_ipv6_enabled     = true
   price_class  = "PriceClass_100"
-  default_root_object = "index.html"
+  #default_root_object = "index.html"
   aliases = [var.domain]
 
   origin {
@@ -107,7 +107,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   custom_error_response {
     error_code = 403
     response_code = 200
-    response_page_path = "/index.html"
+    response_page_path = "/404.html"
   }
 
   logging_config {

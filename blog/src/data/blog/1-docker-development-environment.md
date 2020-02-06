@@ -5,6 +5,7 @@ intro: "A gentle walkthrough on what I did to create the development environment
 tools: "docker docker-compose gnu-make"
 date: "12-10-2019"
 publish: true
+blog: true
 ---
 import { CodeWave } from "gatsby-theme-waves"
 import Code from "components/code"

@@ -29,7 +29,12 @@ export const query = graphql`
          query BlogPosts {
            allFile(
              filter: {
-               childMdx: { frontmatter: { publish: { eq: true } } }
+               childMdx: { 
+                 frontmatter: { 
+                   publish: { eq: true } 
+                   blog: { eq: true } 
+                  } 
+                }
              }
            ) {
              edges {

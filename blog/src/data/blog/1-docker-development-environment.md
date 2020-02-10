@@ -4,7 +4,7 @@ title: "Build a portable development environment to share with your team"
 intro: "A gentle walkthrough on what I did to create the development environment for this blog"
 tools: "docker docker-compose gnu-make"
 date: "12-10-2019"
-publish: false
+publish: true
 blog: true
 ---
 import { CodeWave } from "gatsby-theme-waves"

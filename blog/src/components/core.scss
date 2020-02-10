@@ -262,6 +262,11 @@ p {
   }
 }
 
+strong {
+  color: $red;
+  font-weight: 600;
+}
+
 br {
   line-height: 1rem;
 }
@@ -323,3 +328,7 @@ article {
 }
 
 
+.point {
+  cursor: pointer;
+  color: $green !important;
+}

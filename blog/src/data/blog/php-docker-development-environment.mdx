@@ -1,15 +1,40 @@
 ---
-slug: "build-a-portable-development-environment-for-php/index.html"
-title: "Build a portable development environment for PHP"
-intro: "A step by step guide to create a portable development environment for PHP 7, using docker, docker-compose and GNU Make"
-tools: "docker docker-compose gnu-make php xdebug"
+slug: "build-a-php-dev-environment-your-team-will-love/index.html"
+title: "Build a PHP development environment your team will love"
+intro: "Learn to create development infrastructure-as-code for your dev team"
+tools: "php xdebug docker docker-compose gnu-make"
 date: "02-10-2020"
 publish: true
 blog: true
+category: tutorial
 ---
 import { CodeWave } from "gatsby-theme-waves"
 import Code from "components/code"
 
-Imagine for a moment that you where hired on a fast paced startup, to work on an important php backend project, along with 5 other developers.
-The startup was looking for a fast learner who doesn't need to much hand holding, and can start killing tickets as early as possible.
-The first day, your manager assign you the first task; you must set up your development environment. You are able to get your credentials in place after waiting from one of your coworkers to be released from her current task. She is the most knowleadgable person in the room about the technical aspects of the project; every subtle detail, every dependency, every version number, every step to wire up that beast, are spread across the production environment logs, a few txt files on her computer, and a few code comments.
+Welcome to the first post of my blog! Yay! I'm excited!  
+Hopefully it will help you achieve a meaningful task that will save countless hours to your development and operations teams.  
+
+If you follow through this first chapter. You will end up with a working PHP 7.4 development environment, and a _production like_ environment. Both easily usable with one simple command, that will ensure everyone in your team it's on the same page regarding the runtime environment of your project.
+
+### Concepts
+
+Infrastructue as code it's a term coinned by the DevOps community.  
+
+DevOps is a pretty hypped term these days. Which can produce confusions, but it simply comes down to this:  
+
+- Devops:  A software development metodology, that enable development and operations teams to produce better outcomes for their organization by empowering **collaboration** and **communication** between them
+
+- Infrastructure as code: The process of managing, provisioning and docummenting every aspect of your infrastructure's life cycles
+
+Writing your infrastructure as code as several advantages. Some of them are:
+
+- Reduce times of infrastructure setup and maintenance
+- Ease bug reproduction
+- Communicate in code every relevant aspect of your infrastructure
+- Empowers an organization to evolve it's development and operations practices faster and easier
+- Remove human errors from critical tasks
+- Developers will have a better understanding of the production environment
+
+More on those later. Now it's time to get our hands dirty.
+
+### Configuration

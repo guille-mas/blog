@@ -7,11 +7,14 @@ import Post from "../components/blog/post"
 import "./blog-post.scss"
 
 export default ({ data }) => {
+
+  const bodyClass = data.mdx.frontmatter.blog ?  "blog post animate" : "";
+
   return (
     <Layout>
       <SEO title="Blog" />
       <Helmet>
-        <body className="blog post animate" />
+        <body className={bodyClass} />
       </Helmet>
       
       <section className="body">

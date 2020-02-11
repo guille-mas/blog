@@ -12,19 +12,10 @@ class ContactLink extends React.Component {
   }
 
   /**
-   * A very simple way of fooling simple spam bots
-   * by decoding my email which was 
-   * encoded 3 times to base64
-   * 
-   * I am just obscuring my email adress from code grepping here
+   * Obfuscated email address to fool some spam bots
    */
-  decode(val) {
-    const rounds = 3;
-    let email = val;
-    for(let i=0; i<rounds;i++) {
-      email = atob(email);
-    }
-    return email;
+  get_email() {
+    return "guilledevel" + "@" + "g" + "m" + "a" + "i" + "l" + "." + "c" + "o" + "m";
   }
   
   show_address() {
@@ -34,9 +25,11 @@ class ContactLink extends React.Component {
   }
 
   render() {
-    const email_address = this.decode("V2pOV2NHSkhlR3hhUjFZeVdsZDRRVm95TVdoaFYzZDFXVEk1ZEE9PQ==");
-    const email_link = this.decode("WWxkR2NHSklVblpQYldReFlWZDRjMXBYVW14a2JWWnpVVWRrZEZsWGJITk1iVTUyWWxFOVBRPT0=");
-    return this.state.clicked ? (<a href={email_link}>{email_address}</a>) : (<strong className="point" onClick={this.show_address}>Click me to show an email address</strong>);
+    const email_address = this.get_email();
+    const email_link = "m" + "a" + "i" + "l" + "t" + "o" + ":" + email_address;
+    return this.state.clicked ? 
+      (<a href={email_link}>{email_address}</a>) : 
+      (<strong className="point" onClick={this.show_address}>Click me to show an email address</strong>);
   }
 }
 

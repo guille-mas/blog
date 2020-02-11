@@ -9,10 +9,14 @@
     }
 
     a {
-        font-size: 1.4rem;
-        margin-right: 1rem;
+        font-size: 1rem;
         &:hover {
             border-bottom: 1px solid $blue;
+        }
+
+        @media ($media-medium) {
+            font-size: 1.4rem;
+            margin-right: 1rem;
         }
     }
 }

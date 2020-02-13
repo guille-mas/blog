@@ -11,47 +11,91 @@ category: tutorial
 import { CodeWave } from "gatsby-theme-waves"
 import Code from "components/code"
 
-Welcome to the first post of my blog! Yay! I'm excited!  
-Hopefully it will help you achieve a meaningful task that will save countless hours to your development and operations teams.  
+Welcome to the first post of my blog! Yikes!  
+<br/>
+Hopefully it will help you achieve a meaningful task that will save countless hours to you and the people you work with.  
 
-If you follow through this first chapter. You will end up with a working PHP 7.4 development environment, and a _production like_ environment. Both easily usable with one simple command, that will ensure everyone in your team it's on the same page regarding the runtime environment of your project.
+If you follow through this post. You will end up with a portable PHP 7.4 development environment, with a working PHP remote debugger, that can be installed with a single command on any development box.
 
-### Concepts
+### Intro
 
-**DevOps** it's a pretty hypped term these days, and that can produce confusions, but it simply comes down to:  
+A few terms you will see a lot here are **DevOps** and **infrastructure-as-code**. Despite the hype around them, both terms can be easily explained as follows.
 
-_A software development metodology, that enable development and operations teams to produce better outcomes for their organization by empowering **collaboration** and **communication** between them_
+**Devops** it's _a software development metodology, that enable development and operations teams to produce better outcomes for their organization by empowering **collaboration** and **communication** between them_
 
-**Infrastructue as code** it's another term you are going to see a lot here; It was coinned by the DevOps community, and it means:
+**Infrastructue as code** it's _the process of managing, provisioning and docummenting every aspect of your infrastructure's life cycles_
 
-_The process of managing, provisioning and docummenting every aspect of your infrastructure's life cycles_
+Potentially, the environment you will learn to create here, can allow you to:
 
-Writing your infrastructure as code has several advantages. Some of them are:
-
-- Reduce times of infrastructure setup and maintenance
+- Reduce time dedicated to setting up development infrastructure
 - Ease bug reproduction
-- Communicate in code every relevant aspect of your infrastructure
-- Empowers an organization to evolve it's development and operations workflows faster
-- Remove human errors from critical tasks
-- Removes burocreacy
-- Enable technical teams to try new ideas in production like environments without risks
-- Developers will have a better understanding of the production environment
+- Communicate in code every relevant aspect of your infrastructure to other engineers
+- Reorganize your project folders structure, dependencies, infrastructure, or try other ideas, and share those changes faster than ever.
+- Discuss infrastructure changes in the context of code reviews
+- Help developers be more aware of the context on which their project is running
 
-More on those later. Now it's time to get our hands dirty.
+### Before we start
 
-### Configuration
+You will need `Docker`, `docker-compose`, and `GNU Make`.
 
-Docker & docker-compose setup
+The easiest way to setup Docker and docker-compose in Windows and MacOS is by getting [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
-MakeGNU
+In Windows, GNU Make might be already available in PowerShell. Else look around for a way of running `make` on your command line of choice. Chocolatey package manager might be of help there.
 
-### Create a custom Docker image
+In Linux you should be able to install Docker with your package manager of choice, and GNU Make it's usually present on most popular distros.
+
+Finally, create a folder for this tutorial and add it to Docker's shared folders. You can do that in MacOS's Docker Desktop at:  
+<br/>
+`Preferences -> Resources -> File Sharing`  
+<br/>
+Sharing your folder with Docker it's a prerequisite to copy whatever file you will need to put inside your containers.
+
+### Docker basics
+
+Docker allows you to package your apps with their own runtime, with isolated resources, on top of a minimum operating system kernel. With their own file system, and eventually one or more virtual networks.  
+<br/>
+A docker image it's like a blueprint for docker container. It is defined in a file usually named Dockerfile.  
+To use an analogy taken from OOP; A docker image it's like a class, and a docker container it's like an instance of a docker image.  
+You can create as many containers as you want from a single image.
+
+You can use other's people images, by pulling them from publicly available repositories, such as [DockerHub](https://hub.docker.com). Or you can upload your custom images to a private repo to use inside your organization.  
+It is a recommended practice to use official docker images from certified docker repositories whenever possible.  
+<br/>
+For this tutorial we are going to use an [official PHP image](https://hub.docker.com/_/php) based on a debian distro; Bundled alltogether with an Apache server.  
+<br/>
+For production environments it is better to define one image per process. That way you can administer hardware resources with more granularity, besides having an easier time debugging issues related with your containers.
+
+Enough theory, let's get our hands dirty!
+
+#### A containerized Hello World  
+
+Create the following `index.php` file inside your project folder
+
+```php
+<?php phpinfo();
+```
+
+and run this command
+<br/>
+```bash
+docker run -p 80:80 -v "$PWD":/var/www/html php:7.4.2-apache
+````
+
+If everything wen't weel, you should see a page with information about your PHP environment at http://0.0.0.0
+
+What happened?
+
+1. First, Docker will try to find a local image `php:7.4.2-apache`.  
+Since the first time the image won't be available locally, docker will proceed to download it from its remote location.  
+Next time you try to create a new container based on the same image, Docker will find the local image and won't attempt to download it.
+2. Docker will create a new container based on that image; Mapping port 80 on your computer with port 80 in your container, and mounting the folder specified in `"$PWD"` as folder `/var/www/html` inside your container.
+3. Finally, you will see PHP and Apache logs being streamed to your terminal.
+
+**Note** You might run into troubles if $PWD is the path to a symlinked folder. In that case, pass the absolute path of your project folder, as you shared it with Docker earlier.
+
+### Custom Docker images
 
 ### Declare your development environment with docker-compose
-
-### Define two different environments: development and production
-
-### Update your development environment
 
 ### Upload your images
 

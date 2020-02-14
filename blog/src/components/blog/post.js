@@ -7,12 +7,13 @@ import "./post.scss"
 
 class Post extends React.Component {
   render() {
-    let tech_stack_section;
+    let aside_tech_stack_section;
     let intro_section;
-    let avatar_section;
+    let aside_avatar_section;
+    let aside_section;
 
     if(this.props.tools) {
-      tech_stack_section = (
+      aside_tech_stack_section = (
         <aside className="tech-stack">
           {this.props.tools.split(" ").map((tool, idx) => <span key={idx}>{tool}</span>)}
         </aside>
@@ -28,7 +29,7 @@ class Post extends React.Component {
     }
 
     if(!this.props.body) {
-      avatar_section = (
+      aside_avatar_section = (
         <>
         <Avatar></Avatar>
         <address>Guillermo Maschwitz</address>
@@ -37,18 +38,27 @@ class Post extends React.Component {
       );
     }
 
+    if(aside_avatar_section || intro_section) {
+      aside_section = (
+        <aside>
+          {aside_avatar_section || ""}
+          {aside_tech_stack_section || ""}
+        </aside>
+      );
+    } else {
+      aside_section = ""
+    }
+
+
     return (
       <article className="blog-post">
         <header>
           <h3>
             <Link to={this.props.slug}>{this.props.title}</Link>
           </h3>
-          <aside>
-            {avatar_section || ""}
-            {tech_stack_section || ""}
-          </aside>
+          {intro_section || ""}
+          {aside_section}
         </header>
-        {intro_section || ""}
         {this.props.body && <MDXRenderer className="body">{this.props.body}</MDXRenderer>}
       </article>
     )

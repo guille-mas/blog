@@ -104,7 +104,9 @@ section {
   display: block;
 }
 body {
-  line-height: 1;
+  text-align: justify;
+  font-size: 16px;
+  line-height: 1.5rem;
 }
 blockquote,
 q {
@@ -177,10 +179,11 @@ h6 {
   letter-spacing: 0.015rem;
   margin-bottom: 1rem;
   margin-top: 1rem;
+  text-align: left;
 }
 
 h1 {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   line-height: 2rem;
   color: $black;
 }
@@ -218,10 +221,6 @@ ul {
   margin: 1rem 0 1rem 1rem;
 }
 
-li {
-  line-height: 1.5rem;
-}
-
 ol {
   list-style: none; 
   counter-reset: li;
@@ -251,24 +250,9 @@ ul {
 
 /* paragraphs */
 
-p {
-  font-size: 0.9rem;
-  line-height: 1.5rem;
-  text-align: justify;
-
-  @media ($media-small) {
-    font-size: 1rem;
-    line-height: 1.8rem;
-  }
-}
-
 strong {
   color: $red;
   font-weight: 600;
-}
-
-br {
-  line-height: 1rem;
 }
 
 article {
@@ -286,7 +270,6 @@ article {
   }
 
   address {
-    line-height: 1.5rem;
     display: inline-block;
     margin-left: 0.5rem;
   }
@@ -299,6 +282,7 @@ article {
   }
 
   aside.tech-stack {
+    margin-top: 1rem;
     span {
       @include badge($white, $light-grey);
     }

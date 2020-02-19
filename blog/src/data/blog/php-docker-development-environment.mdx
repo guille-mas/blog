@@ -194,28 +194,22 @@ FROM base-image-name:default
 
 ###### TAG
 
-You can - and should - define a specific tag for the images you consume from others.  
+You should be explicit about docker image tags, adding it to **RUN**
 
 <br/>
 
-If you don't do it, Docker will do it for you!  
+If you don't do it, Docker will pull the image with tag "default", which it's usually one of the latest built images.
 
 <br/>
 
-That's bad cause **"default"** points to the latest build of a specific flavor of those images.  
-
-<br/>
-
-Not choosing a tag for your images makes your build process unreliable in the long run.
+> Not choosing a tag for your images makes your build process unreliable in the long term
 
 ```docker
 # This is a comment
 FROM base-image-name:1.2-variant
 ```
 
-> **Best Practice:** Always use an explicit tag; a specific version of the images you consume in order to avoid upstream breaking changes in the future
-
-> "Not choosing a tag for your images makes your build process unreliable in the long run"
+> Always use an explicit tag; a specific version of the images you consume in order to avoid upstream breaking changes in the future
 
 ```docker
 # This is a comment
@@ -223,7 +217,7 @@ FROM base-image-name:1.2-variant
 RUN echo "hello world"
 ```
 
-**RUN** allows you to run shell commands inside your image.  
+**RUN** will execute the sentence you pass to it in the default terminal
 
 <br/>
 
@@ -255,7 +249,7 @@ Luckily, you can chain shell commands together in order to reduce the amount of 
 
 <br/>
 
-> **Best Practice:** Chain shell commands together when possible to reduce image size
+> It's usually a good practice, to replace consecutive **RUN** lines, by a single line of chained sentences
 
 ```docker
 # This is a comment
@@ -267,7 +261,14 @@ ENV YOUR_NAME message
 RUN echo "hello $YOUR_NAME"
 ```
 
-**ENV** defines environment variables
+Use **ENV** to define environment variables.  
+
+<br>
+
+Environmental variables will be available at runtime for your app.  
+You can check the values with **docker inspect**
+
+<br>
 
 ```docker
 # This is a comment
@@ -296,7 +297,32 @@ EXPOSE 8080/tcp
 
 Alternatively you can **EXPOSE** ports in your image
 
+<br>
+
+```docker
+# This is a comment
+FROM base-image-name:1.2-variant
+RUN echo "hello world" \
+    && do-something \
+    && do-something-else
+ENV YOUR_NAME message
+RUN echo "hello $YOUR_NAME"
+COPY --chown=www-data:www-data ./public /var/www/html
+USER user:group
+```
+
+**USER** sets the username and group to use while running the image.  
+
+<br/>
+
+Every sentence passed to **RUN** will be executed inside the container with that user and group. 
+
+
 </CodeWave>
+
+You can see [here](https://docs.docker.com/engine/reference/builder/) a complete reference of Dockerfile instructions.
+
+<br>
 
 #### Writing a custom PHP image with debugging capabilities
 

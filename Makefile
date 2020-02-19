@@ -16,7 +16,8 @@ build:
 	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION}-development --target blog-development ./
 
 push:
-	docker login -u guillermomaschwitz
+	@read -p "Provide credentials to push guillermomaschwitz/blog: " passwd; \
+	docker login -u guillermomaschwitz -p $$passwd
 	docker push guillermomaschwitz/blog
 
 clean:
@@ -61,3 +62,6 @@ push-code:
 # upload ./dist folder to s3
 	aws s3 sync /tmp/guille-cloud-blog-dist s3://website-guille-dot-cloud-2
 #	aws s3 sync/tmp/guille-cloud-blog-dist s3://www.guille.cloud
+
+
+all: build push deploy

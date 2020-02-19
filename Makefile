@@ -1,4 +1,4 @@
-include .env
+include .env .secrets
 # speed up builds and improve build UI by enabling Docker Buildkit
 export DOCKER_BUILDKIT=0
 
@@ -16,8 +16,7 @@ build:
 	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION}-development --target blog-development ./
 
 push:
-	@read -p "Provide credentials to push guillermomaschwitz/blog: " passwd; \
-	docker login -u guillermomaschwitz -p $$passwd
+	docker login -u guillermomaschwitz -p "${DOCKER_REPO_CREDENTIALS}"
 	docker push guillermomaschwitz/blog
 
 clean:

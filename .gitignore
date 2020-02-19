@@ -76,3 +76,5 @@ blog/.yarn-integrity
 terraform.tfvars
 
 dist/*
+
+.secrets

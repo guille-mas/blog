@@ -218,22 +218,35 @@ a:hover {
 dl,
 ol,
 ul {
-  margin: 1rem 0 1rem 1rem;
+  padding-left: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 ol {
   list-style: none; 
   counter-reset: li;
+  padding-left: 0;
   li::before {
     content: counter(li); 
-    color: $red;
-    display: inline-block; 
-    width: 1rem;
+    color: white;
+    display: inline-block;
+    width: 1.2rem;
+    height: 1.2rem;
+    line-height: 1.2rem;
+    font-size: .9rem;
     font-weight: bold;
-    margin-left: -1rem
+    text-align: center;
+    background-color: $red;
+    border-radius: 50%;
+    position: absolute;
+    top: .2rem;
+    left: -1.5rem;
   }
   li {
     counter-increment: li;
+    margin-left: 1.2rem;
+    position: relative;
   }
 }
 
@@ -244,7 +257,7 @@ ul {
     color: $red;
     display: inline-block; 
     width: 1rem;
-    margin-left: -1rem
+    margin-left: -1rem;
   }
 }
 
@@ -316,3 +329,15 @@ article {
   cursor: pointer;
   color: $green !important;
 }
+
+blockquote {
+  text-align: center;
+  padding: 1rem;
+  margin-top: 1.2em;
+  margin-bottom: 1.2em;
+  font-style: italic;
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: $light-grey;
+}
+

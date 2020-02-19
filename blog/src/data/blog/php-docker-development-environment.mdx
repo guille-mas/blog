@@ -10,8 +10,9 @@ category: tutorial
 ---
 import { CodeWave } from "gatsby-theme-waves"
 import Code from "components/code"
+import "prismjs/components/prism-docker"
 
-Welcome to my first post on my first blog ( yikes! cold sweat! )  
+Welcome to my first tutorial ( yikes! )
 
 <br />
 
@@ -19,7 +20,7 @@ Hopefully it will help you achieve a meaningful task that will save your team co
 
 <br/>
 
-If you follow through this tutorial, you will end up with a working, Linux based, PHP 7.4, portable development environment, with a working XDebug PHP debugger, that can be deployed with a single command, on virtually any computer that fulfills the needed requirements.  
+If you follow through you should end up with a working, Linux based, PHP 7.4, portable development environment, with a working XDebug PHP debugger, that can be deployed with a single command, on virtually any computer that fulfills the needed requirements.  
 
 <br />
 
@@ -79,7 +80,9 @@ For this tutorial we are going to use an [official PHP image](https://hub.docker
 
 <br/>
 
-For production environments it is better to define one image per process. That way you can administer hardware resources with more granularity, besides having an easier time debugging issues related with your containers.  
+For production environments you should define one image per process. That way you can administer hardware resources with more granularity, besides having an easier time debugging issues related with your containers.  
+
+> **Best practice:** Pack one service per image to increase stability, resources administration, and ease logging
 
 ### Requirements
 
@@ -100,7 +103,7 @@ Finally, create a folder for this tutorial and add share it with Docker. In MacO
 
 <br/>
 
-**Preferences -> Resources -> File Sharing**  
+> Preferences -> Resources -> File Sharing
 
 <br/>
 
@@ -109,13 +112,16 @@ Sharing your folder with Docker its a prerequisite to copy whatever file you wil
 #### Hello World! / Hello Container!
 
 Enough theory, lets get our hands dirty!  
-Create the following index.php file inside your project folder
+
+<br/>
+
+First, create an index.php file inside your project folder, with the following content
 
 <Code language="php" snippet={`<?php phpinfo(); `} />  
 
 <br/>
 
-and run this command
+Run this command in a terminal
 
 <br/>
 
@@ -131,11 +137,260 @@ Next time you try to create a new container based on the same image, Docker will
 2. Docker will create a new container based on that image; Mapping port 80 on your computer with port 80 in your container, and mounting the folder specified in **"$PWD"** as folder **/var/www/html** inside your container.
 3. Finally, you will see PHP and Apache logs being streamed to your terminal.
 
-**Note** You might run into troubles if **$PWD** is the path to a symlinked folder. In that case, pass the absolute path of your project folder, as you shared it with Docker earlier.
+<br/>
+
+**Note** Use an absolute path if $PWD points to a symlinked folder.
 
 ### Custom Docker images
 
-### Declare your development environment with docker-compose
+So far you where able to start an existing docker image with **docker run**, and that's cool for projects whose only requirements are those provided by an existing image. But for most real life projects we need to bake our own images to fulfill existing requirements.  
+Docker allows us to extend existing images, and add on top of them, the requirements we need for our specific project.  
+
+<br/>
+
+We are going to code our own custom docker image soon. But first, let's see a few userful Dockerfile instructions.
+
+#### Basic Dockerfile usage
+
+<CodeWave>
+
+```docker
+# This is a comment
+```
+
+##### Comments
+
+You can write comments in your Dockerfiles  
+
+<br/>
+
+Each line must be preceeded by **#**
+
+<br/>
+
+Multi-line comments are not allowed
+
+```docker
+# This is a comment
+FROM base-image-name
+```
+
+##### FROM
+
+Define what existing image to use as the foundation for your custom image.  
+
+<br/>
+
+Every valid Dockerfile must begin with this instruction, except by comments and a few other exceptions.  
+
+<br/>
+
+Images can be public like those in Dockerhub public repos, or private, like those built by your company.
+
+```docker
+# This is a comment
+FROM base-image-name:default
+```
+
+###### TAG
+
+You can - and should - define a specific tag for the images you consume from others.  
+
+<br/>
+
+If you don't do it, Docker will do it for you!  
+
+<br/>
+
+That's bad cause **"default"** points to the latest build of a specific flavor of those images.  
+
+<br/>
+
+Not choosing a tag for your images makes your build process unreliable in the long run.
+
+```docker
+# This is a comment
+FROM base-image-name:1.2-variant
+```
+
+> **Best Practice:** Always use an explicit tag; a specific version of the images you consume in order to avoid upstream breaking changes in the future
+
+> "Not choosing a tag for your images makes your build process unreliable in the long run"
+
+```docker
+# This is a comment
+FROM base-image-name:1.2-variant
+RUN echo "hello world"
+```
+
+**RUN** allows you to run shell commands inside your image.  
+
+<br/>
+
+Each time you use RUN, docker will create a new isolated file system layer.  
+
+<br/>
+
+Each file system layer will be merged later inside each new container you create from your images.
+
+```docker
+# This is a comment
+FROM base-image-name:1.2-variant
+RUN echo "hello world"
+RUN do-something
+RUN do-something-else
+```
+
+You can use **RUN** as many times as you want, but bear in mind that every time you use it, it will significantly increase the size of your image by adding a new file system layer.  
+
+```docker
+# This is a comment
+FROM base-image-name:1.2-variant
+RUN echo "hello world" \
+    && do-something \
+    && do-something-else
+```
+
+Luckily, you can chain shell commands together in order to reduce the amount of **RUN** lines.  
+
+<br/>
+
+> **Best Practice:** Chain shell commands together when possible to reduce image size
+
+```docker
+# This is a comment
+FROM base-image-name:1.2-variant
+RUN echo "hello world" \
+    && do-something \
+    && do-something-else
+ENV YOUR_NAME message
+RUN echo "hello $YOUR_NAME"
+```
+
+**ENV** defines environment variables
+
+```docker
+# This is a comment
+FROM base-image-name:1.2-variant
+RUN echo "hello world" \
+    && do-something \
+    && do-something-else
+ENV YOUR_NAME message
+RUN echo "hello $YOUR_NAME"
+COPY ./public /var/www/html
+```
+
+Use **COPY** to put files from between your docker context inside your image
+
+```docker
+# This is a comment
+FROM base-image-name:1.2-variant
+RUN echo "hello world" \
+    && do-something \
+    && do-something-else
+ENV YOUR_NAME message
+RUN echo "hello $YOUR_NAME"
+COPY ./public /var/www/html
+EXPOSE 8080/tcp
+```
+
+Alternatively you can **EXPOSE** ports in your image
+
+</CodeWave>
+
+#### Writing a custom PHP image with debugging capabilities
+
+Let's bake a custom version of the image we tried previously, except by an interesting few additions: Xdebug, and an XDebug powered PHP remote debugger listening on port 9000.
+
+
+##### Create a Dockerfile
+
+First, create a new file in the root of your project and name it `Dockerfile`. That's the default filename Docker will look for when building your image.  
+
+
+<CodeWave>
+
+```docker title="PHP Image Dockerfile"
+# My PHP Development environment
+FROM php:7.4.2-apache AS dev-image
+```
+
+##### Choose a base image
+
+The first instruction it's **FROM**.  
+It tells Docker, which image to use as a base for your custom image, and how to name your custom image.  
+The image you choose must exist and you need to have access to it.  
+
+<br/>
+
+For this tutorial we are going to use the same official PHP image we used as a base to run the apache container from the previous section, which is public for any Dockerhub's user. If you ever want to check it's source code, you can find it here: [Dockerfile available here](https://github.com/docker-library/php/blob/master/7.4/buster/apache/Dockerfile).  
+
+<br/>
+
+Finally, we are referencing our custom image, in the context of our build process, as `dev-image`  
+
+```docker title="PHP Image Dockerfile"
+# My PHP Development environment
+FROM php:7.4.2-apache AS dev-image
+RUN pecl install xdebug-2.8.1 \
+    && docker-php-ext-enable xdebug
+```
+
+##### Xdebug
+
+Use _pecl_ to install xdebug php extension, and _docker-php-ext-enable_ to enable it.  
+
+<br/>
+
+
+```docker title="PHP Image Dockerfile"
+# My PHP Development environment
+FROM php:7.4.2-apache AS dev-image
+RUN pecl install xdebug-2.8.1 \
+    && docker-php-ext-enable xdebug
+# @todo Copy xdebug config into the container 
+EXPOSE 9000
+```
+
+##### PHP debugger setup
+
+Expose port 9000 and copy the xdebug configuration settings required to enable the PHP remote debugging server at port 9000.
+
+
+And that's it!
+
+</CodeWave>
+
+#### Building your image
+
+Get back to your shell and run:
+
+<Code 
+    language="bash" 
+    snippet={`docker build -t my-project:1.0-development --target dev-image .`} 
+    output={`
+Sending build context to Docker daemon  3.072kB
+Step 1/2 : FROM php:7.4.2-apache AS dev-image
+...
+Step 2/2 : RUN pecl install xdebug-2.8.1     && docker-php-ext-enable xdebug
+...
+ ---> 105de83fa100
+Successfully built 105de83fa100
+Successfully tagged my-project:1.0-development
+`} />
+
+If everything went well, you should see **my-project** custom image as follows:
+
+<Code 
+    language="bash" 
+    snippet={`docker image ls`}
+    output={`
+REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
+my-project                1.0-development     105de83fa100        31 minutes ago      416MB
+php                       7.4.2-apache        4165e46dd82e        2 weeks ago         414MB
+`} />
+
+### Wire your infra with docker-compose
 
 ### Upload your images
 

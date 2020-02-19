@@ -9,7 +9,7 @@ export default class Code extends React.Component {
             <div className={"code-container "+this.props.alignment+" "+this.props.size}>
                 <Highlight {...defaultProps} code={this.props.snippet} language={this.props.language} theme={theme}>
                     {({ className, style, tokens, getLineProps, getTokenProps }) => (
-                    <pre className={className} style={style}>
+                    <pre className={className} style={style} data-user="guille" data-host="remotehost">
                         {tokens.map((line, i) => (
                         <div {...getLineProps({ line, key: i })}>
                             {line.map((token, key) => (
@@ -17,11 +17,12 @@ export default class Code extends React.Component {
                             ))}
                         </div>
                         ))}
-                    </pre>
-                    )}
+                        <code data-user="guille" data-host="remotehost" className={className} style={style}>{this.props.output}</code>
+                    </pre> 
+                    )
+                }
                 </Highlight>
             </div>
         )
     }
 }
-

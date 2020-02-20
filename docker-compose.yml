@@ -7,9 +7,8 @@ services:
       - ./blog:/home/node/blog
     networks:
       net: {}
-    expose: ["${WEB_PORT}"]
     ports:
-      - "${WEB_PORT}:8000"
+      - "8000:8000"
     environment:
       DEBUG: "gatsby:query-watcher"
 

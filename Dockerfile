@@ -2,7 +2,6 @@
 
 # Inmutable core image 
 FROM node:13.1.0-alpine AS blog-production
-ARG WEB_PORT
 ENV TERM=xterm-256color
 ENV GATSBY_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
@@ -13,7 +12,7 @@ COPY --chown=node:node ./blog /home/node/blog
 WORKDIR /home/node/blog
 RUN npm install && gatsby build
 CMD ["gatsby", "serve", "-H", "0.0.0.0", "--port", "8000"]
-EXPOSE "${WEB_PORT}"
+EXPOSE "8000"
 
 
 # Inmutable image for development purposes

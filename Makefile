@@ -1,7 +1,7 @@
 include .env .secrets
 # speed up builds and improve build UI by enabling Docker Buildkit
 export DOCKER_BUILDKIT=0
-
+export WEB_PORT=8000
 
 standalone-prod:
 	docker run -p ${WEB_PORT}:${WEB_PORT} guillermomaschwitz/blog:${PROJECT_VERSION}-production

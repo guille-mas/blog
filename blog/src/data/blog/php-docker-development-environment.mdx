@@ -1,7 +1,7 @@
 ---
 slug: "build-a-php-dev-environment-your-team-will-love/index.html"
-title: "Build a PHP development environment your team will love"
-intro: "Learn to create a full fledged, containerized, development environment for your PHP projects. Learn to update it, destroy it, recreate it, or share it with others; With confidence and in a breeze!"
+title: "Build a PHP 7 development environment your team will love"
+intro: "Learn to build a portable PHP development environment with Docker"
 tools: "docker gnu-make php xdebug"
 date: "02-10-2020"
 publish: true
@@ -12,56 +12,27 @@ import { CodeWave } from "gatsby-theme-waves"
 import Code from "components/code"
 import "prismjs/components/prism-docker"
 
-Welcome to my first tutorial!  
-yikes!
+When we build products, we must think on those who consume them, and I believe the same should happen with the code and infrastructure we build.  
+The time our team will need in order to be proficient with the tools we build, will greatly depend on how we built them.  
+Better than throwing a bunch of lengthy notes with the steps required to get our project running to another developer. It pays off in the long run, for you and your organization, to keep in mind everyone who will end up using it, which are not only the final consumers.  
+
+<br/>
+
+In this post I will help you demistify Docker, by using it to wrap your PHP projects into a portable development environment that can be reused by your development team to quickly get a fully working development environment. By your operations team to understand the requirements of your project. And even by your QA and production teams to run early demos or tests.
 
 <br />
 
-Our goal during this tutorial is to documment in code a development environment for any boostrap PHP project you would like to add to it, as long as it can fulfill the following requirements:
+The development environment will include:
 
-- It is compatible with PHP 7.4.2
-- It only requires port 80 to work
-- Doesn't lack third party vendors
-- Doesn't lack access to third party services ( databases, private APIs, etc )
+- PHP 7.4.2
+- A working Apache web server listening at port 80
+- An Xdebug PHP debugging server, listening on port 9000
+- A high level easy to use client interface
+- High level docummentation to quickly get started
 
 <br />
 
-The development environment should:
-
-- Include PHP 7.4.2
-- Include a working Apache web server listening at port 80
-- Xdebug extension enabled
-- A PHP remote debugger listening on port 9000
-- Provide a high level, docummented, client interface to interact with
-- Be easy to use across any computer with a recent version of the Docker engine
-
-### Docker 101
-
-Docker is a software that allows you to pack your applications around a runtime environment of your choice.
-
-<br/>
-
-It's a great tool that makes it possible for developers and sysadmins to run Linux or Windows applications, on virtually any environment; A cloud infrastructure provider like Amazon, a dedicated server, a virtual machine, a personal computer, a Rasberry PI, Linux, Unix, Windows, MacOS, IoT, a single instance or even a cluster!  
-
-<br/>
-
-Any computer capable of running a Docker engine can run your application in a reproducible way, regardless of the operating system where Docker is running from.  
-
-#### Images and containers
-
-A docker image its like a blueprint of docker container. 
-To use an analogy taken from OOP; A docker image its like a class, and a docker container its like an instance of a docker image.  
-You can create as many containers as you want from a single image.
-
-<br/>
-
-You can reuse other people's images, by pulling them from a remote repository such as [DockerHub](https://hub.docker.com), as long as you have credentials to consume it.
-
-<br/>
-
-For this tutorial we are going to use the [official PHP image](https://hub.docker.com/_/php) based on a debian distro; Bundled alltogether with an Apache server.
-
-> It is a recommended practice to use official docker images from certified docker repositories whenever possible
+I will assume you grasp the basics about using bash, Linux, PHP configuration, and howto use a Makefile
 
 ### Requirements
 
@@ -70,302 +41,160 @@ Before creating our first container, we will need **Docker engine** and **GNU Ma
 <br/>
 
 The easiest way to setup Docker in Windows and MacOS is by getting [Docker Desktop](https://www.docker.com/products/docker-desktop).  
-If you are using Linux you can use your package manager of choice, or compile both from source.
+If you are using Linux you can use your package manager of choice, or compile it from source.
 
 <br/>
 
 GNU Make might be already available in Windows through PowerShell, and its usually present on most popular Linux distros as well as MacOS.
 
-<br/>
+### A few basic Docker concepts
 
-Finally, create a folder for this tutorial and add share it with Docker. In MacOSs Docker Desktop it goes like this:  
+- Docker it's a tool that allows you to pack your applications around a runtime environment of your choice.
+- Any computer capable of running a Docker engine will run your app inside the same runtime environment. Regardless of the operating system running your host (The computer running Docker).
 
-<br/>
+##### Images and containers
 
-> Preferences -> Resources -> File Sharing
-
-<br/>
-
-Sharing your folder with Docker its a prerequisite to copy whatever file you will need to run inside your docker containers.  
-
-#### Hello Container!
-
-A simple way of running a php script on a containerized apache web server is this.
+A Docker image it's the blueprint from where Docker containers are created.  
+Images can be pushed to Docker repositories, where they can be consumed by others to create images or containers.  
+An image it's a build time construct, and a container it's a runtime construct.  
+For those familiar with OOP; A Docker image could be seen as a "class" and a container as an "instance".  
 
 <br/>
 
-First, create an index.php file inside your project folder, with the following content
+Containers alliviate a lot of heavy lifting from error prone tasks, by packaging your apps with everything they need to work with; A minimum operating system, libraries, modules, configuration files, environment variables, and firewall rules.  
 
-<Code language="php" snippet={`<?php phpinfo(); `} />  
+### Hello Container
 
-<br/>
-
-Then, ask docker to put your current folder inside a container of a existing image.
+This blog can serve as an example of their power. You can run the same version that's available at https://guille.cloud, locally, without caring or knowing what's under the hoods. And do so any time you want, expecting the same results.
 
 <br/>
 
-<Code language="bash" snippet={`docker run -p 80:80 -v "$PWD":/var/www/html php:7.4.2-apache`} />  
+Go ahead and try it
 
-If everything went weel, you should see your file running at http://0.0.0.0
+<Code 
+language="bash" 
+snippet={`docker run -p 8000:8000 --rm guillermomaschwitz/blog:1-production`} 
+output={`
+Unable to find image 'guillermomaschwitz/blog:1-production' locally
+1-production: Pulling from guillermomaschwitz/blog
+89d9c30c1d48: Already exists 
+14a328a7d891: Already exists 
+7c9d8f6918aa: Already exists 
+0f41cc513c96: Already exists 
+60eb08073fc4: Pull complete 
+925927e5d4b3: Pull complete 
+6a566d986f65: Pull complete 
+Digest: sha256:97219d2c6fed07921b8f3ca551e91480471599fe4720ef11bb4cb17d1793aaec
+Status: Downloaded newer image for guillermomaschwitz/blog:1-production
+info gatsby serve running at: http://0.0.0.0:8000/
+`}/>  
+
+An exact version of this website will be available at http://0.0.0.0:8000 or http://localhost:8000. In fact, you could keep reading this article from it, cause that container has the same content you are seeing here.
 
 <br/>
 
-**Note** Use an absolute path if $PWD points to a symlinked folder, docker might get in troubles finding your folder.
+Let's check the running container on another terminal
 
-##### Did you tried it?
+<Code 
+language="bash" 
+snippet={`docker container ls`} 
+output={`
+CONTAINER ID        IMAGE                                  COMMAND                  CREATED             STATUS              PORTS                    NAMES
+7ecd413bdf91        guillermomaschwitz/blog:1-production   "docker-entrypoint.s…"   23 minutes ago      Up 23 minutes       0.0.0.0:8000->8000/tcp   peaceful_almeida
+`}/>  
 
-If everything went smoothly, these what should have happened:
+Stop the container
 
-1. Docker tries to find a local image with name "php" and tag "7.4.2-apache". If not found it will attempt to download it from its repo
-2. Once the image is downloaded, it is tagged locally for later use
-2. Docker with create a new container from that image
-3. Finally, PHP and Apache logs will be streamed to your terminal
+<Code 
+language="bash"
+snippet={`docker stop peaceful_almeida`}
+output={`peaceful_almeida`} />
 
-### Custom Docker images
-
-So far you where able to start an existing docker image with **docker run**, and that's pretty cool in my opinion.  
-But for most real life projects we need to bake our own images to provide our apps with the runtime environment they require.
-Docker allows us to extend images and add what we need on top of them, by writing a Dockerfile.
+Hey, in case you didn't noticed, that was a nodejs environment, with a gatsby based website, and a long list of requirements that you don't need to be aware of. It just works.
 
 <br/>
 
-A Dockerfile it's the common place to write your image's provisioning code.  
+Behind the courtains Docker did all the heavy lifting for you:
+
+1. First, it attempted to find a local image **guillermomaschwitz/blog:1-production** and ended up pulling it from its remote repo.
+2. Started a new container with the random name **peaceful_almeida**
+3. Container's port 8000 gets binded to localhost's (0.0.0.0) port 8000
+3. A web server's process it's started inside the container, streaming logs to the screen.
+4. The container gets destroyed once you kill the app cause we used the flag --rm.
+
+### The purpose of custom Docker images
+
+Real life projects have specific requirements we need to setup in order to start them; Vendor libraries, system modules, configuration files, source files, etc.
+Docker allows us to extend existing images containing some of those requirements, and create a new environment blueprint on top of them.  
 
 
-#### Howto write your own Dockerfile ?
+### Using Docker to build a PHP 7 development environment
+
+First, create a folder for your project and share your project's folder with Docker.  
+At least in Docker Desktop for MacOS, it goes like this:  
+
+1. Go to Docker Desktop's preferences
+2. Go to File Sharing, under Resources section
+3. Add your folder and apply changes
+
+Second, create a new file in the root of your project and name it `Dockerfile`.  
+That's the default file name Docker expects for your custom image.  
+
+#### The Dockerfile
+
+Docker images build code is usually written on a file with name Dockerfile. So let's create it at the root of our project.  
+A complete reference to Dockerfile syntax can be found at [the official docs](https://docs.docker.com/engine/reference/builder/) if you want to check.  
+Next, you will see some of these instructions, while we write the code to build our image.
 
 <CodeWave>
 
 ```docker
-# This is a comment
-# On an example Dockerfile
-```
-
-##### Comments
-
-You can write comments in your Dockerfiles  
-
-<br/>
-
-Each line must be preceeded by **#**
-
-<br/>
-
-Multi-line comments are not allowed
-
-```docker
-# This is a comment
-# On an example Dockerfile
-FROM base-image-name
-```
-
-##### FROM
-
-Define what existing image to use as the foundation for your custom image.  
-
-<br/>
-
-Every valid Dockerfile must begin with this instruction, except by comments and a few other exceptions.  
-
-<br/>
-
-Images can be public like those in Dockerhub public repos, or private, like those built by your company.
-
-```docker
-# This is a comment
-# On an example Dockerfile
-FROM base-image-name:default
-```
-
-###### TAG
-
-You should be explicit about docker image tags, adding it to **RUN**
-
-<br/>
-
-If you don't do it, Docker will pull the image with tag "default", which it's usually one of the latest built images.
-
-<br/>
-
-> Not choosing a tag for your images makes your build process unreliable in the long term
-
-```docker
-# This is a comment
-# On an example Dockerfile
-FROM base-image-name:1.2-variant
-```
-
-> Always use an explicit tag; a specific version of the images you consume in order to avoid upstream breaking changes in the future
-
-```docker
-# This is a comment
-# On an example Dockerfile
-FROM base-image-name:1.2-variant
-RUN echo "hello world"
-```
-
-**RUN** will execute the sentence you pass to it in the default terminal
-
-<br/>
-
-Each time you use RUN, docker will create a new isolated file system layer.  
-
-<br/>
-
-Each file system layer will be merged later inside each new container you create from your images.
-
-```docker
-# This is a comment
-# On an example Dockerfile
-FROM base-image-name:1.2-variant
-RUN echo "hello world"
-RUN do-something
-RUN do-something-else
-```
-
-You can use **RUN** as many times as you want, but bear in mind that every time you use it, it will significantly increase the size of your image by adding a new file system layer.  
-
-```docker
-# This is a comment
-# On an example Dockerfile
-FROM base-image-name:1.2-variant
-RUN echo "hello world" \
-    && do-something \
-    && do-something-else
-```
-
-Luckily, you can chain shell commands together in order to reduce the amount of **RUN** lines.  
-
-<br/>
-
-> It's usually a good practice, to replace consecutive **RUN** lines, by a single line of chained sentences
-
-```docker
-# This is a comment
-# On an example Dockerfile
-FROM base-image-name:1.2-variant
-RUN echo "hello world" \
-    && do-something \
-    && do-something-else
-ENV YOUR_NAME message
-RUN echo "hello $YOUR_NAME"
-```
-
-Use **ENV** to define environment variables.  
-
-<br/>
-
-Environmental variables will be available at runtime for your app.  
-You can check the values with **docker inspect**
-
-<br/>
-
-```docker
-# This is a comment
-# On an example Dockerfile
-FROM base-image-name:1.2-variant
-RUN echo "hello world" \
-    && do-something \
-    && do-something-else
-ENV YOUR_NAME message
-RUN echo "hello $YOUR_NAME"
-COPY ./public /var/www/html
-```
-
-Use **COPY** to put files from between your docker context inside your image
-
-```docker
-# This is a comment
-# On an example Dockerfile
-FROM base-image-name:1.2-variant
-RUN echo "hello world" \
-    && do-something \
-    && do-something-else
-ENV YOUR_NAME message
-RUN echo "hello $YOUR_NAME"
-COPY ./public /var/www/html
-EXPOSE 8080/tcp
-```
-
-Alternatively you can **EXPOSE** ports in your image besides those already exposed on your base image.
-
-<br/>
-
-```docker
-# This is a comment
-FROM base-image-name:1.2-variant
-RUN echo "hello world" \
-    && do-something \
-    && do-something-else
-ENV YOUR_NAME message
-RUN echo "hello $YOUR_NAME"
-COPY --chown=www-data:www-data ./public /var/www/html
-USER user:group
-EXPOSE 8080/tcp
-```
-
-**USER** sets the username and group to use while running the image.  
-
-<br/>
-
-You should avoid as much as possible to run your apps as root.
-
-<br/>
-
-Every sentence passed to **RUN** will be executed inside the container with that user and group. 
-
-</CodeWave>
-
-And that's enough for this tutorial. However you should know there are more instructions you can use. You can see the entire list [here](https://docs.docker.com/engine/reference/builder/).
-
-
-##### Lets define a custom PHP development container
-
-First, create a new file in the root of your project and name it `Dockerfile`.  
-That's the default filename Docker will look for when building your image.  
-
-<CodeWave>
-
-```docker title="PHP Image Dockerfile"
 # My PHP Development environment
 FROM php:7.4.2-apache
 ```
 
-##### Choose a base image
+##### Parent image
 
-The first instruction it's **FROM**.  
+The first instruction every Dockerfile needs to have is **FROM**.  
 It tells Docker, which image to use as a base for your custom image, and how to name your custom image.  
 The image you choose must exist and you need to have access to it.  
 
 <br/>
 
-For this tutorial we are going to use the same official PHP image we used as a base to run the apache container from the previous section, which is public for any Dockerhub's user. If you ever want to check it's source code, you can find it here: [Dockerfile available here](https://github.com/docker-library/php/blob/master/7.4/buster/apache/Dockerfile).  
+Docker has a vibrant ecosystem of images you can consume. One of the most popular repositories for storing them is [DockerHub](https://hub.docker.com/), where you can pull public images from thousands of repositories built by devops practitioners.  
 
-```docker title="PHP Image Dockerfile"
+> For improved security and stability, your custom images should rely on [official images](https://docs.docker.com/docker-hub/official_images/), which are maintained by stricter quality standards.
+
+<br/>
+
+For this tutorial we are going to use an [official PHP image, bundled with Apache](https://hub.docker.com/_/php). If you ever want to check it's source code, you can find it here: [Dockerfile available here](https://github.com/docker-library/php/blob/master/7.4/buster/apache/Dockerfile).  
+
+```docker
 # My PHP Development environment
 FROM php:7.4.2-apache AS dev-image
 ```
 
 Finally, we are referencing our custom image, in the context of our build process, as `dev-image`  
 
-```docker title="PHP Image Dockerfile"
+```docker
 # My PHP Development environment
 FROM php:7.4.2-apache AS dev-image
 RUN pecl install xdebug-2.8.1 \
     && docker-php-ext-enable xdebug
 ```
 
-##### Setup PHP extension Xdebug
+##### Install Xdebug
 
 XDebug it's a common PHP development extension that packs handy features to make your life easier while debugging stuff.  
 One of those things it's a PHP debugging server that's usually listening to port 9000 once enabled.  
 
 <br/>
 
-You can configure VSCode or your editor of choice to connect to that port.  
-Once your editor is configured to reach the debugger.   
-Every time you send an HTTP request to your website with the parameter XDEBUG_SESSION_START=session_name,
-the php interpreter will halt execution on a given breakpoint and your editor will start a debugging session with your php server, that you can control from the debugging client you are using (VSCode, PHPStorm, Sublime, or any DBGp compliant client).
+You can configure VSCode or other editor/IDE to connect to that port.  
+
+<br/>
+
+Every time you send an HTTP request to your website with the parameter XDEBUG_SESSION_START=session_name, Xdebug will start a debugging session from port 9000, that you can control from any [DBGP](https://xdebug.org/docs/dbgp) compliant client.
 
 <br/>
 
@@ -374,7 +203,7 @@ As docummented on the docker image's website, we should use _pecl_ to install th
 <br/>
 
 
-```docker title="PHP Image Dockerfile"
+```docker
 # My PHP Development environment
 FROM php:7.4.2-apache AS dev-image
 RUN pecl install xdebug-2.8.1 \
@@ -414,9 +243,11 @@ Successfully built 105de83fa100
 Successfully tagged my-project:1.0-development
 `} />
 
-**docker build** tag a new docker image based on **dev-image** definition at Dockerfile FROM line, and tag it **my-project:1.0-development** .
+Docker will build a new docker image based on **dev-image** and tag it as **my-project:1.0-development**.
 
-If everything went well, you should see **my-project** custom image between your list of locally available Docker images:
+<br/>
+
+If everything went well, you should see **my-project** custom image between your list of locally available Docker images, and the base image, used to build it.
 
 <Code 
     language="bash" 
@@ -427,27 +258,20 @@ my-project                1.0-development     105de83fa100        31 minutes ago
 php                       7.4.2-apache        4165e46dd82e        2 weeks ago         414MB
 `} />
 
-### Share your project with others
-
-When we build products, we think on those who will end up using them. 
-The amount of time others will need to be proficient with the tools we build will depend on the way we designed and docummented the runtime environment as well.
-
-Better than throwing someone a bunch of lengthy notes on the tasks required to get a project running, is it way better to write it in a way that can be relatively easy to understand. And best of all: automatically reproducible!  
-
 ### Whats next
 
-On a next post, I plan to show you howto use docker-compose to effectively documment in code our development environment.  
-We will explore the advantages of following a declarative approach instead of an imperative one, and we will see how docker-compose help us do so.
-
-Later I would like to show you how to define different docker images per environment and application you plan to run inside; defining a separated production ready image, and decoupling the php-apache image into two different custom images using apache and PHP fpm.
+In a next post, I plan to show you howto use docker-compose to effectively documment in code our development environment.
+We will explore the advantages of following a declarative approach instead of an imperative one, and we will see how docker-compose can help us do so.
 
 <br/>
 
-This post is a work in progress,
+Later I would like to show you to write one image per environment type using Docker multi stage builds.
 
-Let me know your thoughts; If you found this useful or not, and any errors you might spot, besides questions you might have.  
+<br/>
+
+This post is a work in progress. Let me know your thoughts; If you found this useful or not, and any errors you might spot or questions you might have.  
+
+<br/>
 
 Thanks a lot for your time!
-
-
 

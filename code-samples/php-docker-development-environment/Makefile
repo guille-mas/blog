@@ -4,7 +4,7 @@ build:
 	docker build -t my-project:1.0-development --target dev-image .
 
 start:
-	docker run -p 80:80/tcp -v ${PWD}/public:/var/www/html --rm --name my-project-container my-project:1.0-development
+	docker run -p 80:80/tcp -v ${PWD}/src:/var/www/html -v ${PWD}/data:/tmp/mydata --rm --name my-project-container my-project:1.0-development
 
 exec:
 	@read -p "Write a command to execute inside your running container: " command; \

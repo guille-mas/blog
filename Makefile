@@ -9,7 +9,8 @@ standalone-prod:
 standalone-dev:
 	docker run -p ${WEB_PORT}:${WEB_PORT} guillermomaschwitz/blog:${PROJECT_VERSION}-development
 
-
+start:
+	docker-compose up
 
 build:
 	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION} -t guillermomaschwitz/blog:${PROJECT_VERSION}-production --target blog-production ./

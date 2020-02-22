@@ -12,31 +12,55 @@ import { CodeWave } from "gatsby-theme-waves"
 import Code from "components/code"
 import "prismjs/components/prism-docker"
 
-When we build products, we must think on those who consume them, and I believe the same should happen with the code and infrastructure we build.  
-The time our team will need in order to be proficient with the tools we build, will greatly depend on how we built them.  
-Better than throwing a bunch of lengthy notes with the steps required to get our project running to another developer. It pays off in the long run, for you and your organization, to keep in mind everyone who will end up using it, which are not only the final consumers.  
+### Intro
+
+When we build tools we must think on the consumer. The time they need to become proficient, depends on the ideas that drive our design.  
+I think internal tools and processes shouldn't be an exception to this; Empathy it's key to increase the business outcomes produced with them.  
+
+<br />
+
+In this post I will show you a way of building a development environment driven by those principles. 
+We will use Docker, to wrap a sample project into a full fledged, portable, development environment.  
+I choose PHP 7.4.2 as the language this tool should support, but the principles exposed here should help you think about your development environment, regardless the language and version you choose.  
+
+### Building a great development environment
+
+I think a great development environment should basically unlock an organization's potential to quickly explore risky ideas on a safe environment.  
+Throwing lengthy notes to someone new to the project, or expecting them to connect the dots from our system logs, force the same blockers to happen again, and again. 
+Even worse; multiple solutions will emerge as a response to those blockers, generating inconsistencies that end up affecting our ability to catch bugs earlier and more importantly, to learn from our mistakes and pivot our processes at a competitive speed.  
+Automating that process is not too difficult if we start early, as I will try to show you here.  
 
 <br/>
 
-In this post I will help you demistify Docker, by using it to wrap your PHP projects into a portable development environment that can be reused by your development team to quickly get a fully working development environment. By your operations team to understand the requirements of your project. And even by your QA and production teams to run early demos or tests.
+So basically, this is what I think a great docker based, PHP development environment must provide:
 
-<br />
-
-The development environment will include:
-
-- PHP 7.4.2
-- A working Apache web server listening at port 80
-- An Xdebug PHP debugging server, listening on port 9000
-- A high level easy to use client interface
-- High level docummentation to quickly get started
-
-<br />
-
-I will assume you grasp the basics about using bash, Linux, PHP configuration, and howto use a Makefile
+- Should be easy to use
+    - Have clear, concise high level docummentation for development workflows
+    - Provide a simple client interface to remove the need to learn about Docker
+    - Minimum setup required. No build process. The user must count with Docker, GNU Make, and a short README.md to get started
+- Stable
+    - Development settings must ensure stability and keep resources consumption under control
+- Help us debug
+    - Debugger
+    - Profiler
+    - Tracer
+    - Logs
+- Easy to roll updates
+    - Once we build a new version, it should be available on a repository accesible by our team
+    - Each version must be tagged with the same version than the project version it supports
+    - The code for the environment should live in the same repo as the code of the app, maintaining both in sync
+- Enable effective communication
+    - By putting the environment code on the same repo as the project itself, devs can see how it was done, and potentially suggest changes with a pull or merge request
+    - Each stable version of the app will have a correlative stable environment to work with
+    - An IT team can read the code and docs we wrote to understand the requirements a production environment should have
+    - Any dev working on a specific version, can expect a consistent experience when testing bugs, easing communication between devs
+- Behave as close as possible to staging and production environments
+    - This point exceeds the scope of the post, but I plan to write about this in a near future
 
 ### Requirements
 
-Before creating our first container, we will need **Docker engine** and **GNU Make**.  
+Before creating our first container, we will need **Docker engine** version 19.03.5 and **GNU Make**.  
+I will assume you grasp the basics about using Linux, PHP, and GNUMake.
 
 <br/>
 
@@ -55,7 +79,7 @@ GNU Make might be already available in Windows through PowerShell, and its usual
 ##### Images and containers
 
 A Docker image it's the blueprint from where Docker containers are created.  
-Images can be pushed to Docker repositories, where they can be consumed by others to create images or containers.  
+Images can be pushed to Docker repositories, where they can be consumed by others to create new images and containers.  
 An image it's a build time construct, and a container it's a runtime construct.  
 For those familiar with OOP; A Docker image could be seen as a "class" and a container as an "instance".  
 
@@ -65,7 +89,7 @@ Containers alliviate a lot of heavy lifting from error prone tasks, by packaging
 
 ### Hello Container
 
-This blog can serve as an example of their power. You can run the same version that's available at https://guille.cloud, locally, without caring or knowing what's under the hoods. And do so any time you want, expecting the same results.
+This blog itself, can help you understand how easy it can be to share a Docker environment. You can run the same version that's available at https://guille.cloud, locally, without caring or knowing what's under the hoods. And do so any time you want, expecting the same results.
 
 <br/>
 
@@ -110,17 +134,15 @@ language="bash"
 snippet={`docker stop peaceful_almeida`}
 output={`peaceful_almeida`} />
 
-Hey, in case you didn't noticed, that was a nodejs environment, with a gatsby based website, and a long list of requirements that you don't need to be aware of. It just works.
-
-<br/>
-
-Behind the courtains Docker did all the heavy lifting for you:
+In case you didn't noticed, that was a nodejs environment, with a gatsby based website, and a long list of requirements that you don't need to be aware of. It should just works out of the box, cause Docker did all the heavy lifting for you:
 
 1. First, it attempted to find a local image **guillermomaschwitz/blog:1-production** and ended up pulling it from its remote repo.
 2. Started a new container with the random name **peaceful_almeida**
+3. A nodejs web server's process it's started inside the container, streaming logs to the screen
 3. Container's port 8000 gets binded to localhost's (0.0.0.0) port 8000
-3. A web server's process it's started inside the container, streaming logs to the screen.
 4. The container gets destroyed once you kill the app cause we used the flag --rm.
+
+In case you want to explore how this website's development and production environments where build, you can take at it's source: https://github.com/guille-mas/blog
 
 ### The purpose of custom Docker images
 
@@ -140,11 +162,11 @@ At least in Docker Desktop for MacOS, it goes like this:
 Second, create a new file in the root of your project and name it `Dockerfile`.  
 That's the default file name Docker expects for your custom image.  
 
-#### The Dockerfile
+#### Building the image
 
-Docker images build code is usually written on a file with name Dockerfile. So let's create it at the root of our project.  
+Image builds can be automated by writing instructions on a Dockerfile.  
 A complete reference to Dockerfile syntax can be found at [the official docs](https://docs.docker.com/engine/reference/builder/) if you want to check.  
-Next, you will see some of these instructions, while we write the code to build our image.
+Let's create a Dockerfile in the root of our project.
 
 <CodeWave>
 

@@ -281,6 +281,11 @@ article {
     div {
       line-height: 1.8rem;
     }
+
+    a {
+      color: $red;
+      text-decoration: none;
+    }
   }
 
   address {
@@ -303,8 +308,10 @@ article {
   }
 
   a {
-    color: $red;
     padding: 0;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   section {

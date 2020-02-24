@@ -11,44 +11,48 @@ category: tutorial
 import { CodeWave } from "gatsby-theme-waves"
 import Code from "components/code"
 import "prismjs/components/prism-docker"
+import "prismjs/components/prism-ini"
+
+> This post is a work in progress. Let me know your thoughts; If you found this useful or not, and any errors you might spot or questions you might have.
 
 ### Intro
 
-When we build tools we must think on the consumer. The time they need to become proficient, depends on the ideas that drive our design.  
+When we build tools we must think in our users. The time they need to become proficient, depends on the ideas that drive our design.  
 I think internal tools and processes shouldn't be an exception to this; Empathy it's key to increase the business outcomes produced with them.  
 
 <br />
 
 In this post I will show you a way of building a development environment driven by those principles. 
 We will use Docker, to wrap a sample project into a full fledged, portable, development environment.  
-I choose PHP 7.4.2 as the language this tool should support, but the principles exposed here should help you think about your development environment, regardless the language and version you choose.  
 
-### Building a great development environment
+### Write your thoughts first
+
+What would be a great development environment for you and your team?  
+That's a question you should ask yourself and your team. Personally, I like to start my thoughts on a piece of paper.
 
 I think a great development environment should basically unlock an organization's potential to quickly explore risky ideas on a safe environment.  
+
+<br/>
+
 Throwing lengthy notes to someone new to the project, or expecting them to connect the dots from our system logs, force the same blockers to happen again, and again. 
 Even worse; multiple solutions will emerge as a response to those blockers, generating inconsistencies that end up affecting our ability to catch bugs earlier and more importantly, to learn from our mistakes and pivot our processes at a competitive speed.  
 Automating that process is not too difficult if we start early, as I will try to show you here.  
 
 <br/>
 
-So basically, this is what I think a great docker based, PHP development environment must provide:
+So basically, this is what I think a great development environment should be:
 
 - Should be easy to use
     - Have clear, concise high level docummentation for development workflows
-    - Provide a simple client interface to remove the need to learn about Docker
-    - Minimum setup required. No build process. The user must count with Docker, GNU Make, and a short README.md to get started
-- Stable
+    - Provide a simple cli interface to delay the need to learn about the environment itself, allowing us to focus on CAPEX right away
+    - Minimum setup required
+- Should be stable
     - Development settings must ensure stability and keep resources consumption under control
-- Help us debug
+- Should provide every tool available to debug
     - Debugger
     - Profiler
     - Tracer
     - Logs
-- Easy to roll updates
-    - Once we build a new version, it should be available on a repository accesible by our team
-    - Each version must be tagged with the same version than the project version it supports
-    - The code for the environment should live in the same repo as the code of the app, maintaining both in sync
 - Enable effective communication
     - By putting the environment code on the same repo as the project itself, devs can see how it was done, and potentially suggest changes with a pull or merge request
     - Each stable version of the app will have a correlative stable environment to work with
@@ -56,11 +60,53 @@ So basically, this is what I think a great docker based, PHP development environ
     - Any dev working on a specific version, can expect a consistent experience when testing bugs, easing communication between devs
 - Behave as close as possible to staging and production environments
     - This point exceeds the scope of the post, but I plan to write about this in a near future
+- Should be portable
+    - I like to use Docker to achieve this, and automate as much as possible the maintainment of the environment
+    - The code, docummentation, and tools, required for the environment should live in the same repo as the code of the project, maintaining both in sync on every major code branch
+
+### The tech stack
+
+I choose PHP 7.4.2 as the language this tool should support and Docker to package the environment into portable containers. But the principles exposed so far, should help you think about a development environment, regardless the language and version you choose.
+
+#### Warning
+
+Before proposing new tools and processes to your team, you should analyze carefully the impact they will have, the hidden costs, and your team's disposition to adopt changes. Else you are going to add a lot of troubles instead of solutions. As allways, empathy and alignment to global goals are key.
+If your organization is reluctant to adopting containers, or you don't have time to learn how to use them, I suggest you adopt a more traditional approach.  
+Whatever path you choose, allways write a clear README.md in the root of your project repo, and explain very clearly the steps required to succesfully setup a working development environment. Everyone involved on these tasks should have access to the repo whenever possible.
+
+##### Hidden costs
+
+Before you go further, I must warn you of a few significant issues I experienced, the first time I migrated an existing project to containers.
+
+###### Containers requires you to think differently
+
+One think is to build a single container to run a php app and the other is to force a cultural change in your organization by handling the responsibility of being the person in charge of managing a complex containerized infrastructure. 
+And while I will try on this post to be a gentle guide on your first containerized experience, most probably you will end up this guide with more questions than answers.  
+My recommendation is to try this approach on your own first. Try the environment by yourself, and only consider sharing it with others after a few months of working with it on your own. 
+You might find big conceptual blockers as soon as you walk away a few steps from what I wrote here. By gaining personal experience, you are going to be better prepared to support others. Which is what you should do, once you propose such a significant change.
+
+###### Docker is not a good fit for development databases
+
+I wasted a lot of time trying to put a few GBs sql dump into a container. The idea sounds great, but it will be easier for you and your team, to avoid this path.
+<br/>
+
+A few suggestions instead:
+
+- Share a db dump with your team, and documment clearly on your README.md, the specific type and version of database the project needs. Your containers can access a database running on your computer by using the domain **host.docker.internal**, or setting your RDBMS ip to the ip of your host computer on an environment variable.
+- Setup a remote development database per developer, and allow access through a VPN or other secure method.
+
+So, are you sure you wann go down this rabbit hole, my friend? If so, consider yourself warned.
+
+<hr/>
 
 ### Requirements
 
-Before creating our first container, we will need **Docker engine** version 19.03.5 and **GNU Make**.  
-I will assume you grasp the basics about using Linux, PHP, and GNUMake.
+Alright, I am happy to see you here. I promise I will try to be as gente as possible on this journey. 
+But I will assume you grasp the basics about using a Linux shell, setting up PHP, and writing a basic Makefile.
+
+<br/>
+
+Before creating our first container, we will need **Docker engine** version 19.03.5 and **GNU Make**.
 
 <br/>
 
@@ -71,7 +117,7 @@ If you are using Linux you can use your package manager of choice, or compile it
 
 GNU Make might be already available in Windows through PowerShell, and its usually present on most popular Linux distros as well as MacOS.
 
-### A few basic Docker concepts
+### Basic Docker concepts
 
 - Docker it's a tool that allows you to pack your applications around a runtime environment of your choice.
 - Any computer capable of running a Docker engine will run your app inside the same runtime environment. Regardless of the operating system running your host (The computer running Docker).
@@ -87,7 +133,7 @@ For those familiar with OOP; A Docker image could be seen as a "class" and a con
 
 Containers alliviate a lot of heavy lifting from error prone tasks, by packaging your apps with everything they need to work with; A minimum operating system, libraries, modules, configuration files, environment variables, and firewall rules.  
 
-### Hello Container
+### Run your first container
 
 This blog itself, can help you understand how easy it can be to share a Docker environment. You can run the same version that's available at https://guille.cloud, locally, without caring or knowing what's under the hoods. And do so any time you want, expecting the same results.
 
@@ -137,20 +183,19 @@ output={`peaceful_almeida`} />
 In case you didn't noticed, that was a nodejs environment, with a gatsby based website, and a long list of requirements that you don't need to be aware of. It should just works out of the box, cause Docker did all the heavy lifting for you:
 
 1. First, it attempted to find a local image **guillermomaschwitz/blog:1-production** and ended up pulling it from its remote repo.
-2. Started a new container with the random name **peaceful_almeida**
-3. A nodejs web server's process it's started inside the container, streaming logs to the screen
-3. Container's port 8000 gets binded to localhost's (0.0.0.0) port 8000
-4. The container gets destroyed once you kill the app cause we used the flag --rm.
+2. Started a new container with the random name **peaceful_almeida**, running this website on a nodejs web server
+4. Container's port 8000 gets binded to localhost's (0.0.0.0) port 8000
+5. Web server logs are streamed to the screen
+6. The container gets destroyed once you kill the app cause we used the flag --rm.
 
-In case you want to explore how this website's development and production environments where build, you can take at it's source: https://github.com/guille-mas/blog
+In case you want to explore how this website's development and production environments where build, you can take a look at it's source code: https://github.com/guille-mas/blog
 
-### The purpose of custom Docker images
+### Custom Docker images
 
 Real life projects have specific requirements we need to setup in order to start them; Vendor libraries, system modules, configuration files, source files, etc.
 Docker allows us to extend existing images containing some of those requirements, and create a new environment blueprint on top of them.  
 
-
-### Using Docker to build a PHP 7 development environment
+### Dockerizing a custom PHP 7 development environment
 
 First, create a folder for your project and share your project's folder with Docker.  
 At least in Docker Desktop for MacOS, it goes like this:  
@@ -159,10 +204,33 @@ At least in Docker Desktop for MacOS, it goes like this:
 2. Go to File Sharing, under Resources section
 3. Add your folder and apply changes
 
-Second, create a new file in the root of your project and name it `Dockerfile`.  
-That's the default file name Docker expects for your custom image.  
+#### Create the basic folder and files required for this project
 
-#### Building the image
+Copy the sample project from https://github.com/guille-mas/blog/tree/master/code-samples/php-docker-development-environment
+
+#### Sample project structure
+
+- ./config
+    - The place for server configuration files
+- ./src
+    - The place for your code
+- Makefile
+    - This will be your high level environment cli interface.
+    You should write here a simple set of commands to help people use the environment without having any knowledge on how Docker works.
+- README.md
+    - A very important file, the place where people will look for the first time they use this environment.
+    It should have the minimum amount of information to help them get started without your guidance. 
+    Iterate on it each time someone asks you something that was not docummented there.
+- ./data
+    - This folder will contain files created by PHP tracer and profiler if the developer needs them
+    - This folder won't be commited to the repo, and will be automatically generated by docker
+- .gitignore
+    - add those files you don't want to be commited to the code; secrets, development files, garbage, etc
+- .dockerignore
+    - You can add the files you wan't docker to include in your image in this file. Check the docs for more information.
+
+
+#### Writing your custom image
 
 Image builds can be automated by writing instructions on a Dockerfile.  
 A complete reference to Dockerfile syntax can be found at [the official docs](https://docs.docker.com/engine/reference/builder/) if you want to check.  
@@ -178,67 +246,99 @@ FROM php:7.4.2-apache
 ##### Parent image
 
 The first instruction every Dockerfile needs to have is **FROM**.  
-It tells Docker, which image to use as a base for your custom image, and how to name your custom image.  
+It tells Docker, which image to base for your custom environment.  
 The image you choose must exist and you need to have access to it.  
 
 <br/>
 
-Docker has a vibrant ecosystem of images you can consume. One of the most popular repositories for storing them is [DockerHub](https://hub.docker.com/), where you can pull public images from thousands of repositories built by devops practitioners.  
+Docker has a vibrant ecosystem of images you can consume. One of the most popular repositories for storing them is [DockerHub](https://hub.docker.com/), with thousands of repositories publicly available, built by devops practitioners around the world.  
 
-> For improved security and stability, your custom images should rely on [official images](https://docs.docker.com/docker-hub/official_images/), which are maintained by stricter quality standards.
+> For improved security and stability, your custom images should rely on [official images](https://docs.docker.com/docker-hub/official_images/); A curated list of images maintained by strict quality standards
 
 <br/>
 
-For this tutorial we are going to use an [official PHP image, bundled with Apache](https://hub.docker.com/_/php). If you ever want to check it's source code, you can find it here: [Dockerfile available here](https://github.com/docker-library/php/blob/master/7.4/buster/apache/Dockerfile).  
+For this tutorial we are going to use an [official PHP image, bundled with Apache](https://hub.docker.com/_/php). If you ever want to check it's source code, you can [read it from Github](https://github.com/docker-library/php/blob/master/7.4/buster/apache/Dockerfile).  
 
 ```docker
 # My PHP Development environment
 FROM php:7.4.2-apache AS dev-image
 ```
 
-Finally, we are referencing our custom image, in the context of our build process, as `dev-image`  
+### Set an alias for your image
+
+Lets reference our custom image, in the context of our build process, as **dev-image**.  
+That will help you recognize your image if you add more images in the future ( a production or testing image, an image to compile assets, another to build automated docummentation, deployment pipeline specific images, etc ).  
 
 ```docker
 # My PHP Development environment
 FROM php:7.4.2-apache AS dev-image
-RUN pecl install xdebug-2.8.1 \
-    && docker-php-ext-enable xdebug
+# Install XDebug
+RUN pecl install xdebug-2.8.1
+RUN docker-php-ext-enable xdebug
 ```
 
-##### Install Xdebug
+##### Running instructions inside your image
 
-XDebug it's a common PHP development extension that packs handy features to make your life easier while debugging stuff.  
-One of those things it's a PHP debugging server that's usually listening to port 9000 once enabled.  
-
-<br/>
-
-You can configure VSCode or other editor/IDE to connect to that port.  
+**RUN** will execute the sentence you pass to it in the default terminal.
 
 <br/>
 
-Every time you send an HTTP request to your website with the parameter XDEBUG_SESSION_START=session_name, Xdebug will start a debugging session from port 9000, that you can control from any [DBGP](https://xdebug.org/docs/dbgp) compliant client.
+We are going to use it to install [XDebug](https://xdebug.org/); A development PHP extension that packs handy features to make your life easier while debugging stuff.  
+As [docummented here](https://hub.docker.com/_/php), we should use _pecl_ to install the extension and _docker-php-ext-enable_ to enable it.  
 
 <br/>
 
-As docummented on the docker image's website, we should use _pecl_ to install the extension, and _docker-php-ext-enable_ to enable it.  
+From XDebug we are going to use the following features in this project:
+
+- HTML/CSS formatted error messages on http responses
+- A php debugging server to debug php code at runtime
+- An optional tracing stored to readable files, to understand your app's flow and check memory consumption at each step
+- An optional profiler to analyze memory and cpu usage at every step of a given flow
+
+You can use RUN as many times as you want, but bear in mind that every time you use it, it will significantly increase the size of your image by adding a new docker image layer to it.
 
 <br/>
+
+```docker
+# My PHP Development environment
+FROM php:7.4.2-apache AS dev-image
+# Install XDebug
+RUN pecl install xdebug-2.9.2 \
+    && docker-php-ext-enable xdebug \
+```
+
+##### Optimize the size of your image by chaining RUN instructions together
+
+Luckily, you can chain shell commands together in order to reduce the amount of RUN lines.
+
+> Unless you want to cache specific steps of your build process, it is a good practice, to replace consecutive RUN lines, by a single line of chained sentences
 
 
 ```docker
 # My PHP Development environment
 FROM php:7.4.2-apache AS dev-image
-RUN pecl install xdebug-2.8.1 \
-    && docker-php-ext-enable xdebug
-# @todo Copy xdebug config into the container 
-EXPOSE 9000
+# Install XDebug
+RUN pecl install xdebug-2.9.2 \
+    && docker-php-ext-enable xdebug \
+# Create data folders for XDebug
+# tracing and profiling tools
+# and set ownership to www-data
+    && mkdir -p /tmp/mydata \
+    && chown -R www-data:www-data /tmp/mydata
+# copy PHP development settings
+COPY ./config/development.ini /usr/local/etc/php/conf.d/
 ```
 
-##### Expose XDebug debugging server port
+##### Configure PHP and XDebug
 
-Expose port 9000 and copy the xdebug configuration settings required to enable the PHP remote debugging server at port 9000.
+We could append to php.ini the configuration we need, by echoing each setting into it from between the Dockerfile. But I like instead to write our desired PHP configuration in a separated file, to avoid obfuscating Dockerfile's code, making its code more concise. Later, you could add different files per environment type.  
+So let's do this:
+
+1. Create the folder /tmp/mydata inside your image, to store output files generated with XDebug tracer and profiler
+5. Copy the configuration file inside your image by using the instruction **COPY** in your Dockerfile
 
 </CodeWave>
+
 
 And that's it!
 
@@ -247,7 +347,7 @@ And that's it!
 Now that you have a Dockerfile, let's build the image.
 
 
-#### Building your image
+#### Building your custom image
 
 Get back to your shell and run:
 
@@ -282,16 +382,12 @@ php                       7.4.2-apache        4165e46dd82e        2 weeks ago   
 
 ### Whats next
 
-In a next post, I plan to show you howto use docker-compose to effectively documment in code our development environment.
+In the next post, I plan to show you howto use **docker-compose** to effectively documment in code our development environment.
 We will explore the advantages of following a declarative approach instead of an imperative one, and we will see how docker-compose can help us do so.
 
 <br/>
 
-Later I would like to show you to write one image per environment type using Docker multi stage builds.
-
-<br/>
-
-This post is a work in progress. Let me know your thoughts; If you found this useful or not, and any errors you might spot or questions you might have.  
+Later I would like to show you how to write one image per environment type using Docker **multi stage builds**.
 
 <br/>
 

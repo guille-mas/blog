@@ -6,7 +6,7 @@ class ContactLink extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      clicked: false
+      clicked: true
     };
     this.show_address = this.show_address.bind(this);
   }

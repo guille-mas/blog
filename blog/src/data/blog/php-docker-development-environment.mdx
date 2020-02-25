@@ -2,7 +2,7 @@
 slug: "build-a-php-dev-environment-your-team-will-love/index.html"
 title: "Build a PHP 7 development environment your team will love"
 intro: "Learn to build a portable PHP development environment with Docker"
-tools: "docker gnu-make php xdebug"
+tools: "docker gnu-make php xdebug debian-linux"
 date: "02-24-2020"
 publish: true
 blog: true
@@ -24,8 +24,7 @@ I think internal tools and processes shouldn't be an exception to this; Empathy 
 
 In this post we will use Docker to wrap a PHP project into a full fledged, portable, development environment, that I hope will help you and your development team be more effective on your day to day tasks. 
 The environment will have several tools to help you debug software issues effectively: a debugger, a profiler, a tracer, colorful error reporting, and a folder for your phpunit tests.  
-I will try to be as gente as possible on this journey. 
-But I will assume you grasp the basics about writing web applications in PHP, and basic Linux command line usage.
+I will try to be as gentle as possible on this journey, but I will assume you grasp the basics about writing web applications in PHP, and basic Linux command line usage.
 
 <br />
 
@@ -34,7 +33,7 @@ However, the resulting container will be able to access any database you would n
 
 ### Requirements
 
-Before creating our first container, we will need a **Docker engine** version equal or greater than version 19.03, and **GNU Make**.
+Before creating our first container, you will need a **Docker engine** version equal or greater than 19.03, and **GNU Make**.
 
 <br/>
 
@@ -43,7 +42,8 @@ If you are using Linux you can use your package manager of choice, or compile it
 
 <br/>
 
-GNU Make might be already available in Windows through PowerShell, and its usually present on most popular Linux distros as well as MacOS.
+GNU Make might be already available in Windows through PowerShell, and its usually present on most popular Linux distros as well as MacOS.  
+Windows has an open source package manager called chocolatey. You might want to give it a try to install GNU Make.
 
 ### Basic Docker concepts
 
@@ -161,8 +161,7 @@ Copy the sample project from https://github.com/guille-mas/blog/tree/master/code
 #### Writing your custom image
 
 Image builds can be automated by writing instructions on a Dockerfile.  
-A complete reference to Dockerfile syntax can be found at [the official docs](https://docs.docker.com/engine/reference/builder/) if you want to check.  
-Let's create a Dockerfile in the root of our project.
+We are going to explore the basics of a Dockerfile syntax and instructions available while we write one.  
 
 <CodeWave>
 
@@ -173,8 +172,8 @@ FROM php:7.4.2-apache
 
 ##### Parent image
 
-The first instruction every Dockerfile needs to have is **FROM**.  
-It tells Docker, which image to base for your custom environment.  
+The first instruction used on most Dockerfile is **FROM**.  
+It tells Docker, which base image to use.  
 The image you choose must exist and you need to have access to it.  
 
 <br/>
@@ -218,12 +217,12 @@ As [docummented here](https://hub.docker.com/_/php), we should use _pecl_ to ins
 
 From XDebug we are going to use the following features in this project:
 
-- HTML/CSS formatted error messages on http responses
-- A php debugging server to debug php code at runtime
-- An optional tracing stored to readable files, to understand your app's flow and check memory consumption at each step
-- An optional profiler to analyze memory and cpu usage at every step of a given flow
+- HTML/CSS formatted error messages on http responses.
+- A php debugging server to debug php code at runtime.
+- A tracer that once triggered with an HTTTP request will store in a human readable file, useful details about your program's flow since your request is handled by the server, till a response is sent your way.
+- A profiler, that once triggered with an HTTP request, will allow you to analyze memory and cpu usage at every step of your program's flow.
 
-You can use RUN as many times as you want, but bear in mind that every time you use it, it will significantly increase the size of your image by adding a new docker image layer to it.
+You can use RUN as many times as you want, but bear in mind that every time you use it, the size of your image will increase significantly.
 
 <br/>
 
@@ -259,16 +258,14 @@ COPY ./config/development.ini /usr/local/etc/php/conf.d/
 
 ##### Configure PHP and XDebug
 
-We could append to php.ini the configuration we need, by echoing each setting into it from between the Dockerfile. But I like instead to write our desired PHP configuration in a separated file, to avoid obfuscating Dockerfile's code, making its code more concise. Later, you could add different files per environment type.  
-So let's do this:
-
-1. Create the folder /tmp/mydata inside your image, to store output files generated with XDebug tracer and profiler
-5. Copy the configuration file inside your image by using the instruction **COPY** in your Dockerfile
+1. Let's create with **RUN**, a folder  /tmp/mydata inside your image, to store output files generated with XDebug tracer and profiler
+1. **COPY** the file config/development.ini into /usr/local/etc/php/conf.d/ inside your image, so PHP can load your settings automatically
 
 </CodeWave>
 
 
-And that's it!
+And that's it!  
+There are more instructions than those we just wrote. I recommend you check [the Dockerfile reference](https://docs.docker.com/engine/reference/builder/).
 
 <br/>
 
@@ -280,7 +277,7 @@ Now that you have a Dockerfile, let's build the image.
 Get back to your shell and run:
 
 <Code 
-    language="bash" 
+    language="bash command-line" 
     snippet={`docker build -t my-project:1.0-development --target dev-image .`} 
     output={`
 Sending build context to Docker daemon  3.072kB

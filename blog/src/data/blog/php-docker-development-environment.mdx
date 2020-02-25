@@ -22,91 +22,19 @@ I think internal tools and processes shouldn't be an exception to this; Empathy 
 
 <br />
 
-In this post I will show you a way of building a development environment driven by those principles. 
-We will use Docker, to wrap a sample project into a full fledged, portable, development environment.  
+In this post we will use Docker to wrap a PHP project into a full fledged, portable, development environment, that I hope will help you and your development team be more effective on your day to day tasks. 
+The environment will have several tools to help you debug software issues effectively: a debugger, a profiler, a tracer, colorful error reporting, and a folder for your phpunit tests.  
+I will try to be as gente as possible on this journey. 
+But I will assume you grasp the basics about writing web applications in PHP, and basic Linux command line usage.
 
-### Write your thoughts first
+<br />
 
-What would be a great development environment for you and your team?  
-That's a question you should ask yourself and your team. Personally, I like to start my thoughts on a piece of paper.
-
-I think a great development environment should basically unlock an organization's potential to quickly explore risky ideas on a safe environment.  
-
-<br/>
-
-Throwing lengthy notes to someone new to the project, or expecting them to connect the dots from our system logs, force the same blockers to happen again, and again. 
-Even worse; multiple solutions will emerge as a response to those blockers, generating inconsistencies that end up affecting our ability to catch bugs earlier and more importantly, to learn from our mistakes and pivot our processes at a competitive speed.  
-Automating that process is not too difficult if we start early, as I will try to show you here.  
-
-<br/>
-
-So basically, this is what I think a great development environment should be:
-
-- Should be easy to use
-    - Have clear, concise high level docummentation for development workflows
-    - Provide a simple cli interface to delay the need to learn about the environment itself, allowing us to focus on CAPEX right away
-    - Minimum setup required
-- Should be stable
-    - Development settings must ensure stability and keep resources consumption under control
-- Should provide every tool available to debug
-    - Debugger
-    - Profiler
-    - Tracer
-    - Logs
-- Enable effective communication
-    - By putting the environment code on the same repo as the project itself, devs can see how it was done, and potentially suggest changes with a pull or merge request
-    - Each stable version of the app will have a correlative stable environment to work with
-    - An IT team can read the code and docs we wrote to understand the requirements a production environment should have
-    - Any dev working on a specific version, can expect a consistent experience when testing bugs, easing communication between devs
-- Behave as close as possible to staging and production environments
-    - This point exceeds the scope of the post, but I plan to write about this in a near future
-- Should be portable
-    - I like to use Docker to achieve this, and automate as much as possible the maintainment of the environment
-    - The code, docummentation, and tools, required for the environment should live in the same repo as the code of the project, maintaining both in sync on every major code branch
-
-### The tech stack
-
-I choose PHP 7.4.2 as the language this tool should support and Docker to package the environment into portable containers. But the principles exposed so far, should help you think about a development environment, regardless the language and version you choose.
-
-#### Warning
-
-Before proposing new tools and processes to your team, you should analyze carefully the impact they will have, the hidden costs, and your team's disposition to adopt changes. Else you are going to add a lot of troubles instead of solutions. As allways, empathy and alignment to global goals are key.
-If your organization is reluctant to adopting containers, or you don't have time to learn how to use them, I suggest you adopt a more traditional approach.  
-Whatever path you choose, allways write a clear README.md in the root of your project repo, and explain very clearly the steps required to succesfully setup a working development environment. Everyone involved on these tasks should have access to the repo whenever possible.
-
-##### Hidden costs
-
-Before you go further, I must warn you of a few significant issues I experienced, the first time I migrated an existing project to containers.
-
-###### Containers requires you to think differently
-
-One think is to build a single container to run a php app and the other is to force a cultural change in your organization by handling the responsibility of being the person in charge of managing a complex containerized infrastructure. 
-And while I will try on this post to be a gentle guide on your first containerized experience, most probably you will end up this guide with more questions than answers.  
-My recommendation is to try this approach on your own first. Try the environment by yourself, and only consider sharing it with others after a few months of working with it on your own. 
-You might find big conceptual blockers as soon as you walk away a few steps from what I wrote here. By gaining personal experience, you are going to be better prepared to support others. Which is what you should do, once you propose such a significant change.
-
-###### Docker is not a good fit for development databases
-
-I wasted a lot of time trying to put a few GBs sql dump into a container. The idea sounds great, but it will be easier for you and your team, to avoid this path.
-<br/>
-
-A few suggestions instead:
-
-- Share a db dump with your team, and documment clearly on your README.md, the specific type and version of database the project needs. Your containers can access a database running on your computer by using the domain **host.docker.internal**, or setting your RDBMS ip to the ip of your host computer on an environment variable.
-- Setup a remote development database per developer, and allow access through a VPN or other secure method.
-
-So, are you sure you wann go down this rabbit hole, my friend? If so, consider yourself warned.
-
-<hr/>
+This tutorial will focus on containerizing a single PHP application. I won't show you here howto orchestrate several containers together, or howto containerize a database. And the containerized environment we are going to build here won't be suitable for production use.
+However, the resulting container will be able to access any database you would normally access from your computer, and I think it will introduce several advantages in comparison to a native development environment.
 
 ### Requirements
 
-Alright, I am happy to see you here. I promise I will try to be as gente as possible on this journey. 
-But I will assume you grasp the basics about using a Linux shell, setting up PHP, and writing a basic Makefile.
-
-<br/>
-
-Before creating our first container, we will need **Docker engine** version 19.03.5 and **GNU Make**.
+Before creating our first container, we will need a **Docker engine** version equal or greater than version 19.03, and **GNU Make**.
 
 <br/>
 

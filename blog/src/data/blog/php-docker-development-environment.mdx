@@ -12,14 +12,13 @@ import { CodeWave } from "gatsby-theme-waves"
 import Code from "components/code"
 import ContactLink from "components/contact-link"
 import "prismjs/components/prism-docker"
-import "prismjs/components/prism-ini"
 
 > Welcome! This post it's a work in progress and will be changing during the next few days. 
 > Don't hesitate to write me an email to <ContactLink/> with any comments, critics or advices you might have.
 
 ### Intro
 
-When we build tools we must think in our users. The time they need to become proficient, depends on the ideas that drive our design.  
+When we build tools we must think in our users. The time they need to become proficient with them, depends on the ideas that drive our design.  
 I think internal tools and processes shouldn't be an exception to this; Empathy it's key to increase the business outcomes produced with them.  
 
 <br />
@@ -36,7 +35,7 @@ However, the resulting container will be able to access any database you would n
 
 ### Requirements
 
-Before creating our first container, you will need **Docker engine** ( I am using version 19.03, yours should be at least that version ), and **GNU Make**.
+Before creating our first container, you will need **Docker engine** ( I am using version 19.03 ), and **GNU Make**.
 
 <br/>
 
@@ -65,21 +64,38 @@ Docker images are the blueprint from where Docker containers are created. An ima
 For those comming from software development and object oriented programming, an image could be seen as a class and a container as an instance.  
 Images can be pushed to Docker repositories, where they can be consumed by others to create new images and containers.  
 
+<br/>
+
+Real life projects have specific requirements we usually need to provide to our environments; Vendor libraries, system modules, configuration and source files, environment variables, firewall rules, etc.
+Docker allows us to extend existing images containing some of those requirements, and create a new environment blueprint on top of them.
+
 ##### Windows Images vs Linux images
 
 There are two types of images: Linux, and Windows images.  
-The difference is the kernel they need to interact with, in order to access hardware resources.  
+The difference is the kernel they need to interact with in order to access hardware resources.  
 It is possible to run Windows images on a computer running Linux, and visceversa, by spinning the containers on top of a virtual machine, with the desired operating system. That's how a Linux container can be executed with Docker for Windows.  
 By default Docker for Windows it's only capable of running Linux images, by installing the Docker daemon inside a lightweight Linux VM. But you can configure Docker for Windows to install the Docker daemon natively, in order to run Windows images instead.  
 Docker for MacOS doesn't run a Docker daemon natively either. Instead it follows the same approach than Docker for Windows; running the Docker daemon on top of a lightweight Linux VM.
 
 ##### Docker Volumes
 
-work in progress
+Each Docker image is composed of several layers, and each layer encapsulates an isolated portion of a file system.  
+When you copy files at build time from your Docker host into your image. A new layer is stacked on top of the previous one, containing only the files you copied.
+Every layer is identified with a unique hash ID. You could create a new container from a specific layer by its ID. The resulting file system will be the sum of every stacked layer created before.  
 
-##### Inmutable vs mutable infrastructure
+At runtime, you can mount folders of your Docker host, inside a container as a Docker Volume by running **docker run** with the **-v** flag.  
+That's what we will do to update our source code inside a container, while we use it for development purposes.
 
-work in progress
+##### Inmutable vs mutable images
+
+Inmutable images are built to run with no modifications once in the wild. A mutable image instead it's an image whose file system you plan to change after deployed.  
+An example mutable image it's an image that you deploy, and later you modify it's source code, similar to what you would do on a dedicated server.  
+An inmutable image it's built to be used without touching it's files from the outside. Instead, containers made from inmutable are replaced by new containers, once a new version of the source code it's available.  
+
+<br/>
+
+Inmutable images allows you to implement simpler deployment processes, at the expense of longer build times.  
+I like to use -and recommend- this simpler approach cause it eases a lot the management of production infrastructure. Even for development environments, I recommend you to copy every file you will need into your image. That way, you can test specific versions of your source code with a simple **docker run** command.
 
 ##### Docker networking
 
@@ -109,7 +125,7 @@ CONTAINER ID        IMAGE                                  COMMAND              
 7ecd413bdf91        guillermomaschwitz/blog:1-production   "docker-entrypoint.s…"   23 minutes ago      Up 23 minutes       0.0.0.0:8000->8000/tcp   peaceful_almeida
 `}/>  
 
-Stop the container
+You can stop the container by passing its name or it's container ID when using docker's command stop
 
 <Code language="bash" snippet={`docker stop peaceful_almeida`} />
 
@@ -121,14 +137,9 @@ In case you didn't noticed, that was a nodejs environment, with a gatsby based w
 5. Web server logs are streamed to the screen
 6. The container gets destroyed once you kill the app cause we used the flag --rm.
 
-In case you want to explore how this website's development and production environments where build, you can take a look at it's source code: https://github.com/guille-mas/blog
+If you are curious, you can read the [Dockerfile code for this website at](https://github.com/guille-mas/blog/blob/master/Dockerfile)
 
-### Custom Docker images
-
-Real life projects have specific requirements we need to setup in order to start them; Vendor libraries, system modules, configuration files, source files, etc.
-Docker allows us to extend existing images containing some of those requirements, and create a new environment blueprint on top of them.  
-
-### Dockerize a complete PHP 7 development environment
+### Configure Docker to work with your project
 
 First, create a folder for your project and share your project's folder with Docker.  
 At least in Docker Desktop for MacOS, it goes like this:  
@@ -144,9 +155,9 @@ Copy the sample project from https://github.com/guille-mas/blog/tree/master/code
 #### Sample project structure
 
 - ./config
-    - The place for server configuration files
+    - The place for server configuration files.
 - ./src
-    - The place for your code
+    - The place for your code.
 - Makefile
     - This will be your high level environment cli interface.
     You should write here a simple set of commands to help people use the environment without having any knowledge on how Docker works.
@@ -155,12 +166,12 @@ Copy the sample project from https://github.com/guille-mas/blog/tree/master/code
     It should have the minimum amount of information to help them get started without your guidance. 
     Iterate on it each time someone asks you something that was not docummented there.
 - ./data
-    - This folder will contain files created by PHP tracer and profiler if the developer needs them
-    - This folder won't be commited to the repo, and will be automatically generated by Docker
+    - This folder will contain files created by PHP tracer and profiler if the developer needs them.
+    - This folder won't be commited to the repo, and will be automatically generated by Docker.
 - .gitignore
-    - add those files you don't want to be commited to the code; secrets, development files, garbage, etc
+    - add those files you don't want to be commited to the code; secrets, development files, garbage, etc.
 - .dockerignore
-    - You can add the files you wan't Docker to include in your image in this file. Check the docs for more information.
+    - You can flag the files from the file system context provided to Docker at build time to avoid adding them to the resulting image.
 
 
 #### Write your image
@@ -189,7 +200,7 @@ Docker images are tagged with the following syntax:
 
 The image you choose must exist and you need to have access to it.  
 For this tutorial we are going to use an [official PHP image, bundled with Apache](https://hub.docker.com/_/php), whose name its "php", and its version "7.4.2-apache"  
-You should always be explicity with versions when using images. That way you will future proof your own image by protecting it from breaking changes.
+You should always be explicit about image's versions your images consume. That way you will future proof your own image by protecting it from breaking changes.
 
 <br/>
 
@@ -249,7 +260,7 @@ You can use RUN as many times as you want, but bear in mind that every time you 
 FROM php:7.4.2-apache AS dev-image
 # Install XDebug
 RUN pecl install xdebug-2.9.2 \
-    && docker-php-ext-enable xdebug \
+    && docker-php-ext-enable xdebug
 ```
 
 ##### Optimize the size of your image
@@ -295,13 +306,14 @@ RUN pecl install xdebug-2.9.2 \
     && chown -R www-data:www-data /tmp/mydata
 # copy PHP development settings
 COPY ./config/development.ini /usr/local/etc/php/conf.d/
+COPY --chown=www-data:www-data ./src /usr/local/project
 RUN ln -s /usr/local/project/public /var/www/html
 ```
 
 ##### Copy your project source code inside the image
 
 1. **COPY** your local folder src/ into /usr/local/project inside your images, and assign the ownership of those files to user www-data
-2. And use **RUN** to symlink /var/www/html to /usr/local/project/public folder
+2. Then use **RUN** to symlink /var/www/html to /usr/local/project/public folder
 
 
 ```docker
@@ -317,6 +329,7 @@ RUN pecl install xdebug-2.9.2 \
     && chown -R www-data:www-data /tmp/mydata
 # copy PHP development settings
 COPY ./config/development.ini /usr/local/etc/php/conf.d/
+COPY --chown=www-data:www-data ./src /usr/local/project
 RUN ln -s /usr/local/project/public /var/www/html
 EXPOSE 443
 ```
@@ -346,6 +359,7 @@ RUN pecl install xdebug-2.9.2 \
     && chown -R www-data:www-data /tmp/mydata
 # copy PHP development settings
 COPY ./config/development.ini /usr/local/etc/php/conf.d/
+COPY --chown=www-data:www-data ./src /usr/local/project
 RUN ln -s /usr/local/project/public /var/www/html
 EXPOSE 443
 ```

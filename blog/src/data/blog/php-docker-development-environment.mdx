@@ -99,11 +99,47 @@ I like to use -and recommend- this simpler approach cause it eases a lot the man
 
 ##### Docker networking
 
-work in progress
+Docker relies on the Container Network Model (CNM), a pluggable open-source architecture, to provide networking capabilities. 
+CNM is extended to provide different network topologies. 
+Docker supports the following implementations out of the box:
 
-### Run your first container
+- Linux network drivers
+    - bridge
+    - overlay
+    - macvlan
+- Windows network drivers
+    - nat
+    - overlay
+    - transparent
+    - l2bridge
 
-This blog itself, can help you understand how easy it can be to share a Docker environment. You can run the same version that's available at https://guille.cloud, locally, without caring or knowing what's under the hoods. And do so any time you want, expecting the same results.
+Many other implementations exist maintained by third parties.  
+
+<br/>
+
+In this tutorial we are going to use the single-host network topology called **bridge**. 
+It allows us to create one or more sandboxed networks to connect our container into, by using a network endpoint; A network adapter that will connect our container to a single network through a virtual network interface.  
+Bridge networks can exists on a single host. It's Windows counter part is NAT.
+
+<br/>
+
+Because we are not going to create a custom network for this tutorial, we will attach our container to the default bridged network available, by mapping at runtime it's exposed ports to ports in our docker host.
+
+<br/>
+
+Enough theory for an introductory Docker tutorial. Besides I am not an expert on network topologies, so you better ask someone more experienced than me about the other network alternatives.
+
+<br/>
+
+Let's get more practical now, and try to run an existing container in your computer.
+
+<br/>
+
+<hr/>
+
+### Try your first container
+
+This website was implemented in a containerized nodejs environment. You can run the same version that's available at https://guille.cloud, locally, without caring or knowing what's under the hoods. And do so any time you want, expecting the same results to happen each time.
 
 <br/>
 
@@ -115,7 +151,23 @@ An exact version of this website will be available at http://0.0.0.0:8000 or htt
 
 <br/>
 
-Let's check the running container on another terminal
+Unless I Introduced a bug in my Dockerfile, it should work out of the box, cause Docker did all the heavy lifting for you:
+
+1. Docker attempts to find the image **guillermomaschwitz/blog:1-production** locally. If loading it locally fails, will pull it from its Dockerhub repository.
+2. Then a new container is started based on that image, with a random name, running this website on a nodejs web server.
+4. Container's port 8000 gets binded to localhost's (0.0.0.0) port 8000 cause we asked so by using the parameter **-p 8000:8000**. 
+5. Web server logs are streamed to the screen.
+6. The container will get destroyed once you stop it, because we used the flag **--rm**.
+
+If you are curious about it, you could read the [Dockerfile code for this website](https://github.com/guille-mas/blog/blob/master/Dockerfile).
+
+<br/>
+
+Let's check if the container is running correctly.
+
+#### List every container running at your Docker host
+
+**docker container ls** lists every running container. The output should look as follows:
 
 <Code 
 language="bash" 
@@ -125,28 +177,64 @@ CONTAINER ID        IMAGE                                  COMMAND              
 7ecd413bdf91        guillermomaschwitz/blog:1-production   "docker-entrypoint.s…"   23 minutes ago      Up 23 minutes       0.0.0.0:8000->8000/tcp   peaceful_almeida
 `}/>  
 
-You can stop the container by passing its name or it's container ID when using docker's command stop
+If everything went well, you should see a similar list in your terminal; A running container with ID 7ecd413bdf91, and name peaceful_almeida. You can use any of both identifiers to manage your container.
+
+If you would like to check for stopped containers as well, try the **-a** flag.  
+
+#### A few useful Docker commands
+
+##### List every image locally available
+
+<Code language="bash" snippet={`docker image ls`} />  
+
+##### Execute commands inside a running container
+
+<Code language="bash" snippet={`docker exec <container-name> <command>`} />  
+
+By default, exec will execute commands in detached mode, what means the output of the command won't be attached to your shell, and you won't see anything.
+If you want to interact with the command you execute, or see its output, use **-it** flag which meanse "interactive".
+For example, you could use that flag to run a bash shell inside your container. Similar as if you would SSH into a linux box.
+
+<Code language="bash" snippet={`docker exec -it peaceful_almeida bash`} />
+
+##### Start an image and run a command in a new container
+
+<Code language="bash" snippet={`docker run [--name new-container-name] <docker-image> <command>`} />
+
+##### Stop containers
+
+You can kill the container by passing its name or container ID when using docker's command stop
 
 <Code language="bash" snippet={`docker stop peaceful_almeida`} />
 
-In case you didn't noticed, that was a nodejs environment, with a gatsby based website, and a long list of requirements that you don't need to be aware of. It should just works out of the box, cause Docker did all the heavy lifting for you:
+##### Remove containers
 
-1. First, it attempted to find a local image **guillermomaschwitz/blog:1-production** and ended up pulling it from its remote repo.
-2. Started a new container with the random name **peaceful_almeida**, running this website on a nodejs web server
-4. Container's port 8000 gets binded to localhost's (0.0.0.0) port 8000
-5. Web server logs are streamed to the screen
-6. The container gets destroyed once you kill the app cause we used the flag --rm.
+<Code language="bash" snippet={`docker rm peaceful_almeida`} />
 
-If you are curious, you can read the [Dockerfile code for this website at](https://github.com/guille-mas/blog/blob/master/Dockerfile)
+##### Remove images
 
-### Configure Docker to work with your project
+<Code language="bash" snippet={`docker image rm guillermomaschwitz/blog:1-production`} />
 
-First, create a folder for your project and share your project's folder with Docker.  
+<br/>
+
+Now that you have a basic idea of the kind of things you can do with existing Docker images, let's see howto create your own custom image.
+
+<br/>
+
+<hr/>
+
+## Create a PHP development environment based on Docker
+
+### Share your project folder with Docker
+
+In order to allow Docker to copy your project's source code and configuration files into your custom images, you need to share the project folder with Docker.  
 At least in Docker Desktop for MacOS, it goes like this:  
 
 1. Go to Docker Desktop's preferences
 2. Go to File Sharing, under Resources section
 3. Add your folder and apply changes
+
+Avoid symlinked folders cause Docker will complaint.
 
 #### Create the basic folder and files required for this project
 
@@ -281,7 +369,7 @@ RUN pecl install xdebug-2.9.2 \
 # and set ownership to www-data
     && mkdir -p /tmp/mydata \
     && chown -R www-data:www-data /tmp/mydata
-# copy PHP development settings
+# copy development settings for PHP
 COPY ./config/development.ini /usr/local/etc/php/conf.d/
 ```
 
@@ -304,9 +392,12 @@ RUN pecl install xdebug-2.9.2 \
 # and set ownership to www-data
     && mkdir -p /tmp/mydata \
     && chown -R www-data:www-data /tmp/mydata
-# copy PHP development settings
+# copy development settings for PHP
 COPY ./config/development.ini /usr/local/etc/php/conf.d/
+# copy the PHP source code inside your image
 COPY --chown=www-data:www-data ./src /usr/local/project
+# symling your project folder 
+# with default's public apache folder
 RUN ln -s /usr/local/project/public /var/www/html
 ```
 
@@ -327,21 +418,23 @@ RUN pecl install xdebug-2.9.2 \
 # and set ownership to www-data
     && mkdir -p /tmp/mydata \
     && chown -R www-data:www-data /tmp/mydata
-# copy PHP development settings
+# copy development settings for PHP
 COPY ./config/development.ini /usr/local/etc/php/conf.d/
+# copy the PHP source code inside your image
 COPY --chown=www-data:www-data ./src /usr/local/project
+# symling your project folder 
+# with default's public apache folder
 RUN ln -s /usr/local/project/public /var/www/html
-EXPOSE 443
+EXPOSE 80
 ```
 
-##### Expose HTTPS port
+##### Expose ports
 
 **EXPOSE** allows you to open ports in the container.
 
 <br/>
 
-There is no need to expose port 80, cause that has been done already on the base image. 
-However we do need to open port 443 if we want to run our app over HTTPS.  
+This is just an example, cause there's no need to expose port 80, since it's been done already on the base image.  
 Bear in mind that an open port at the container, at least with the network type we are using in this tutorial won't be available at your Docker host, unless you map both ports when running the container with parameter -p.
 
 <br/>
@@ -357,74 +450,79 @@ RUN pecl install xdebug-2.9.2 \
 # and set ownership to www-data
     && mkdir -p /tmp/mydata \
     && chown -R www-data:www-data /tmp/mydata
-# copy PHP development settings
+# copy development settings for PHP
 COPY ./config/development.ini /usr/local/etc/php/conf.d/
+# copy the PHP source code inside your image
 COPY --chown=www-data:www-data ./src /usr/local/project
+# symling your project folder 
+# with default's public apache folder
 RUN ln -s /usr/local/project/public /var/www/html
-EXPOSE 443
+EXPOSE 80
 ```
 
-##### That's it
-
-Next, I will show you how to:
-
-1. Build your image
-2. Test it locally
-3. Push it to a private repo
-4. Share it with your team
-5. Roll updates
-6. Make use of several PHP debugging tools
-7. Run your automated tests
+And that's it. You can now use this file to build your custom image.
 
 <br/>
 
-There are more instructions than those we just wrote. I recommend you check [the Dockerfile reference](https://docs.docker.com/engine/reference/builder/).
+Check [the Dockerfile reference](https://docs.docker.com/engine/reference/builder/) for a deep dive into every option available when writing custom images.
 
 </CodeWave>
 
-#### Build your image
 
-Let's get back to the command line to build it. Try the following command:
+### A few workflows you can try now
+
+#### Build your image
 
 <Code language="bash" snippet={`docker build -t my-project:1.0-development --target dev-image .`} />
 
-Docker will build a new Docker image based on **dev-image** and tag it as **my-project:1.0-development**. 
-The last parameter is the context folder Docker will use to build your image. Any file you want to **COPY** into the image, must be inside the given context. 
+Builds and tags your image as **my-project:1.0-development**.  
+The last parameter is the file system context at your Docker host. Any file you want to **COPY** into the image, must be inside the given context. 
 The context must be shared with Docker through Docker settings, under the "File Sharing" section.
 
 <br/>
 
-If everything went well, you should see **my-project** custom image between your list of locally available Docker images, and the base image, used to build it.
+If everything went well, you should see **my-project** custom image between your locally available images.
 
 <Code language="bash" snippet={`docker image ls`} />
 
-#### Test it locally
+#### Test it as a standalone container
 
-work in progress
+<Code 
+language="bash" 
+snippet={`docker run -p 80:80/tcp --rm --name my-project-container my-project:1.0-development`} 
+/>
 
-#### Push it to a private repo
+#### Run it as a development environment
 
-work in progress
+Mount your source code and data folders with the **-v** param.  
+You should also use **--rm** to tell Docker to discard the container after using it.
 
-#### Share it with your team
+<Code 
+language="bash" 
+snippet={`docker run -p 80:80/tcp -v /absolute-path-to-project/src:/usr/local/project -v /absolute-path-to-project/data:/tmp/mydata --rm --name my-project-container my-project:1.0-development`} 
+/>
 
-work in progress
+#### Push it to your Dockerhub repo
 
-#### Roll updates
+In order to share your environment with others, you should build it yourself and push the image to a Dockerhub repo of your own.
 
-work in progress
+<Code 
+language="bash" 
+snippet={`docker login -u your-dockerhub-username -p "your-dockerhub-password"`}
+/>
 
-#### Make use of several PHP debugging tools
+<Code 
+language="bash" 
+snippet={`docker push your-dockerhub-username/my-project`}
+/>
 
-work in progress
+<br/>
 
-#### Run your automated tests
-
-work in progress
+<hr/>
 
 ### Whats next
 
-In the next post, I plan to show you how to use **docker-compose** to effectively documment in code our development environment.
+In a near future, I plan to show you how to use **docker-compose** to effectively documment in code our development environment.
 We will explore the advantages of following a declarative approach instead of an imperative one, and we will see how docker-compose can help us do so.
 
 <br/>
@@ -433,5 +531,5 @@ Later I would like to show you how to write one image per environment type using
 
 <br/>
 
-Thanks a lot for your time!
+Let me know your thoughts at <ContactLink/>
 

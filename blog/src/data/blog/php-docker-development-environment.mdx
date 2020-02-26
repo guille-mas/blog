@@ -14,8 +14,8 @@ import ContactLink from "components/contact-link"
 import "prismjs/components/prism-docker"
 import "prismjs/components/prism-ini"
 
-> Welcome! This post it's a work in progress and will be changing during the next few days. Please don't hesitate to write me an email to <ContactLink/> with any comments, critics or advices you might have.
-> Thanks a lot for your time!
+> Welcome! This post it's a work in progress and will be changing during the next few days. 
+> Don't hesitate to write me an email to <ContactLink/> with any comments, critics or advices you might have.
 
 ### Intro
 
@@ -50,21 +50,28 @@ Windows has an open source package manager called chocolatey. You might want to 
 
 ### Basic Docker concepts
 
-- Docker it's a tool that allows you to pack your applications around a runtime environment of your choice.
-- Any computer capable of running a Docker engine will run your app inside the same runtime environment. Regardless of the operating system running your host (The computer running Docker).
+Docker it's an amazing tool that allows you to pack your applications around a runtime environment of your choice. 
+With it you can provision your environment once, and reuse it any time you need, switching the paradigm of how deployments and other business critical tasks are performed. 
+Instead of long lasting dedicated servers, containerized infrastructure it's ephemeral and disposable. 
 
-Containers alliviate a lot of heavy lifting from error prone tasks, by packaging your apps with everything they need to work with; A minimum operating system, libraries, modules, configuration files, environment variables, and firewall rules.  
+##### Containers
 
-##### Images and containers
+Containers are a way to package a running process with everything it needs to work; The minimum operating system, file system, environment variables, and firewall rules.
+A container is lighter than a virtual machine, cause instead of emulating all the required hardware required to run an entire operating system with several processes running, containers share the kernel of the host machine it is running on, using the host harware resources as well, usually specialized to run a single process.
 
-A Docker image it's the blueprint from where Docker containers are created.  
+##### Images
+
+Docker images are the blueprint from where Docker containers are created. An image it's a build time construct, and a container it's a runtime construct. Or in other words: an image is a stopped container. 
+For those comming from software development and object oriented programming, an image could be seen as a class and a container as an instance.  
 Images can be pushed to Docker repositories, where they can be consumed by others to create new images and containers.  
-An image it's a build time construct, and a container it's a runtime construct.  
-For those familiar with OOP; A Docker image could be seen as a "class" and a container as an "instance".  
 
 ##### Windows Images vs Linux images
 
-comming soon
+There are two types of images: Linux, and Windows images.  
+The difference is the kernel they need to interact with, in order to access hardware resources.  
+It is possible to run Windows images on a computer running Linux, and visceversa, by spinning the containers on top of a virtual machine, with the desired operating system. That's how a Linux container can be executed with Docker for Windows.  
+By default Docker for Windows it's only capable of running Linux images, by installing the Docker daemon inside a lightweight Linux VM. But you can configure Docker for Windows to install the Docker daemon natively, in order to run Windows images instead.  
+Docker for MacOS doesn't run a docker daemon natively either. Instead it follows the same approach than Docker for Windows; running the Docker daemon on top of a lightweight Linux VM.
 
 ##### Docker Volumes
 

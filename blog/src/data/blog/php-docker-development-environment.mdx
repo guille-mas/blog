@@ -39,13 +39,14 @@ Linux users can get both via their default package manager. Two popular package 
 
 Next, create a DockerHub account, and sign in from the command line.
 
-<Code language="terminal" snippet={`docker login`} />  
+<Code language="bash" snippet={`docker login`} />  
 
 ### Basic Docker concepts
 
 Docker allows you to pack your applications around a runtime environment of your choice, provision your environment once, and deploy it anywhere with a docker engine. 
-Containers are lighter than virtual machines and share the kernel of their host; Usually run a single process, packed with a minimum operating system, files and environment variables.  
-Instead of long lasting dedicated servers, containerized infrastructure can be ephemeral and disposable. 
+Containers share the kernel of their host, and usually run a single process, bundled with the minimum operating system, files, and environment variables required. 
+As a result, containers are lighter than virtual machines, and allows the administration of resources by process.
+Instead of long lasting dedicated servers, containerized infrastructure can be ephemeral and disposable.
 
 ##### Images
 
@@ -64,22 +65,32 @@ You can create a new container from a specific layer by its ID. The resulting fi
 
 Docker can run two types of images: Linux or Windows images.  
 The difference is the kernel they need to interact with in order to access hardware resources.  
-It is possible to run Windows images on a computer running Linux, and visceversa, by running a docker engine on top of a virtual machine.
-Both Windows and MacOS docker versions run Linux images by default, on top of a lightweight VM. However Docker for Windows can spin up Windows images, by running natively.  
-In MacOS a Windows VM as a docker host to spin up Windows images.
+It's possible to run Windows images on a computer running Linux, and visceversa, by running a docker engine on top of a virtual machine.
+Both Windows and MacOS docker versions run Linux images by default, on top of a lightweight Linux VM. However Docker for Windows can spin up Windows images natively.  
+In MacOS or Linux, you would need to setup a Windows VM as your docker host to do that.
 
 ##### Docker Volumes
 
-At runtime, you can mount folders of your Docker host as volumes inside a container. The command to do that is **docker run** with the **-v** flag.
+At runtime, you can mount folders of your Docker host as volumes inside a container. The way to do that is by running your container with the **-v** (volume) flag.  
+The next command mounts your current folder as a folder inside a container.
+
+<Code 
+language="bash" 
+snippet={`docker run -v "$PWD":/mount-destination docker-image`} />  
 
 ##### Inmutable vs mutable images
 
-Inmutable images already contain every file needed to run it's process. A mutable image instead it's an image that gets updated at runtime.  
+As usual, maintaining state on your applications is harder than not having state at all. Because state introduces edge cases you must consider. 
+That's why it's easier to cover every scenario when you write automated tests on a codebase implemented with a functional approach. And the same applies when you implement your infrastructure as code.  
+
+<br/>
+
+Inmutable images are those that are built with every file needed by their main process, and you don't modify their state once deployed.  
 Inmutable images allows you to implement simpler deployment processes, at the expense of longer build times.
 
 ##### Docker networking
 
-Docker relies on the Container Network Model (CNM), a pluggable open-source architecture, to provide networking capabilities. 
+Docker relies on the Container Network Model (CNM), a pluggable open-source architecture, to provide networking capabilities.  
 CNM is extended to provide different network topologies. 
 Docker supports the following implementations out of the box:
 
@@ -97,24 +108,29 @@ Many other implementations exist maintained by third parties.
 
 <br/>
 
-Bridge are single host networks, and the default option when running docker containers. Their Windows counter part is NAT.
+Bridge are single host networks, and the default option when running Linux docker images. Their Windows counter part is NAT.
 
 <br/>
 
 <hr/>
 
-### Run a container from an inmutable image
+### Run an inmutable image
 
-The environments used to implement and deploy this website are docker containers based on a specific version of the official nodejs image.  
-If you are curious about it, you can read the [Dockerfile code for this website](https://github.com/guille-mas/blog/blob/master/Dockerfile).  
-You can run the same version that's available at https://guille.cloud, locally, without caring or knowing what's under the hoods. 
+This website's development and production environments, are nodejs docker images whose [source code](https://github.com/guille-mas/blog/blob/master/Dockerfile) you could read if you want.  
+That means, you can run locally, the same version that's available at https://guille.cloud, without caring or knowing what's under the hoods. 
 And do so any time you want, expecting the same results to happen each time.
 
 <br/>
 
 Go ahead and try it
 
-<Code language="bash" snippet={`docker run -p 8000:8000 --rm guillermomaschwitz/blog:1-production`} />  
+<Code 
+language="bash" 
+snippet={`docker run --rm 
+    -p 8000:8000 
+    --name guillecloud 
+    guillermomaschwitz/blog:1-production`} 
+/>  
 
 An exact version of this website should be available at http://0.0.0.0:8000 or http://localhost:8000. Your container has the same content you are reading in this tab.
 
@@ -122,9 +138,9 @@ An exact version of this website should be available at http://0.0.0.0:8000 or h
 
 Unless my Dockerfile it's buggy, it should work out of the box, cause Docker did all the heavy lifting for you:
 
-1. Docker attempts to find the image **guillermomaschwitz/blog:1-production** locally. If it locally fails, attempts to pull it from its Dockerhub repository.
-2. Start a new container, with a random name, based on **guillermomaschwitz/blog:1-production**.
-4. Docker binds localhost's port 8000 with the container exposed port 8000 by running it with **-p 8000:8000**. 
+1. It attempted to find the image **guillermomaschwitz/blog:1-production** locally. If that fails will pull it from its [Dockerhub repository](https://hub.docker.com/r/guillermomaschwitz/blog).
+2. Starts a new container, with name **guillecloud**, based on the image.
+4. Binds localhost's port 8000 with the container exposed port 8000 by running it with **-p 8000:8000**. 
 5. Web server logs are streamed to the screen.
 6. The running container is destroyed once stopped, because of the flag **--rm**.
 
@@ -132,12 +148,13 @@ Unless my Dockerfile it's buggy, it should work out of the box, cause Docker did
 
 **docker container ls** lists every running container. The output should look as follows:
 
+<Code language="bash" snippet={`docker container ls`} />  
+
 <Code 
-language="bash" 
-snippet={`docker container ls`} 
-output={`
+language="terminal"
+snippet={`
 CONTAINER ID        IMAGE                                  COMMAND                  CREATED             STATUS              PORTS                    NAMES
-7ecd413bdf91        guillermomaschwitz/blog:1-production   "docker-entrypoint.s…"   23 minutes ago      Up 23 minutes       0.0.0.0:8000->8000/tcp   peaceful_almeida
+7ecd413bdf91        guillermomaschwitz/blog:1-production   "docker-entrypoint.s…"   23 minutes ago      Up 23 minutes       0.0.0.0:8000->8000/tcp   guillecloud
 `}/>  
 
 If everything went well, you should see a similar list in your terminal; A running container with a unique ID and NAME.
@@ -150,6 +167,17 @@ To list stopped containers as well, use the **-a** flag.
 
 <Code language="bash" snippet={`docker image ls`} />  
 
+<Code language="terminal" 
+snippet={`
+REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
+guillermomaschwitz/blog   1                   14699ea162d0        2 hours ago         885MB
+guillermomaschwitz/blog   1-production        14699ea162d0        2 hours ago         885MB
+node                      13.1.0-alpine       f20a6d8b6721        3 months ago        105MB
+`} 
+/>
+
+In this case, both TAGS for __guillermomaschwitz/blog__ belong to the same image, because both share the same IMAGE ID.
+
 ##### Execute a command inside a running container
 
 <Code language="bash" snippet={`docker exec <container-name-or-id> <command>`} />  
@@ -160,9 +188,22 @@ Use the **-it** flag to execute the command in "interactive" mode, streaming it'
 
 Run bash or other available shell in interactive mode to debug or try things inside your container.
 
-<Code language="bash" snippet={`docker exec -it <container-name-or-id> bash`} />
+<Code language="bash" snippet={`docker exec -it guillecloud bash`} />
+
+<Code language="terminal" 
+snippet={`bash-5.0$ whoami
+node
+bash-5.0$ pwd
+/home/node/blog
+bash-5.0$ echo "I am inside a container!"
+I am inside a container!
+bash-5.0$ exit
+exit
+guille@localhost % `}/>
 
 ##### Run a command in a new container
+
+The same as exec, but inside a new container.
 
 <Code language="bash" snippet={`docker run [--name new-container-name] <docker-image> <command>`} />
 
@@ -182,13 +223,15 @@ Example:
 
 <Code language="bash" snippet={`docker image rm guillermomaschwitz/blog:1-production`} />
 
+<Code language="terminal" snippet={`Untagged: guillermomaschwitz/blog:1-production`} />
+
 <br/>
 
 <hr/>
 
 ## Create a custom image with a PHP development environment
 
-### Share your project folder with Docker
+### Previous Steps
 
 Allow Docker to read your project's folder.  
 At least in Docker Desktop for MacOS, it goes like this:  
@@ -199,33 +242,46 @@ At least in Docker Desktop for MacOS, it goes like this:
 
 Avoid symlinked folders cause Docker will complaint.
 
-#### Create the basic folder and files required for this project
+#### Download an example PHP project
 
-Copy the sample project from https://github.com/guille-mas/blog/tree/master/code-samples/php-docker-development-environment
+Download [this sample PHP project](https://github.com/guille-mas/blog/tree/master/code-samples/php-docker-development-environment) from my Github account.  
+The project it's trivial and aimed at helping you understand the big picture about docker containers. 
+Besides providing you with a few useful configuration tricks for any PHP development environment.
+
+<br/>
+
+For small organizations I like to use monorepos. That way I can put every relevant file about a project and it's environment in the same place.   
+Overall monorepos ease communication of in-depth aspects of your project, removing bottlenecks and bureocracy, besides helping others know as much of the project as they need.  
+
+<br/>
+
+Any risk of exposing those files can be safely managed with code reviews, and a git flow adapted to your organization's needs.  
+Believe me, if you are thinking "I don't have time to implement code reviews", and you don't automate your tests, then you are wasting way more time fixing bugs and poor code.
 
 #### Sample project structure
 
-- ./config
-    - The place for server configuration files.
-- ./src
-    - PHP sourcode
-- ./src/public
-    - Public facing PHP sourcode.
-- Makefile
+- **./config/development.ini**
+    - PHP configuration for a development environment full of useful features
+- **./src**
+    - PHP code that shouldn't be exposed to the public
+- **./src/public**
+    - Files you want to expose to the public, like a front controller, static assets, etc
+- **Makefile**
     - High level cli interface. Important to delay learning curve to others, and ease adoption of the environment.
-- README.md
-    - The first place where people should look for guidance to start the environment.
-    Should have the minimum amount of information. Iterate on it each time someone asks you something that was not docummented there.
-- ./data
+- **README.md**
+    - The first place where people should look for guidance to start the environment.  
+    Should have the minimum amount of information to get new devs quickly on boarded to the project.  
+    Iterate on it each time someone asks you relevant questions whose answers where not docummented here.
+- **./data**
     - Folder used by PHP's tracer and profiler to output reports.
-- .gitignore
-    - Flag files to exclude from GIT repo.
-- .dockerignore
+- **.gitignore**
+    - Flag files to exclude from GIT repo, like credentials, secrets, vendor files, build constructs, etc.
+- **.dockerignore**
     - Flag files to exclude from Docker builds.
 
 #### The Dockerfile
 
-Docker uses Dockerfiles as recipes to creat images.
+Docker uses Dockerfiles as recipes to create images. Let's explore it's syntax and a few useful instructions.
 
 <CodeWave>
 
@@ -246,17 +302,19 @@ Docker images are tagged with the following syntax:
 
 <br/>
 
-The image you choose must exist and you need to have access to it.  
-Use the [official PHP image, bundled with Apache](https://hub.docker.com/_/php), whose name its "php", and its version "7.4.2-apache"  
-Be explicit with image versions you consume, to protect your image from upstream's breaking changes.
+
+Docker has a vibrant ecosystem of images you can use. One of the most popular repositories places to look for it's [DockerHub](https://hub.docker.com/), with thousands of repositories publicly available, built by devops practitioners around the world.  
 
 <br/>
 
-Docker has a vibrant ecosystem of images you can consume. One of the most popular repositories for storing them is [DockerHub](https://hub.docker.com/), with thousands of repositories publicly available, built by devops practitioners around the world.  
+The image you choose must exist and you need to have access to it.  
+Use the [official PHP image, bundled with Apache](https://hub.docker.com/_/php), whose name its "php", and its version "7.4.2-apache". 
+If you want to check it's source code, [read its Dockerfile from Github](https://github.com/docker-library/php/blob/master/7.4/buster/apache/Dockerfile).  
+To protect your image from upstream's breaking changes, always use explicit version tags. This principle applies to every external dependency you use in your projects, from Docker images to composer and npm packages.
 
-> For improved security and stability, your custom images should rely on [official images](https://docs.docker.com/docker-hub/official_images/); A curated list of images maintained by strict quality standards
+<br/>
 
-If you want to check it's source code, you can [read its Dockerfile from Github](https://github.com/docker-library/php/blob/master/7.4/buster/apache/Dockerfile).  
+> For improved security and stability, your custom images should rely on [official images](https://docs.docker.com/docker-hub/official_images/); A curated list of images maintained by stricter quality standards
 
 <br/>
 
@@ -265,9 +323,9 @@ If you want to check it's source code, you can [read its Dockerfile from Github]
 FROM php:7.4.2-apache AS dev-image
 ```
 
-##### Set an alias for your image
+##### Choose an alias for your image
 
-An alias labels an image in the build process. The label for **php:7.4.2-apache** is **dev-image**.  
+An alias help you reference one of your images in your build process. In this case the alias is **dev-image**.  
 
 <br/>
 
@@ -284,16 +342,16 @@ RUN docker-php-ext-enable xdebug
 
 ##### Run shell commands
 
-**RUN** will run each sentence in the default shell.
+Each sentence passed to **RUN** will be executed at build time inside your image.
 
 <br/>
 
 Install [XDebug](https://xdebug.org/); A development PHP extension that packs handy features to make your life easier while debugging stuff.  
-As [docummented here](https://hub.docker.com/_/php), use _pecl_, and _docker-php-ext-enable_.  
+As [docummented here](https://hub.docker.com/_/php), use _pecl_, and _docker-php-ext-enable_ instead of apt-get or other methods.  
 
 <br/>
 
-You can use RUN as many times as you want, but bear in mind that every time you use it, the size of your image will increase significantly.
+You can use RUN as many times as you want, but every time you use it, a new layer will be added to your image, increasing it's size.
 
 <br/>
 
@@ -307,9 +365,9 @@ RUN pecl install xdebug-2.9.2 \
 
 ##### Optimize the size of your image
 
-Luckily, you can chain shell commands together in order to reduce the amount of RUN lines.
+You can chain shell commands together in order to reduce the amount of layers that compound an image.
 
-> Unless you want to cache specific steps of your build process, it is a good practice, to replace consecutive RUN lines, by a single line of chained sentences
+> Unless you want to cache specific steps of your build process, it's a good practice to replace consecutive RUN lines, by a single line of chained sentences
 
 
 ```docker
@@ -331,7 +389,7 @@ COPY ./config/development.ini /usr/local/etc/php/conf.d/
 
 **COPY** allows you to copy files and folders from your host into your image.
 
-1. Let's create with **RUN**, a folder  /tmp/mydata inside your image, to store output files generated with XDebug tracer and profiler
+1. Let's **RUN** a command to create a folder  /tmp/mydata inside your image; The place to store output files generated with XDebug tracer and profiler (see config/development.ini).
 1. **COPY** the file config/development.ini into /usr/local/etc/php/conf.d/ inside your image, so PHP can load your settings automatically
 
 
@@ -360,6 +418,7 @@ RUN ln -s /usr/local/project/public /var/www/html
 1. **COPY** your local folder src/ into /usr/local/project inside your images, and assign the ownership of those files to user www-data
 2. Then use **RUN** to symlink /var/www/html to /usr/local/project/public folder
 
+The **--chown=user:group** option, sets the ownership your files will have inside the image.
 
 ```docker
 # My PHP Development environment
@@ -389,7 +448,7 @@ EXPOSE 80
 <br/>
 
 This is just an example, cause there's no need to expose port 80, since it's been done already on the base image.  
-Bear in mind that an open port at the container, at least with the network type we are using in this tutorial won't be available at your Docker host, unless you map both ports when running the container with parameter -p.
+Keep in mind that an open port at the container, at least when using bridged networks, won't be available at localhost, unless you map both ports at runtime.
 
 <br/>
 
@@ -414,24 +473,26 @@ RUN ln -s /usr/local/project/public /var/www/html
 EXPOSE 80
 ```
 
-And that's it. You can now use this file to build your custom image.
+##### And that's it!
+
+You can now use this Dockerfile to build your custom image.
 
 <br/>
 
-Check [the Dockerfile reference](https://docs.docker.com/engine/reference/builder/) for a deep dive into every option available when writing custom images.
+Check [the Dockerfile reference](https://docs.docker.com/engine/reference/builder/) for a deep dive into every option available to write your own images, or customize this example.
 
 </CodeWave>
 
 
-### Basic image workflows
+### Basic docker workflows
 
 #### Build your image
 
 <Code language="bash" snippet={`docker build -t my-project:1.0-development --target dev-image .`} />
 
 Builds and tags your image as **my-project:1.0-development**.  
-The last parameter is the file system context at your Docker host. Any file you want to **COPY** into the image, must be inside the given context. 
-The context must be shared with Docker through Docker settings, under the "File Sharing" section.
+The last parameter is the file system context at your docker host. Any file you want to **COPY** into the image, must be inside the given context. 
+You should allow docker to access your project's folder first. See the "File Sharing" settings section in Docker for Desktop.
 
 <br/>
 
@@ -439,30 +500,51 @@ If everything went well, you should see **my-project** custom image between your
 
 <Code language="bash" snippet={`docker image ls`} />
 
+<Code language="bash" snippet={`docker image ls`} />
+
 #### Test it as a standalone container
+
+Test your image before sharing it.  
+Do not mount any volume, to discard issues in the build process.
 
 <Code 
 language="bash" 
-snippet={`docker run -p 80:80/tcp --rm --name my-project-container my-project:1.0-development`} 
+snippet={`docker run --rm 
+    -p 80:80/tcp 
+    --name my-project-container 
+    my-project:1.0-development`} 
 />
 
 #### Run it as a development environment
 
-Mount your source code and data folders with the **-v** param.  
+How can you use this image as a development environment?  
+Simply by mounting your the folder containing your project code inside the environment.
+
+<br/>
+
+Let's run a new container, with your source code mounted into it. 
+And mount as well a local "data/" folder, as the folder where XDebug profiler and tracer dump their files inside the container. 
+That way you can read them from your host.  
+Use the **-v host-folder:container-folder** parameters for each volume.  
 You should also use **--rm** to tell Docker to discard the container after using it.
 
 <Code 
 language="bash" 
-snippet={`docker run -p 80:80/tcp -v /absolute-path-to-project/src:/usr/local/project -v /absolute-path-to-project/data:/tmp/mydata --rm --name my-project-container my-project:1.0-development`} 
+snippet={`docker run --rm 
+    -p 80:80/tcp
+    -v "$PWD"/src:/usr/local/project 
+    -v "$PWD"/data:/tmp/mydata 
+    --name my-project-container 
+    my-project:1.0-development`} 
 />
 
-#### Push it to your Dockerhub repo
+#### Share your image
 
 To share it with other developers, push the image to your Dockerhub repo.
 
 <Code 
 language="bash" 
-snippet={`docker login -u your-dockerhub-username -p "your-dockerhub-password"`}
+snippet={`docker login`}
 />
 
 <Code 
@@ -472,14 +554,23 @@ snippet={`docker push your-dockerhub-username/my-project`}
 
 <br/>
 
+I hope this first tutorial has been useful to you.  
+Feel free to share your thoughts with me at <ContactLink/>
+
 <hr/>
 
 ### Whats next
 
-In my next post, I'll show you how to use **docker-compose** to wire multiple containers together, 
-the advantages of it's declarative style, and how to write one image per environment type using Docker **multi stage builds**.
+In next posts I'll write about:
+
+- Howto use **environment variables** to expose configurable aspects of your containers
+- A few **network topologies** you can create to connect multiple containers together.
+- How to write one image per environment type using Docker **multi stage builds**. 
+- An introduction to **docker-compose**, a useful tool to declare and manage your development environments.
+- Refactoring tips for legacy **PHP** and **Javascript** codebases
 
 <br/>
 
-Let me know your thoughts at <ContactLink/>
+**Stay tuned!**
+
 

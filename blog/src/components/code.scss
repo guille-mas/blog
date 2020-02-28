@@ -2,16 +2,11 @@
 
 .code-container {
     margin: 1rem 0;
-    font-size: 0.8rem;
 
     &::after {
       content: "";
       clear: both;
       display: table;
-    }
-
-    @media ($media-wide) {
-      font-size: 1rem;
     }
 
     &.left {
@@ -41,5 +36,37 @@
         }
       }
     }
+
+    code[class*="language-"],
+    pre[class*="language-"] {
+      background: none;
+      font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+      white-space: pre;
+      word-spacing: normal;
+      word-break: normal;
+      word-wrap: normal;
+      line-height: 1.5;
+
+      -webkit-hyphens: none;
+      -moz-hyphens: none;
+      -ms-hyphens: none;
+      hyphens: none;
+    }
+
+    /* Code blocks */
+    pre[class*="language-"] {
+      padding: 1rem;
+      margin: .5rem 0;
+      overflow: auto;
+      border-radius: 0.3rem;
+    }
+
+    /* Inline code */
+    :not(pre) > code[class*="language-"] {
+      padding: .1rem;
+      border-radius: .3rem;
+      white-space: normal;
+    }
+
   }
   

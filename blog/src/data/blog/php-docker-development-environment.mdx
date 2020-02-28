@@ -27,7 +27,7 @@ In this post you will use Docker to wrap a PHP project into a full fledged, port
 
 ### Requirements
 
-You need **Docker engine** ( version 19.03 or higher ), and **GNU Make**.
+You need **Docker engine** ( mine is 19.03 ), and **GNU Make**.
 
 <br/>
 
@@ -35,16 +35,23 @@ The easiest way to setup Docker in Windows and MacOS is by getting [Docker Deskt
 GNU Make might be already available in Windows through PowerShell, and its usually present on most popular Linux distros as well as MacOS.  
 Linux users can get both via their default package manager. Two popular package managers for other environments are brew (MacOS), and chocolatey (Windows).
 
+<br/>
+
+Next, create a DockerHub account, and sign in from the command line.
+
+<Code language="terminal" snippet={`docker login`} />  
+
 ### Basic Docker concepts
 
-Docker allows you to pack your applications around a runtime environment of your choice, provision your environment once, and reuse it everywhere. 
-Containers are lighter than virtual machines and share the kernel of their host; Usually run a single process, packed with the minimum required resources.  
-Instead of long lasting dedicated servers, containerized infrastructure should be ephemeral and disposable. 
+Docker allows you to pack your applications around a runtime environment of your choice, provision your environment once, and deploy it anywhere with a docker engine. 
+Containers are lighter than virtual machines and share the kernel of their host; Usually run a single process, packed with a minimum operating system, files and environment variables.  
+Instead of long lasting dedicated servers, containerized infrastructure can be ephemeral and disposable. 
 
 ##### Images
 
-A Docker image it's the blueprint from where containers are created. An image it's a stopped container. 
-For those comming from software development and object oriented programming, an image can be seen as a class and a container as an instance.  
+A Docker image it's the blueprint from where containers are created.  
+For those comming from software development and object oriented programming, an image can be seen as a class and a container as an instance. 
+An image it's just a stopped container.  
 Custom images are extended from existing images, and can be shared with others by pushing them to docker repositories.
 
 <br/>

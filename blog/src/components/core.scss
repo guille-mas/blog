@@ -189,17 +189,39 @@ h1 {
   color: $black;
 }
 
-h2, h3, h4 {
-  font-size: 1.4rem;
-  line-height: 1.8rem;
+h2, h3, h4, h5, h6 {
+  line-height: 1.6em;
   color: $red;
 }
 
-h5,
-h6 {
+h3, h4 {
+  margin-bottom: .8rem;
+  margin-top: .8rem;
+}
+
+h5,h6 {
+  margin-bottom: .5rem;
+  margin-top: .5rem;
+}
+
+h2 {
+  font-size: 1.4rem;
+}
+
+h3 {
+  font-size: 1.3rem;
+}
+
+h4 {
   font-size: 1.2rem;
-  line-height: 1.6rem;
-  color: $red;
+}
+
+h5 {
+  font-size: 1.1rem;
+}
+
+h6 {
+  font-size: 1rem;
 }
 
 /* Links */

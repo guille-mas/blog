@@ -12,6 +12,7 @@ import { CodeWave } from "gatsby-theme-waves"
 import Code from "components/code"
 import ContactLink from "components/contact-link"
 import "prismjs/components/prism-docker"
+import "prismjs/components/prism-ini"
 
 > Welcome! This post it's a work in progress and will be changing during the next few days. 
 > Don't hesitate to write me an email to <ContactLink/> with any comments, critics or advices you might have.
@@ -19,16 +20,16 @@ import "prismjs/components/prism-docker"
 ### Intro
 
 Maybe because I studied psychology for a few years, before getting back into software development. 
-Or maybe because I try to learn a little bit of the business and organizational side on every project I work. 
-Is that I've come to the conclusion, that human factors outweigh technical ones, in the fate of most business ideas. 
-Simply because humans time is way more expensive than computers time, and human tasks take much longer as well.
-So whenever I am working on internal tools, I try to think on the users like I do with customers; 
-Empathy in my opinion, it's key to increase the business outcomes produced with them.  
+Because I try to learn a little bit of the business and organizational side of the projects I get involved. 
+Or simply because human time is more expensive, and take much longer, than computing time. 
+It's my opinion that human factors outweigh technical ones, in the fate of most business ideas. 
+So whenever I build internal tools, I try to think on the users of those tools like I do with customers. 
+Empathy in my opinion, it's key to increase the business outcomes produced with them.
 
 <br />
 
-In this post you will use Docker to wrap a PHP project into a full fledged, portable, development environment. With several tools to debug and understand your application.
-Hopefully, the features contained on this development environment, will help you and your team, become more effective on your day to day duties.
+In this post I use Docker to wrap a PHP project into a full fledged development environment. 
+Built with features that hopefully, will help you and your team, become more effective on your day to day duties. 
 
 ### Requirements
 
@@ -48,9 +49,9 @@ Next, create a DockerHub account, and sign in from the command line.
 
 ### Basic Docker concepts
 
-Docker allows you to pack your applications around a runtime environment of your choice, provision your environment once, and deploy it anywhere with a docker engine. 
+With docker you can pack applications with their own runtime environment, provision it once, and deploy it into any machine, running a docker engine. 
 Containers share the kernel of their host, and usually run a single process, bundled with the minimum operating system, files, and environment variables required. 
-As a result, containers are lighter than virtual machines, and allows the administration of resources by process.
+As a result, containers are lighter than virtual machines, and allow detailed resource administration.
 Instead of long lasting dedicated servers, containerized infrastructure can be ephemeral and disposable.
 
 ##### Images
@@ -60,12 +61,6 @@ For those comming from software development and object oriented programming, an 
 An image it's just a stopped container.  
 Custom images are extended from existing images, and can be shared with others by pushing them to docker repositories.
 
-<br/>
-
-Each Docker image is composed of several layers, and each layer encapsulates an isolated portion of a file system.  
-Every layer is identified with a unique hash ID. The layer at the top of the stack gives the image it's hash ID. 
-You can create a new container from a specific layer by its ID. The resulting file system will be the sum of every stacked layer created before.  
-
 ##### Windows Images vs Linux images
 
 Docker can run two types of images: Linux or Windows images.  
@@ -74,19 +69,18 @@ It's possible to run Windows images on a computer running Linux, and visceversa,
 Both Windows and MacOS docker versions run Linux images by default, on top of a lightweight Linux VM. However Docker for Windows can spin up Windows images natively.  
 In MacOS or Linux, you would need to setup a Windows VM as your docker host to do that.
 
-##### Docker Volumes
+##### Containerized file systems
 
-At runtime, you can mount folders of your Docker host as volumes inside a container. The way to do that is by running your container with the **-v** (volume) flag.  
-The next command mounts your current folder as a folder inside a container.
-
-<Code 
-language="bash" 
-snippet={`docker run -v "$PWD":/mount-destination docker-image`} />  
+You can copy files into an image from your host, add files from a url, create them by running shell commands, or mount a folder from your host as a volume. 
+Each time one of those operations are performed, a new image layer wrap those changes, pretty much like source control commits.  
+Every layer is identified with a unique hash ID. The layer at the top of the stack identifies the image like the last commit on a branch. 
+You can create new containers from any layer on the stack. The resulting file system it's the sum of every stacked layer created before.  
 
 ##### Inmutable vs mutable images
 
-As usual, maintaining state on your applications is harder than not having state at all. Because state introduces edge cases you must consider. 
-That's why it's easier to cover every scenario when you write automated tests on a codebase implemented with a functional approach. And the same applies when you implement your infrastructure as code.  
+As usual, maintaining state on your applications is harder than not having state at all. Because state introduces edge cases you must consider, and complicates testing.  
+It's usually easier to cover every scenario when testing a codebase written with a functional approach than an object oriented alternative. 
+And the same applies when we write code to automate infrastructure.
 
 <br/>
 
@@ -119,9 +113,9 @@ Bridge are single host networks, and the default option when running Linux docke
 
 <hr/>
 
-### Run an inmutable image
+### Hello World
 
-This website's development and production environments, are nodejs docker images whose [source code](https://github.com/guille-mas/blog/blob/master/Dockerfile) you could read if you want.  
+This website's is built inside a nodejs docker image whose [source code](https://github.com/guille-mas/blog/blob/master/Dockerfile) you could read if you want.  
 That means, you can run locally, the same version that's available at https://guille.cloud, without caring or knowing what's under the hoods. 
 And do so any time you want, expecting the same results to happen each time.
 
@@ -141,17 +135,18 @@ An exact version of this website should be available at http://0.0.0.0:8000 or h
 
 <br/>
 
-Unless my Dockerfile it's buggy, it should work out of the box, cause Docker did all the heavy lifting for you:
+It should work out of the box, cause Docker did all the heavy lifting for you:
 
-1. It attempted to find the image **guillermomaschwitz/blog:1-production** locally. If that fails will pull it from its [Dockerhub repository](https://hub.docker.com/r/guillermomaschwitz/blog).
-2. Starts a new container, with name **guillecloud**, based on the image.
-4. Binds localhost's port 8000 with the container exposed port 8000 by running it with **-p 8000:8000**. 
-5. Web server logs are streamed to the screen.
-6. The running container is destroyed once stopped, because of the flag **--rm**.
+1. Attempts to find a local image tagged as **guillermomaschwitz/blog:1-production**, or pull it from its [Dockerhub repository](https://hub.docker.com/r/guillermomaschwitz/blog).
+2. Starts a new container and name it **guillecloud**.
+4. Bind port 8080 on your host with 8000 on the container **-p 8080:8000**. 
+5. Stream logs to STDOUT
 
-#### List every container running at your Docker host
+The **--rm** flag tells docker to destroy the container once stopped.
 
-**docker container ls** lists every running container. The output should look as follows:
+<br/>
+
+Check if your container is running with **docker container ls**.
 
 <Code language="bash" snippet={`docker container ls`} />  
 
@@ -234,7 +229,7 @@ Example:
 
 <hr/>
 
-## Create a custom image with a PHP development environment
+## Create the development environment for a PHP project
 
 ### Previous Steps
 
@@ -245,7 +240,7 @@ At least in Docker Desktop for MacOS, it goes like this:
 2. Go to File Sharing, under Resources section
 3. Add your folder and apply changes
 
-Avoid symlinked folders cause Docker will complaint.
+Avoid symlinked folders cause Docker doesn´t like them.
 
 #### Download an example PHP project
 
@@ -284,6 +279,114 @@ Believe me, if you are thinking "I don't have time to implement code reviews", a
 - **.dockerignore**
     - Flag files to exclude from Docker builds.
 
+
+#### The PHP development INI file
+
+A development environment is different from a production environment, because it should help developers understand their codebase. 
+To do so, I wrote the following configuration file. Let's see it.
+
+
+<CodeWave>
+
+```ini
+###############################
+# General
+#############
+error_reporting = E_ALL
+display_startup_errors = On
+display_errors = On
+xdebug.var_display_max_depth=9
+````
+##### Display errors
+
+Developers should have complete visibility over any error or exception that might rise at run time.
+
+<br/>
+
+They also need to see the data structures they work with ease. **xdebug.var_display_max_depth** affects how deep will go var_dump() function with complex arrays and objects.
+
+
+```ini
+###############################
+# Debugger
+# Disabled by default
+# Triggered by an HTTP request
+# containing the parameter 
+# XDEBUG_SESSION_START
+#############
+xdebug.remote_enable=1
+# Starting the remote debugger 
+# makes the server reponses slower
+# Instead, we will set an idekey 
+# to trigger an attempt to connect
+# to the dbgp client
+xdebug.remote_autostart=0
+xdebug.remote_host="host.docker.internal"
+xdebug.remote_mode=req
+# The port your IDE will use to wait 
+# for a connection from xdebug
+xdebug.remote_port=9001
+````
+
+##### PHP Remote Debugger
+
+Using a debugger is way more effective than var_dump()'ing variables and refreshing the screen, but it slows down the execution of the program. 
+These settings allow devs to enable a debugging session when they need so, by sending an  HTTP parameter to the server with name **XDEBUG_SESSION_START**, in their requests.  
+When **XDEBUG_SESSION_START** is present on the request, in a GET, POST, PUT, DELETE, or UPDATE type of request, Xdebug will start the debugger.  
+The debugger attempts to connect to the docker host ip, specified by the docker global variable **host.docker.internal**, and port 9001.
+
+<br/>
+
+Once you setup your IDE or editor to listen for connections into port 9001, you will be able to handle the debugger running from the containerized server, from your IDE.
+
+
+
+```ini
+###############################
+# Profiler
+# Disabled by default
+# Triggered by an HTTP request
+# containing the parameter 
+# XDEBUG_PROFILE
+#############
+xdebug.cli_color=1
+xdebug.profiler_enable=0
+xdebug.profiler_enable_trigger=1
+xdebug.profiler_output_dir="/tmp/mydata"
+xdebug.profiler_output_name="cachegrind.out.%H.%t.%p"
+````
+
+##### PHP Profiler
+
+Send an HTTP request with the parameter **XDEBUG_PROFILE**, a file is created at /tmp/mydata. 
+A human readable list of every function call made, while your request was handled by the app.  
+Total memory consumption will be reported at every step of the flow.
+
+
+```ini
+###############################
+# Tracer
+# Disabled by default
+# Triggered by an HTTP request
+# containing the parameter 
+# XDEBUG_TRACE
+#############
+xdebug.trace_enable_trigger=1
+xdebug.show_mem_delta=1
+xdebug.trace_output_dir="/tmp/mydata"
+xdebug.trace_output_name="trace.%H.%t.%p"
+xdebug.collect_params=3
+```
+
+##### PHP Tracer
+
+Send an HTTP request with the parameter **XDEBUG_TRACE**, to create a file at /tmp/mydata.
+Then you can open the file in a tracer build program like https://github.com/kuun/xdebug-trace-viewer to get a complete tracer report.  
+This is useful when you want to understand what happens on a new project, or how a framework works under the hoods.
+
+</CodeWave>
+
+
 #### The Dockerfile
 
 Docker uses Dockerfiles as recipes to create images. Let's explore it's syntax and a few useful instructions.
@@ -297,9 +400,9 @@ FROM php:7.4.2-apache
 
 ##### Use an official base image
 
-**FROM** its usually the first instruction you will use on your Dockerfiles.  
-It tells Docker, which base image to use.  
-Docker images are tagged with the following syntax:
+**FROM** tells docker which base image has to use for subsequent instructions. 
+Because of this, it's the first instruction on the Dockerfile.   
+Every image is tagged with the following syntax:
 
 <br/>
 
@@ -308,7 +411,7 @@ Docker images are tagged with the following syntax:
 <br/>
 
 
-Docker has a vibrant ecosystem of images you can use. One of the most popular repositories places to look for it's [DockerHub](https://hub.docker.com/), with thousands of repositories publicly available, built by devops practitioners around the world.  
+Docker has a vibrant ecosystem of images you can use. One of the most popular repositories places to look for it's [DockerHub](https://hub.docker.com/), with thousands of publicly available repositories, built by devops practitioners around the world.  
 
 <br/>
 
@@ -347,16 +450,12 @@ RUN docker-php-ext-enable xdebug
 
 ##### Run shell commands
 
-Each sentence passed to **RUN** will be executed at build time inside your image.
-
-<br/>
-
-Install [XDebug](https://xdebug.org/); A development PHP extension that packs handy features to make your life easier while debugging stuff.  
+First, install [XDebug](https://xdebug.org/); A development PHP extension that packs handy features to make your life easier as a developer.  
 As [docummented here](https://hub.docker.com/_/php), use _pecl_, and _docker-php-ext-enable_ instead of apt-get or other methods.  
 
 <br/>
 
-You can use RUN as many times as you want, but every time you use it, a new layer will be added to your image, increasing it's size.
+You can use RUN as many times as you want, but every time you use it, a new layer gets added to the stack, increasing image size.
 
 <br/>
 
@@ -423,7 +522,7 @@ RUN ln -s /usr/local/project/public /var/www/html
 1. **COPY** your local folder src/ into /usr/local/project inside your images, and assign the ownership of those files to user www-data
 2. Then use **RUN** to symlink /var/www/html to /usr/local/project/public folder
 
-The **--chown=user:group** option, sets the ownership your files will have inside the image.
+**--chown=user:group** sets ownership of those files.
 
 ```docker
 # My PHP Development environment
@@ -448,12 +547,11 @@ EXPOSE 80
 
 ##### Expose ports
 
-**EXPOSE** allows you to open ports in the container.
+**EXPOSE** open one or multiple ports in the container.
 
 <br/>
 
 This is just an example, cause there's no need to expose port 80, since it's been done already on the base image.  
-Keep in mind that an open port at the container, at least when using bridged networks, won't be available at localhost, unless you map both ports at runtime.
 
 <br/>
 
@@ -557,6 +655,125 @@ language="bash"
 snippet={`docker push your-dockerhub-username/my-project`}
 />
 
+
+
+#### The Makefile
+
+Let's see now howto define a high level cli inteface to speed up on boarding, by hidding docker concepts behind a single file, with a friendly syntax, that's easy to read.
+
+
+<CodeWave>
+
+```makefile
+# Bake an image of your development environment
+build:
+	docker build -t my-project:1.0-development --target dev-image .
+````
+
+##### make build
+
+
+```makefile
+# Bake an image of your development environment
+build:
+	docker build -t my-project:1.0-development --target dev-image .
+
+start:
+	docker run -p 80:80/tcp \
+        -v ${PWD}/src:/var/www/html \
+        -v ${PWD}/data:/tmp/mydata \
+        --rm --name my-project-container \
+        my-project:1.0-development
+
+````
+
+##### make start
+
+
+```makefile
+# Bake an image of your development environment
+build:
+	docker build -t my-project:1.0-development --target dev-image .
+
+start:
+	docker run -p 80:80/tcp \
+        -v ${PWD}/src:/var/www/html \
+        -v ${PWD}/data:/tmp/mydata \
+        --rm --name my-project-container \
+        my-project:1.0-development
+
+exec:
+	@read -p "Command to execute: " command; \
+	docker exec my-project-container sh -c "$$command"
+
+````
+
+##### make exec
+
+
+```makefile
+# Bake an image of your development environment
+build:
+	docker build -t my-project:1.0-development --target dev-image .
+
+start:
+	docker run -p 80:80/tcp \
+        -v ${PWD}/src:/var/www/html \
+        -v ${PWD}/data:/tmp/mydata \
+        --rm --name my-project-container \
+        my-project:1.0-development
+
+exec:
+	@read -p "Command to execute: " command; \
+	docker exec my-project-container sh -c "$$command"
+
+stop: 
+	-docker container stop my-project-container
+
+````
+
+##### make stop
+
+
+```makefile
+# Bake an image of your development environment
+build:
+	docker build -t my-project:1.0-development --target dev-image .
+
+start:
+	docker run -p 80:80/tcp \
+        -v ${PWD}/src:/var/www/html \
+        -v ${PWD}/data:/tmp/mydata \
+        --rm --name my-project-container \
+        my-project:1.0-development
+
+exec:
+	@read -p "Command to execute: " command; \
+	docker exec my-project-container sh -c "$$command"
+
+stop: 
+	-docker container stop my-project-container
+
+clean: stop	
+	-docker container rm my-project-container
+	docker image rm my-project:1.0-development
+
+````
+
+##### make clean
+
+</CodeWave>
+
+It's important to implement a common set of commands across projects to ease understanding and integration with automation tools. 
+I like to use commands like: build, clean, start, stop, deploy, test, all. 
+Because are concise and self descriptive, besides being some of them pretty common across other projects I've seen in the wild.
+
+#### The README.md
+
+Always remember to wrap your environment with a high level docummentation, so those who have to work with it, can move faster without depending on you.  
+Docummentation is critical for communication, and reduce the dependency a team has on the maintainer of the environment.
+It also helps to spread the knowledge about the product, which is something very good if you plan to go on vacations someday.
+
 <br/>
 
 I hope this first tutorial has been useful to you.  
@@ -566,13 +783,9 @@ Feel free to share your thoughts with me at <ContactLink/>
 
 ### Whats next
 
-In next posts I'll write about:
-
-- Howto use **environment variables** to expose configurable aspects of your containers
-- A few **network topologies** you can create to connect multiple containers together.
-- How to write one image per environment type using Docker **multi stage builds**. 
-- An introduction to **docker-compose**, a useful tool to declare and manage your development environments.
-- Refactoring tips for legacy **PHP** and **Javascript** codebases
+In the next post I show you how to build a production image as well with docker multi-stage builds. 
+How to create sandboxed docker networks to connect multiple containers together. 
+And **docker-compose**, an interesting tool to declare your dev infrastructure in yaml format.
 
 <br/>
 

@@ -19,17 +19,17 @@ import "prismjs/components/prism-ini"
 
 ### Intro
 
-I am convinced that human factors outweigh technical ones in the fate of most business ideas. 
+I am convinced that human factors outweigh technical ones in the fate of most business ideas.  
 Maybe it's because I studied psychology before getting back into software development. 
-Or because I try to learn a little bit of the business and organizational side of the projects I get involved. 
-After all, human time is more expensive than computing time.  
-The same applies when we must design internal tools and processes; 
-Empathy is key to increase the business outcomes produced with them.
+Or because I am curious about the business and organizational side of most projects I get involved. 
+After all, human time is more expensive than computing time. And for good reasons.  
+So, being empathetic while building software; Being it a great product, or an internal tool. 
+Have a great impact in the business outcomes, people can generate with them.
 
 <br />
 
 In this post I use Docker to wrap a PHP project into a full fledged development environment. 
-Built with features that hopefully, will help you and your team, become more effective on your day to day duties. 
+Designed to help you and your team, become more effective on your day to day duties.  
 
 ### Requirements
 
@@ -49,7 +49,7 @@ Next, create a DockerHub account, and sign in from the command line.
 
 ### Basic Docker concepts
 
-With docker you can pack applications with their own runtime environment, provision it once, and deploy it into any machine, running a docker engine. 
+With docker you can pack applications with their own environment, provision it once, and deploy it into any machine running a docker engine. 
 Containers share the kernel of their host, and usually run a single process, bundled with the minimum operating system, files, and environment variables required. 
 As a result, containers are lighter than virtual machines, and allow detailed resource administration.
 Instead of long lasting dedicated servers, containerized infrastructure can be ephemeral and disposable.
@@ -66,26 +66,27 @@ Custom images are extended from existing images, and can be shared with others b
 Docker can run two types of images: Linux or Windows images.  
 The difference is the kernel they need to interact with in order to access hardware resources.  
 It's possible to run Windows images on a computer running Linux, and visceversa, by running a docker engine on top of a virtual machine.
-Both Windows and MacOS docker versions run Linux images by default, on top of a lightweight Linux VM. However Docker for Windows can spin up Windows images natively.  
-In MacOS or Linux, you would need to setup a Windows VM as your docker host to do that.
+Both Windows and MacOS docker versions run Linux images by default, on top of a lightweight Linux VM. However Docker for Windows can spin up Windows images natively. 
+You need a Windows VM to do the same in other operating systems.
 
 ##### Containerized file systems
 
 You can copy files into an image from your host, add files from a url, create them by running shell commands, or mount a folder from your host as a volume. 
 Each time one of those operations are performed, a new image layer wrap those changes, pretty much like source control commits.  
-Every layer is identified with a unique hash ID. The layer at the top of the stack identifies the image like the last commit on a branch.  
-You can create new containers from any layer on the stack. The resulting file system it's the sum of every stacked layer created before.  
+Every layer is identified with a unique hash ID. And the layer at the top of the stack identifies the image like a GIT branch is identified by it's last commit.  
+You can create new containers from any layer on the stack.  
+When a new container is created from a given image tag, or layer ID, the file system inside, is built by summing every file system portion, inside each layer.
 
 ##### Inmutable vs mutable images
 
-As usual, maintaining state on your applications is harder than not having state at all. Because state introduces edge cases you must consider, and complicates testing.  
-It's usually easier to cover every scenario when testing a codebase written with a functional approach than an object oriented alternative. 
-And the same applies when we write code to automate infrastructure.
+Usually, managing state on your applications is harder than not relying on stateless constructs. Because state introduces more variables you have to deal with. 
+Such is the strength of a functional approach vs object oriented.  
+And the same applies when we write our infrastructure as program.
 
 <br/>
-
-Inmutable images are those that are built with every file needed by their main process, and you don't modify their state once deployed.  
-Inmutable images allows you to implement simpler deployment processes, at the expense of longer build times.
+In the context of Docker images. Inmutability happens when an image is built with every file needed by their main process, and you don't modify their state once deployed.  
+Instead of modifying the image while it's running, once a new version of the code it's available for deployment, a new image is baked, and replace the old one.  
+Overall, inmutable images allows you to implement simpler deployment processes, at the expense of longer build times.
 
 ##### Docker networking
 
@@ -107,14 +108,14 @@ Many other implementations exist maintained by third parties.
 
 <br/>
 
-Bridge are single host networks, and the default option when running Linux docker images. Their Windows counter part is NAT.
+Bridge are single host networks, the default option when running Linux docker images, and the network type used on this tutorial. Their Windows counter part is NAT.  
 
 <br/>
 
 #### Hello World
 
 This website's is built inside a nodejs docker image.    
-That means, you can run locally, the same version that's available at https://guille.cloud, without caring or knowing what's under the hoods. 
+That means, you can run the same version available at https://guille.cloud, at your local host, without caring or knowing what's under the hoods. 
 And do so any time you want, expecting the same results to happen each time.  
 You could read it's [source code](https://github.com/guille-mas/blog/blob/master/Dockerfile) if you are curious about it.
 
@@ -137,7 +138,7 @@ An exact version of this website should be available at http://0.0.0.0:8080 or h
 It should work out of the box, cause Docker did all the heavy lifting for you:
 
 1. Attempts to find a local image tagged as **guillermomaschwitz/blog:1-production**, or pull it from its [Dockerhub repository](https://hub.docker.com/r/guillermomaschwitz/blog).
-2. Starts a new container and name it **guillecloud**.
+2. Starts a new container labeled as **guillecloud**.
 4. Bind port 8080 on your host with port 8000 on the container with the **-p** param. 
 5. Stream logs to STDOUT and errors to STDERR
 
@@ -154,7 +155,8 @@ node                      13.1.0-alpine       f20a6d8b6721        3 months ago  
 `} 
 />
 
-In this case, both TAGS for __guillermomaschwitz/blog__ belong to the same image, because both share the same IMAGE ID.
+In this case, both TAGS for **guillermomaschwitz/blog** belong to the same image, because both share the same IMAGE ID.  
+**node:13.1.0-alpine** (or f20a6d8b6721) it's the base image of **guillermomaschwitz/blog**.
 
 ###### Check if your container is running
 
@@ -213,34 +215,42 @@ node                      13.1.0-alpine       f20a6d8b6721        3 months ago  
 
 That's because node:13.1.0-alpine it's the base image on top of which, the image 14699ea162d0 (identified by tags "guillermomaschwitz/blog:1" and "guillermomaschwitz/blog:1-production") was built.
 
+You can remove the base image in two ways:
+
+<Code language="bash" snippet={`docker image rm f20a6d8b6721`} />
+
+Or
+
+<Code language="bash" snippet={`docker image rm node:13.1.0-alpine`} />
+
 <hr/>
 
 ## The development environment
 
 ### The big picture
 
-In this section, I show you the source code of a working docker development environment, with a very silly php codebase.  
+In this section, I show you the source code of a working docker development environment, with a trivial php codebase.  
 Download [this sample PHP project](https://github.com/guille-mas/blog/tree/master/code-samples/php-docker-development-environment) from my Github account.  
 
 ##### Focus on the following files
 
 ###### The PHP configuration file
 
-This file configures the behaviour of a decent PHP development environment. It's located in the config/ folder.
+This file configures the behaviour of what I consider a decent PHP development environment. It's located in the config/ folder.
 
 ###### The Dockerfile
 
-The rosetta stone of this tutorial; the file where we define the docker environment.
+This file is the "Rosetta stone" of this tutorial; the recipe used to build a docker environment.
 
 ###### The Makefile
 
-A high level cli interface other developers can use to interact with the development environment, while they get familiar with it.  
+A high level cli interface other developers can use to interact with the development environment, while they get familiar with docker.  
 This is also the place, a CI/CD pipeline should rely on.
 
 ###### The README.md
 
-Every project that you pass to other devs, should have a clear and concise README file in the root of the project. I won't cover this file's content, but you can read it's source code as an example on how it should look like.  
-The information you put on this file should be the minimal amount of information, someone new to the project needs to adopt the tool without your guidance.  
+Every project that you pass to other devs, should have a clear and concise README file in the root folder. I won't cover this file's content, but you can read it's source code as an example on how it should look like.  
+What you write on this file should be the minimal amount of information, needed by others to adopt the tool without your guidance.  
 
 ###### Other files in the project
 
@@ -362,7 +372,7 @@ xdebug.collect_params=3
 ##### PHP Tracer
 
 Send an HTTP request with the parameter **XDEBUG_TRACE**, to create a file at /tmp/mydata.
-Then you can open the file in a tracer build program like https://github.com/kuun/xdebug-trace-viewer to get a complete tracer report.  
+Then you can open the file in specialized viewer like https://github.com/kuun/xdebug-trace-viewer to read the report.  
 This is useful when you want to understand what happens on a new project, or how a framework works under the hoods.
 
 </CodeWave>
@@ -576,24 +586,25 @@ Check [the Dockerfile reference](https://docs.docker.com/engine/reference/builde
 
 ### Basic docker workflows
 
-### Previous Steps
+#### Previous Steps
 
-Allow Docker to read your project's folder.  
+Before building the environment, allow Docker to read your project's folder.  
 At least in Docker Desktop for MacOS, it goes like this:  
 
 1. Go to Docker Desktop's preferences
 2. Go to File Sharing, under Resources section
 3. Add your folder and apply changes
 
-Avoid symlinked folders cause Docker doesn´t like them.
+Avoid symlinked folders cause Docker doesn't like them.
 
+#### Let's do it
 
-#### Build your image
+###### Build your image
 
 <Code language="bash" snippet={`docker build -t my-project:1.0-development --target dev-image .`} />
 
 Builds and tags your image as **my-project:1.0-development**.  
-The last parameter is the file system context at your docker host. Any file you want to **COPY** into the image, must be inside the given context. 
+The last parameter ".", is the file system context at your docker host. Any file you want to **COPY** into the image, must be inside the given context. 
 You should allow docker to access your project's folder first. See the "File Sharing" settings section in Docker for Desktop.
 
 <br/>
@@ -602,12 +613,17 @@ If everything went well, you should see **my-project** custom image between your
 
 <Code language="bash" snippet={`docker image ls`} />
 
-<Code language="bash" snippet={`docker image ls`} />
+<Code 
+language="bash" 
+snippet={`
+REPOSITORY                  TAG                 IMAGE ID            CREATED             SIZE
+dockerhub-user/my-project   1.0-development     14699ea162d0        2 minutes ago       885MB
+`} />
 
-#### Test it as a standalone container
+###### Test it as a standalone container
 
 Test your image before sharing it.  
-Do not mount any volume, to discard issues in the build process.
+Do not mount any volume, because you want to test the image itself as an inmutable artifact.
 
 <Code 
 language="bash" 
@@ -617,10 +633,10 @@ snippet={`docker run --rm
     my-project:1.0-development`} 
 />
 
-#### Run it as a development environment
+###### Run it as a development environment
 
 How can you use this image as a development environment?  
-Simply by mounting your the folder containing your project code inside the environment.
+Simply by mounting your source code inside the environment.
 
 <br/>
 
@@ -640,7 +656,7 @@ snippet={`docker run --rm
     my-project:1.0-development`} 
 />
 
-#### Share your image
+###### Share your image
 
 To share it with other developers, push the image to your Dockerhub repo.
 

@@ -19,12 +19,12 @@ import "prismjs/components/prism-ini"
 
 ### Intro
 
-Maybe because I studied psychology for a few years, before getting back into software development. 
-Because I try to learn a little bit of the business and organizational side of the projects I get involved. 
-Or simply because human time is more expensive, and take much longer, than computing time. 
-It's my opinion that human factors outweigh technical ones, in the fate of most business ideas. 
-So whenever I build internal tools, I try to think on the users of those tools like I do with customers. 
-Empathy in my opinion, it's key to increase the business outcomes produced with them.
+I am convinced that human factors outweigh technical ones in the fate of most business ideas. 
+Maybe it's because I studied psychology before getting back into software development. 
+Or because I try to learn a little bit of the business and organizational side of the projects I get involved. 
+After all, human time is more expensive than computing time.  
+The same applies when we must design internal tools and processes; 
+Empathy is key to increase the business outcomes produced with them.
 
 <br />
 
@@ -73,7 +73,7 @@ In MacOS or Linux, you would need to setup a Windows VM as your docker host to d
 
 You can copy files into an image from your host, add files from a url, create them by running shell commands, or mount a folder from your host as a volume. 
 Each time one of those operations are performed, a new image layer wrap those changes, pretty much like source control commits.  
-Every layer is identified with a unique hash ID. The layer at the top of the stack identifies the image like the last commit on a branch. 
+Every layer is identified with a unique hash ID. The layer at the top of the stack identifies the image like the last commit on a branch.  
 You can create new containers from any layer on the stack. The resulting file system it's the sum of every stacked layer created before.  
 
 ##### Inmutable vs mutable images
@@ -111,27 +111,26 @@ Bridge are single host networks, and the default option when running Linux docke
 
 <br/>
 
-<hr/>
+#### Hello World
 
-### Hello World
-
-This website's is built inside a nodejs docker image whose [source code](https://github.com/guille-mas/blog/blob/master/Dockerfile) you could read if you want.  
+This website's is built inside a nodejs docker image.    
 That means, you can run locally, the same version that's available at https://guille.cloud, without caring or knowing what's under the hoods. 
-And do so any time you want, expecting the same results to happen each time.
+And do so any time you want, expecting the same results to happen each time.  
+You could read it's [source code](https://github.com/guille-mas/blog/blob/master/Dockerfile) if you are curious about it.
 
 <br/>
 
-Go ahead and try it
+###### Go ahead and try it
 
 <Code 
 language="bash" 
 snippet={`docker run --rm 
-    -p 8000:8000 
+    -p 8080:8000 
     --name guillecloud 
     guillermomaschwitz/blog:1-production`} 
 />  
 
-An exact version of this website should be available at http://0.0.0.0:8000 or http://localhost:8000. Your container has the same content you are reading in this tab.
+An exact version of this website should be available at http://0.0.0.0:8080 or http://localhost:8080. Your container has the same content you are reading in this tab.
 
 <br/>
 
@@ -139,31 +138,10 @@ It should work out of the box, cause Docker did all the heavy lifting for you:
 
 1. Attempts to find a local image tagged as **guillermomaschwitz/blog:1-production**, or pull it from its [Dockerhub repository](https://hub.docker.com/r/guillermomaschwitz/blog).
 2. Starts a new container and name it **guillecloud**.
-4. Bind port 8080 on your host with 8000 on the container **-p 8080:8000**. 
-5. Stream logs to STDOUT
+4. Bind port 8080 on your host with port 8000 on the container with the **-p** param. 
+5. Stream logs to STDOUT and errors to STDERR
 
-The **--rm** flag tells docker to destroy the container once stopped.
-
-<br/>
-
-Check if your container is running with **docker container ls**.
-
-<Code language="bash" snippet={`docker container ls`} />  
-
-<Code 
-language="terminal"
-snippet={`
-CONTAINER ID        IMAGE                                  COMMAND                  CREATED             STATUS              PORTS                    NAMES
-7ecd413bdf91        guillermomaschwitz/blog:1-production   "docker-entrypoint.s…"   23 minutes ago      Up 23 minutes       0.0.0.0:8000->8000/tcp   guillecloud
-`}/>  
-
-If everything went well, you should see a similar list in your terminal; A running container with a unique ID and NAME.
-
-To list stopped containers as well, use the **-a** flag.  
-
-#### A few useful Docker commands
-
-##### List every local image
+###### List every image pulled by docker
 
 <Code language="bash" snippet={`docker image ls`} />  
 
@@ -178,15 +156,24 @@ node                      13.1.0-alpine       f20a6d8b6721        3 months ago  
 
 In this case, both TAGS for __guillermomaschwitz/blog__ belong to the same image, because both share the same IMAGE ID.
 
-##### Execute a command inside a running container
+###### Check if your container is running
 
-<Code language="bash" snippet={`docker exec <container-name-or-id> <command>`} />  
+<Code language="bash" snippet={`docker container ls`} />  
 
-Use the **-it** flag to execute the command in "interactive" mode, streaming it's output to your screen.
+<Code 
+language="terminal"
+snippet={`
+CONTAINER ID        IMAGE                                  COMMAND                  CREATED             STATUS              PORTS                    NAMES
+7ecd413bdf91        guillermomaschwitz/blog:1-production   "docker-entrypoint.s…"   23 minutes ago      Up 23 minutes       0.0.0.0:8000->8000/tcp   guillecloud
+`}/>  
 
-<br/>
+If everything went well, you should see a similar list in your terminal; A running container with a unique ID and NAME.
 
-Run bash or other available shell in interactive mode to debug or try things inside your container.
+To list stopped containers as well, use the **-a** flag.  
+
+###### Run a command inside the container
+
+You can run bash and play inside your container
 
 <Code language="bash" snippet={`docker exec -it guillecloud bash`} />
 
@@ -201,77 +188,68 @@ bash-5.0$ exit
 exit
 guille@localhost % `}/>
 
-##### Run a command in a new container
+###### Stop the container
 
-The same as exec, but inside a new container.
+<Code language="bash" snippet={`docker stop guillecloud`} />
 
-<Code language="bash" snippet={`docker run [--name new-container-name] <docker-image> <command>`} />
+Because the container was started with the **--rm** flag, docker destroys the container once stopped.
 
-##### Stop a container
+###### Finally, remove the image
 
-<Code language="bash" snippet={`docker stop <container-name-or-id>`} />
-
-##### Remove a container
-
-<Code language="bash" snippet={`docker rm <container-name-or-id>`} />
-
-##### Remove an image
-
-<Code language="bash" snippet={`docker image rm <docker-image>`} />
-
-Example:
-
-<Code language="bash" snippet={`docker image rm guillermomaschwitz/blog:1-production`} />
-
-<Code language="terminal" snippet={`Untagged: guillermomaschwitz/blog:1-production`} />
+<Code language="bash" snippet={`docker image rm 14699ea162d0`} />
 
 <br/>
+
+Now, if you see the list of local images, you will see node's image.
+
+<Code language="bash" snippet={`docker image ls`} />  
+
+<Code language="terminal" 
+snippet={`
+REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
+node                      13.1.0-alpine       f20a6d8b6721        3 months ago        105MB
+`} 
+/>
+
+That's because node:13.1.0-alpine it's the base image on top of which, the image 14699ea162d0 (identified by tags "guillermomaschwitz/blog:1" and "guillermomaschwitz/blog:1-production") was built.
 
 <hr/>
 
-## Create the development environment for a PHP project
+## The development environment
 
-### Previous Steps
+### The big picture
 
-Allow Docker to read your project's folder.  
-At least in Docker Desktop for MacOS, it goes like this:  
-
-1. Go to Docker Desktop's preferences
-2. Go to File Sharing, under Resources section
-3. Add your folder and apply changes
-
-Avoid symlinked folders cause Docker doesn´t like them.
-
-#### Download an example PHP project
-
+In this section, I show you the source code of a working docker development environment, with a very silly php codebase.  
 Download [this sample PHP project](https://github.com/guille-mas/blog/tree/master/code-samples/php-docker-development-environment) from my Github account.  
-The project it's trivial and aimed at helping you understand the big picture about docker containers. 
-Besides providing you with a few useful configuration tricks for any PHP development environment.
 
-<br/>
+##### Focus on the following files
 
-For small organizations I like to use monorepos. That way I can put every relevant file about a project and it's environment in the same place.   
-Overall monorepos ease communication of in-depth aspects of your project, removing bottlenecks and bureocracy, besides helping others know as much of the project as they need.  
+###### The PHP configuration file
 
-<br/>
+This file configures the behaviour of a decent PHP development environment. It's located in the config/ folder.
 
-Any risk of exposing those files can be safely managed with code reviews, and a git flow adapted to your organization's needs.  
-Believe me, if you are thinking "I don't have time to implement code reviews", and you don't automate your tests, then you are wasting way more time fixing bugs and poor code.
+###### The Dockerfile
 
-#### Sample project structure
+The rosetta stone of this tutorial; the file where we define the docker environment.
 
-- **./config/development.ini**
-    - PHP configuration for a development environment full of useful features
+###### The Makefile
+
+A high level cli interface other developers can use to interact with the development environment, while they get familiar with it.  
+This is also the place, a CI/CD pipeline should rely on.
+
+###### The README.md
+
+Every project that you pass to other devs, should have a clear and concise README file in the root of the project. I won't cover this file's content, but you can read it's source code as an example on how it should look like.  
+The information you put on this file should be the minimal amount of information, someone new to the project needs to adopt the tool without your guidance.  
+
+###### Other files in the project
+
 - **./src**
     - PHP code that shouldn't be exposed to the public
 - **./src/public**
     - Files you want to expose to the public, like a front controller, static assets, etc
 - **Makefile**
     - High level cli interface. Important to delay learning curve to others, and ease adoption of the environment.
-- **README.md**
-    - The first place where people should look for guidance to start the environment.  
-    Should have the minimum amount of information to get new devs quickly on boarded to the project.  
-    Iterate on it each time someone asks you relevant questions whose answers where not docummented here.
 - **./data**
     - Folder used by PHP's tracer and profiler to output reports.
 - **.gitignore**
@@ -279,8 +257,11 @@ Believe me, if you are thinking "I don't have time to implement code reviews", a
 - **.dockerignore**
     - Flag files to exclude from Docker builds.
 
+<br/>
 
-#### The PHP development INI file
+<hr/>
+
+#### The config/development.ini file
 
 A development environment is different from a production environment, because it should help developers understand their codebase. 
 To do so, I wrote the following configuration file. Let's see it.
@@ -386,6 +367,9 @@ This is useful when you want to understand what happens on a new project, or how
 
 </CodeWave>
 
+<br/>
+
+<hr/>
 
 #### The Dockerfile
 
@@ -586,8 +570,23 @@ Check [the Dockerfile reference](https://docs.docker.com/engine/reference/builde
 
 </CodeWave>
 
+<br/>
+
+<hr/>
 
 ### Basic docker workflows
+
+### Previous Steps
+
+Allow Docker to read your project's folder.  
+At least in Docker Desktop for MacOS, it goes like this:  
+
+1. Go to Docker Desktop's preferences
+2. Go to File Sharing, under Resources section
+3. Add your folder and apply changes
+
+Avoid symlinked folders cause Docker doesn´t like them.
+
 
 #### Build your image
 
@@ -655,7 +654,9 @@ language="bash"
 snippet={`docker push your-dockerhub-username/my-project`}
 />
 
+<br/>
 
+<hr/>
 
 #### The Makefile
 

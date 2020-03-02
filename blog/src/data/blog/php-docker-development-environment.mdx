@@ -1,9 +1,9 @@
 ---
-slug: "build-a-php-dev-environment-your-team-will-love/index.html"
-title: "Build a PHP 7 development environment your team will love"
-intro: "Learn to build a portable PHP development environment with Docker"
+slug: "build-a-docker-development-environment-for-php-projects/index.html"
+title: "Build a PHP development environment your team will love"
+intro: "Learn to build a containerized development environment with Docker, PHP 7 and XDebug"
 tools: "docker gnu-make php xdebug debian-linux"
-date: "02-24-2020"
+date: "03-03-2020"
 publish: true
 blog: true
 category: tutorial
@@ -13,23 +13,25 @@ import Code from "components/code"
 import ContactLink from "components/contact-link"
 import "prismjs/components/prism-docker"
 import "prismjs/components/prism-ini"
+import "prismjs/components/prism-json"
 
 > Welcome! This post it's a work in progress and will be changing during the next few days. 
 > Don't hesitate to write me an email to <ContactLink/> with any comments, critics or advices you might have.
 
 ### Intro
 
-I am convinced that human factors outweigh technical ones in the fate of most business ideas.  
-Maybe it's because I studied psychology before getting back into software development. 
-Or because I am curious about the business and organizational side of most projects I get involved. 
-After all, human time is more expensive than computing time. And for good reasons.  
-So, being empathetic while building software; Being it a great product, or an internal tool. 
-Have a great impact in the business outcomes, people can generate with them.
+Maybe because I studied psychology, before getting back into software development. 
+I am convinced that human factors outweigh technical ones in the fate of most business ideas. 
+After all, human time is more expensive than computing time.  
 
-<br />
+<br/>
 
-In this post I use Docker to wrap a PHP project into a full fledged development environment. 
-Designed to help you and your team, become more effective on your day to day duties.  
+So, being empathetic while designing software; Being customer facing or an internal tool. Can have, in different ways, a significant impact on business outcomes.
+
+### Goals of this post
+
+In this post I show you how to use Docker to make a great PHP development environment. 
+How to design it, write it, and wrap it, with concise docummentation, so your team can be more effective.
 
 ### Requirements
 
@@ -49,43 +51,44 @@ Next, create a DockerHub account, and sign in from the command line.
 
 ### Basic Docker concepts
 
-With docker you can pack applications with their own environment, provision it once, and deploy it into any machine running a docker engine. 
+With docker you can pack applications with their own environment, build it once, and deploy it into any machine running a docker engine.  
 Containers share the kernel of their host, and usually run a single process, bundled with the minimum operating system, files, and environment variables required. 
-As a result, containers are lighter than virtual machines, and allow detailed resource administration.
+As a result, containers are lighter than virtual machines, and allow detailed resource administration.  
 Instead of long lasting dedicated servers, containerized infrastructure can be ephemeral and disposable.
 
 ##### Images
 
 A Docker image it's the blueprint from where containers are created.  
-For those comming from software development and object oriented programming, an image can be seen as a class and a container as an instance. 
+For those comming from object oriented programming, an image can be seen as a class and a container as an instance. 
 An image it's just a stopped container.  
 Custom images are extended from existing images, and can be shared with others by pushing them to docker repositories.
 
 ##### Windows Images vs Linux images
 
 Docker can run two types of images: Linux or Windows images.  
-The difference is the kernel they need to interact with in order to access hardware resources.  
-It's possible to run Windows images on a computer running Linux, and visceversa, by running a docker engine on top of a virtual machine.
-Both Windows and MacOS docker versions run Linux images by default, on top of a lightweight Linux VM. However Docker for Windows can spin up Windows images natively. 
-You need a Windows VM to do the same in other operating systems.
+The difference is the kernel they need to interact with in order to access hardware resources. The machine that provides it's kernel, is called host.  
+It's possible to run Windows images on a computer running Linux, and visceversa, by running a docker engine on top of a virtual machine.  
+Both Windows and MacOS docker versions, run Linux images by default, on top of a lightweight Linux VM. 
+However Docker for Windows can spin up Windows images natively.
 
-##### Containerized file systems
+##### Image layers
 
 You can copy files into an image from your host, add files from a url, create them by running shell commands, or mount a folder from your host as a volume. 
-Each time one of those operations are performed, a new image layer wrap those changes, pretty much like source control commits.  
+Each of those operations add a new layer to a stack that compounds the resulting image. Each of those layers are like commits in source control software, encapsulating the changes made to the image.  
 Every layer is identified with a unique hash ID. And the layer at the top of the stack identifies the image like a GIT branch is identified by it's last commit.  
 You can create new containers from any layer on the stack.  
-When a new container is created from a given image tag, or layer ID, the file system inside, is built by summing every file system portion, inside each layer.
+When a new container is created from a given image tag, or layer ID, it is built by summing every change commited on each layer, into a cohesive environment.
 
 ##### Inmutable vs mutable images
 
-Usually, managing state on your applications is harder than not relying on stateless constructs. Because state introduces more variables you have to deal with. 
-Such is the strength of a functional approach vs object oriented.  
-And the same applies when we write our infrastructure as program.
+Usually, managing state on your applications is harder than not doing so. Because state introduces more variables you have to deal with. 
+Such is the strength of a functional vs object oriented programming paradigm.  
+And something similar happens while building our images; Inmutable images are easier to use than mutable images.
 
 <br/>
-In the context of Docker images. Inmutability happens when an image is built with every file needed by their main process, and you don't modify their state once deployed.  
-Instead of modifying the image while it's running, once a new version of the code it's available for deployment, a new image is baked, and replace the old one.  
+
+Inmutability happens when an image is built with every file needed, and you don't modify their state once deployed.  
+Instead of modifying the image while it's running. Once a new version of the code it's available for deployment, you build a new image, deploy it, and remove the old one.  
 Overall, inmutable images allows you to implement simpler deployment processes, at the expense of longer build times.
 
 ##### Docker networking
@@ -108,18 +111,14 @@ Many other implementations exist maintained by third parties.
 
 <br/>
 
-Bridge are single host networks, the default option when running Linux docker images, and the network type used on this tutorial. Their Windows counter part is NAT.  
+Bridge networks are the default network type when attaching a Linux container port to a host port, as you will see later. Their Windows counter part is NAT.  
 
 <br/>
 
 #### Hello World
 
-This website's is built inside a nodejs docker image.    
+This website was built inside a nodejs docker image.    
 That means, you can run the same version available at https://guille.cloud, at your local host, without caring or knowing what's under the hoods. 
-And do so any time you want, expecting the same results to happen each time.  
-You could read it's [source code](https://github.com/guille-mas/blog/blob/master/Dockerfile) if you are curious about it.
-
-<br/>
 
 ###### Go ahead and try it
 
@@ -131,16 +130,17 @@ snippet={`docker run --rm
     guillermomaschwitz/blog:1-production`} 
 />  
 
-An exact version of this website should be available at http://0.0.0.0:8080 or http://localhost:8080. Your container has the same content you are reading in this tab.
+An exact version of this website should be available at http://0.0.0.0:8080 or http://localhost:8080.
 
 <br/>
 
 It should work out of the box, cause Docker did all the heavy lifting for you:
 
-1. Attempts to find a local image tagged as **guillermomaschwitz/blog:1-production**, or pull it from its [Dockerhub repository](https://hub.docker.com/r/guillermomaschwitz/blog).
-2. Starts a new container labeled as **guillecloud**.
-4. Bind port 8080 on your host with port 8000 on the container with the **-p** param. 
-5. Stream logs to STDOUT and errors to STDERR
+1. Attempts to find a local image tagged as **guillermomaschwitz/blog:1-production**
+1. If the image is not found locally, docker will attempt to pull it from it's [Dockerhub repository](https://hub.docker.com/r/guillermomaschwitz/blog).
+1. A new container with label **guillecloud**, gets started from that image.
+1. Localhost's port 8080 gets binded to container's port 8000. 
+1. Logs are streamed to the screen through STDOUT and/or STDERR
 
 ###### List every image pulled by docker
 
@@ -155,8 +155,8 @@ node                      13.1.0-alpine       f20a6d8b6721        3 months ago  
 `} 
 />
 
-In this case, both TAGS for **guillermomaschwitz/blog** belong to the same image, because both share the same IMAGE ID.  
-**node:13.1.0-alpine** (or f20a6d8b6721) it's the base image of **guillermomaschwitz/blog**.
+The image with ID **14699ea162d0** belongs to repository **guillermomaschwitz/blog** and have two different tags: **1**, and **1-production**.
+It's base image is **f20a6d8b6721**, from repository **node**, with the tag **13.1.0-alpine**.
 
 ###### Check if your container is running
 
@@ -196,32 +196,9 @@ guille@localhost % `}/>
 
 Because the container was started with the **--rm** flag, docker destroys the container once stopped.
 
-###### Finally, remove the image
+###### Finally, remove both images from your computer
 
-<Code language="bash" snippet={`docker image rm 14699ea162d0`} />
-
-<br/>
-
-Now, if you see the list of local images, you will see node's image.
-
-<Code language="bash" snippet={`docker image ls`} />  
-
-<Code language="terminal" 
-snippet={`
-REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
-node                      13.1.0-alpine       f20a6d8b6721        3 months ago        105MB
-`} 
-/>
-
-That's because node:13.1.0-alpine it's the base image on top of which, the image 14699ea162d0 (identified by tags "guillermomaschwitz/blog:1" and "guillermomaschwitz/blog:1-production") was built.
-
-You can remove the base image in two ways:
-
-<Code language="bash" snippet={`docker image rm f20a6d8b6721`} />
-
-Or
-
-<Code language="bash" snippet={`docker image rm node:13.1.0-alpine`} />
+<Code language="bash" snippet={`docker image rm 14699ea162d0 f20a6d8b6721`} />
 
 <hr/>
 
@@ -229,28 +206,26 @@ Or
 
 ### The big picture
 
-In this section, I show you the source code of a working docker development environment, with a trivial php codebase.  
-Download [this sample PHP project](https://github.com/guille-mas/blog/tree/master/code-samples/php-docker-development-environment) from my Github account.  
+The development environment is available for download [at Github](https://github.com/guille-mas/blog/tree/master/code-samples/php-docker-development-environment).  
+It contains several files and folders. The most important ones are briefly explained below:
 
-##### Focus on the following files
+###### php-dev.ini
 
-###### The PHP configuration file
+Settings to make PHP work like it should in a development environment: exposing errors to the user and enabling powerful debugging tools.
 
-This file configures the behaviour of what I consider a decent PHP development environment. It's located in the config/ folder.
-
-###### The Dockerfile
+###### Dockerfile
 
 This file is the "Rosetta stone" of this tutorial; the recipe used to build a docker environment.
 
-###### The Makefile
+###### Makefile
 
 A high level cli interface other developers can use to interact with the development environment, while they get familiar with docker.  
-This is also the place, a CI/CD pipeline should rely on.
+This is also the place, external tools should rely on to interact with the docker environment. 
 
-###### The README.md
+###### README.md
 
-Every project that you pass to other devs, should have a clear and concise README file in the root folder. I won't cover this file's content, but you can read it's source code as an example on how it should look like.  
-What you write on this file should be the minimal amount of information, needed by others to adopt the tool without your guidance.  
+Every project that you pass to other devs, should have a clear and concise README file in the root folder. I won't cover this file's content, but you can read it at the root of the project.  
+What you write on this file should be the minimal amount of information, needed to introduce others on every basic development workflow.  
 
 ###### Other files in the project
 
@@ -258,87 +233,122 @@ What you write on this file should be the minimal amount of information, needed 
     - PHP code that shouldn't be exposed to the public
 - **./src/public**
     - Files you want to expose to the public, like a front controller, static assets, etc
-- **Makefile**
-    - High level cli interface. Important to delay learning curve to others, and ease adoption of the environment.
 - **./data**
     - Folder used by PHP's tracer and profiler to output reports.
 - **.gitignore**
-    - Flag files to exclude from GIT repo, like credentials, secrets, vendor files, build constructs, etc.
+    - Flag files to exclude from the GIT repo, like credentials, secrets, vendor files, build constructs, etc.
 - **.dockerignore**
-    - Flag files to exclude from Docker builds.
+    - Flag files to exclude from Docker's context.
 
 <br/>
 
 <hr/>
 
-#### The config/development.ini file
+#### config/php-dev.ini
 
-A development environment is different from a production environment, because it should help developers understand their codebase. 
-To do so, I wrote the following configuration file. Let's see it.
-
+A development environment should help developers understand their codebase, and catch errors as early as possible. 
+The following settings should do the job.
 
 <CodeWave>
 
 ```ini
-###############################
+###########################
 # General
 #############
 error_reporting = E_ALL
 display_startup_errors = On
 display_errors = On
-xdebug.var_display_max_depth=9
 ````
-##### Display errors
 
-Developers should have complete visibility over any error or exception that might rise at run time.
+##### Errors
 
-<br/>
+Developers should have complete visibility over any error or exception that might rise at run time. 
 
-They also need to see the data structures they work with ease. **xdebug.var_display_max_depth** affects how deep will go var_dump() function with complex arrays and objects.
-
+- **error_reporting = E_ALL** enable output of every message sent to php error logs
+- **display_startup_errors = On** enable PHP's startup errors reporting
+- **display_errors = On** print errors to the screen as part of the output
 
 ```ini
 ###############################
 # Debugger
-# Disabled by default
-# Triggered by an HTTP request
-# containing the parameter 
-# XDEBUG_SESSION_START
 #############
 xdebug.remote_enable=1
-# Starting the remote debugger 
-# makes the server reponses slower
-# Instead, we will set an idekey 
-# to trigger an attempt to connect
-# to the dbgp client
 xdebug.remote_autostart=0
 xdebug.remote_host="host.docker.internal"
 xdebug.remote_mode=req
-# The port your IDE will use to wait 
-# for a connection from xdebug
 xdebug.remote_port=9001
 ````
 
-##### PHP Remote Debugger
+##### PHP Debugger
 
-Using a debugger is way more effective than var_dump()'ing variables and refreshing the screen, but it slows down the execution of the program. 
-These settings allow devs to enable a debugging session when they need so, by sending an  HTTP parameter to the server with name **XDEBUG_SESSION_START**, in their requests.  
-When **XDEBUG_SESSION_START** is present on the request, in a GET, POST, PUT, DELETE, or UPDATE type of request, Xdebug will start the debugger.  
-The debugger attempts to connect to the docker host ip, specified by the docker global variable **host.docker.internal**, and port 9001.
+Using a PHP debugger will certainly make a huge difference in your productivity as a PHP developer.  
+If you are debugging issues with var_dump() or print_r() you should really ( **reeeally** ) try this approach instead.
 
 <br/>
 
-Once you setup your IDE or editor to listen for connections into port 9001, you will be able to handle the debugger running from the containerized server, from your IDE.
+The thing with this debugger, is that it's not suitable for shared development servers, or servers exposed to the wild. 
+But it is very easy to make it work from a locally running docker container.
+
+<br/>
+
+With these settings, an HTTP request, containing the parameter **XDEBUG_SESSION_START** will start a debugging session.  
+You can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) to help you attach that param to any request.
+
+<br/>
+
+###### This is how a PHP debugging session works:
+
+1. Your must tell your editor to listen on port 9001 for incoming connections. If the editor doesn't support that out of the box, look for a plugin.
+1. An HTTP request containing the param **XDEBUG_SESSION_START** is sent to the web server
+1. XDebug pause the flow of your program, attempts to connect back to your computer at localhost:9001, and waits for your orders.
+1. Your editor accepts the connection
+1. If there is a breakpoint in your code, the web server will halt it's execution there, and send to your editor, all the information available about the current context.
+
+From there, you will have complete visibility on every variable, constant, object, created on the current context, and every frame of the memory stack of your PHP programs.  
+You can use the debugger like you would use a javascript debugger from your browser.
+
+<br/>
+
+You can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) to help you attach that param to any request.
+
+> Using the PHP debugger **will increase your productivity** as a PHP developer !!
+
+<br/>
+
+A few useful resources to setup an IDE or editor to debug requests:
+
+- [Felix Becker PHP Xdebug plugin for VSCode](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug)
+- [Howto setup PHP Xdebug in PHPStorm](https://www.jetbrains.com/help/phpstorm/creating-php-web-application-debug-configuration.html)
+- [PHP Xdebug plugin for Sublime 2 and 3](https://packagecontrol.io/packages/Xdebug%20Client)
+
+This is my VSCode configuration for FelixBecker's plugin, in case you are using VSCode:
+
+<Code
+language="json"
+snippet={`
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "My project",
+      "type": "php",
+      "request": "launch",
+      "port": 9001,
+      "pathMappings": {
+        "/var/www": "\$\{workspaceFolder\}/src"
+      }
+    }
+  ]
+}
+`} />
+
+
 
 
 
 ```ini
 ###############################
 # Profiler
-# Disabled by default
-# Triggered by an HTTP request
-# containing the parameter 
-# XDEBUG_PROFILE
 #############
 xdebug.cli_color=1
 xdebug.profiler_enable=0
@@ -349,18 +359,15 @@ xdebug.profiler_output_name="cachegrind.out.%H.%t.%p"
 
 ##### PHP Profiler
 
-Send an HTTP request with the parameter **XDEBUG_PROFILE**, a file is created at /tmp/mydata. 
-A human readable list of every function call made, while your request was handled by the app.  
-Total memory consumption will be reported at every step of the flow.
+Enabled by an HTTP parameter **XDEBUG_PROFILE**. 
+XDebug's PHP profiler will produce a complete report of the messages passed between functions and/or objects in your PHP programs during a specific request.
+Then you can open those reports with [KCacheGrind](https://kcachegrind.github.io/), [QCacheGrind](http://sourceforge.net/projects/qcachegrindwin/), [WinCacheGrind](http://ceefour.github.io/wincachegrind/), or [WebGrind](https://github.com/jokkedk/webgrind) .  
+This is useful when you want to understand what happens on a new project, or how a framework works under the hoods.
 
 
 ```ini
 ###############################
 # Tracer
-# Disabled by default
-# Triggered by an HTTP request
-# containing the parameter 
-# XDEBUG_TRACE
 #############
 xdebug.trace_enable_trigger=1
 xdebug.show_mem_delta=1
@@ -371,9 +378,18 @@ xdebug.collect_params=3
 
 ##### PHP Tracer
 
-Send an HTTP request with the parameter **XDEBUG_TRACE**, to create a file at /tmp/mydata.
-Then you can open the file in specialized viewer like https://github.com/kuun/xdebug-trace-viewer to read the report.  
-This is useful when you want to understand what happens on a new project, or how a framework works under the hoods.
+XDebug tracer is a powerful tool that gives you the ability to analyze your PHP code, detect bottlenecks, and understand memory consumption at every step in a given flow.
+
+<br/>
+
+Reports are human readable and are stored in container's folder /tmp/mydata.  
+Later I show you howto map that folder with a local folder in your host, to read those reports more easily.
+
+<br/>
+
+To enable the tracer, add the HTTP parameter **XDEBUG_TRACE** to any HTTP request. 
+Again, you can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) to help you attach that param to any request.
+
 
 </CodeWave>
 
@@ -449,7 +465,7 @@ As [docummented here](https://hub.docker.com/_/php), use _pecl_, and _docker-php
 
 <br/>
 
-You can use RUN as many times as you want, but every time you use it, a new layer gets added to the stack, increasing image size.
+You can use RUN as many times as you want, but keep in mind it will generate a new layer, increasing the resulting image's size.
 
 <br/>
 
@@ -674,7 +690,7 @@ snippet={`docker push your-dockerhub-username/my-project`}
 
 <hr/>
 
-#### The Makefile
+#### Write a Makefile, to wrap every workflow in a simple cli interface
 
 Let's see now howto define a high level cli inteface to speed up on boarding, by hidding docker concepts behind a single file, with a friendly syntax, that's easy to read.
 
@@ -800,7 +816,7 @@ Feel free to share your thoughts with me at <ContactLink/>
 
 ### Whats next
 
-In the next post I show you how to build a production image as well with docker multi-stage builds. 
+In the next post I show you how to build a production version of this image with docker multi-stage builds. 
 How to create sandboxed docker networks to connect multiple containers together. 
 And **docker-compose**, an interesting tool to declare your dev infrastructure in yaml format.
 

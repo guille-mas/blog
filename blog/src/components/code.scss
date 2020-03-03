@@ -3,6 +3,8 @@
 
 .code-container {
     margin: 1rem 0;
+    display: inline-grid;
+    width: 100%;
 
     &::after {
       content: "";

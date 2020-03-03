@@ -26,12 +26,12 @@ After all, human time is more expensive than computing time.
 
 <br/>
 
-So, being empathetic while designing software; Being customer facing or an internal tool. Can have, in different ways, a significant impact on business outcomes.
+In my opinion, being empathetic while designing software; Whether customer facing or an internal tool. Can have, in different ways, a significant impact on business outcomes.
 
 ### Goals of this post
 
 In this post I show you how to use Docker to make a great PHP development environment. 
-How to design it, write it, and wrap it, with concise docummentation, so your team can be more effective.
+How to design it, write it, and wrap it, with powerful tools and concise docummentation, so your team can be more effective.
 
 ### Requirements
 
@@ -244,6 +244,8 @@ What you write on this file should be the minimal amount of information, needed 
 
 <hr/>
 
+### Core files
+
 #### config/php-dev.ini
 
 A development environment should help developers understand their codebase, and catch errors as early as possible. 
@@ -252,9 +254,7 @@ The following settings should do the job.
 <CodeWave>
 
 ```ini
-###########################
 # General
-#############
 error_reporting = E_ALL
 display_startup_errors = On
 display_errors = On
@@ -269,9 +269,7 @@ Developers should have complete visibility over any error or exception that migh
 - **display_errors = On** print errors to the screen as part of the output
 
 ```ini
-###############################
 # Debugger
-#############
 xdebug.remote_enable=1
 xdebug.remote_autostart=0
 xdebug.remote_host="host.docker.internal"
@@ -281,8 +279,8 @@ xdebug.remote_port=9001
 
 ##### PHP Debugger
 
-Using a PHP debugger will certainly make a huge difference in your productivity as a PHP developer.  
-If you are debugging issues with var_dump() or print_r() you should really ( **reeeally** ) try this approach instead.
+Using a PHP debugger will make a **huge difference in your productivity** as a PHP developer.  
+If you are debugging issues with var_dump() or print_r() you should really try this approach instead.
 
 <br/>
 
@@ -347,9 +345,7 @@ snippet={`
 
 
 ```ini
-###############################
 # Profiler
-#############
 xdebug.cli_color=1
 xdebug.profiler_enable=0
 xdebug.profiler_enable_trigger=1
@@ -366,9 +362,7 @@ This is useful when you want to understand what happens on a new project, or how
 
 
 ```ini
-###############################
 # Tracer
-#############
 xdebug.trace_enable_trigger=1
 xdebug.show_mem_delta=1
 xdebug.trace_output_dir="/tmp/mydata"
@@ -390,12 +384,11 @@ Later I show you howto map that folder with a local folder in your host, to read
 To enable the tracer, add the HTTP parameter **XDEBUG_TRACE** to any HTTP request. 
 Again, you can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) to help you attach that param to any request.
 
-
 </CodeWave>
 
 <br/>
 
-<hr/>
+<br/>
 
 #### The Dockerfile
 
@@ -598,7 +591,7 @@ Check [the Dockerfile reference](https://docs.docker.com/engine/reference/builde
 
 <br/>
 
-<hr/>
+<br/>
 
 ### Basic docker workflows
 
@@ -688,112 +681,121 @@ snippet={`docker push your-dockerhub-username/my-project`}
 
 <br/>
 
-<hr/>
+<br/>
 
-#### Write a Makefile, to wrap every workflow in a simple cli interface
+#### Wrapping each workflow into a cohesive interface
 
-Let's see now howto define a high level cli inteface to speed up on boarding, by hidding docker concepts behind a single file, with a friendly syntax, that's easy to read.
+Just like you would define an interface, or a group of public methods in a PHP class, so others can reuse it, without studying your implementation.  
+You should expose a simple list of commands, so others can use your environment, without knowing about docker.  
+Of course, it's code should be clear and well docummented, to allow anyone curious, to learn more about it.
+Let's see now howto define a high level cli inteface, by writing a Makefile compatible with GNUMake.  
+The list of commands shuld be as similar as possible across projects, to reduce complexity and favor reuse.  
+GNUMake it's a good fit for this task, because it allows you to write every high level command in a single file, and it's a tool available on most operating systems.
+
+<br/>
+
+These are a few commands I like to define for projects in general:
+
+- make build
+- make clean
+- make all
+- make start
+- make stop
+- make test
 
 
 <CodeWave>
 
 ```makefile
-# Bake an image of your development environment
 build:
-	docker build -t my-project:1.0-development --target dev-image .
+	docker build \
+    -t my-project:1.0-development \
+    --target dev-image .
 ````
 
 ##### make build
 
+Build the development environment.  
+In the case of multiple environments, it should build every image required by any environment.  
+
+<br/>
+
+This command is used by the maintainers of the environment, and a CI/CD pipeline.
+
 
 ```makefile
-# Bake an image of your development environment
-build:
-	docker build -t my-project:1.0-development --target dev-image .
-
 start:
-	docker run -p 80:80/tcp \
-        -v ${PWD}/src:/var/www/html \
-        -v ${PWD}/data:/tmp/mydata \
-        --rm --name my-project-container \
-        my-project:1.0-development
-
+	docker run --rm \
+    -p 80:80/tcp \
+    -v ${PWD}/src:/var/www/html \
+    -v ${PWD}/data:/tmp/mydata \
+    --name my-project-container \
+    acme/my-project:1.0-development
 ````
 
 ##### make start
 
+Use this command to start a local development environment. It's usually used by developers involved in the project.  
+
+- Docker will pull my-project:1.0-development image from acme´s docker repository
+- Map ports with the developer computer
+- Assigns a name to the container (useful to write other commands like "make stop")
+- Mount the source code inside the container so the environment can reflect changes made to the code.
 
 ```makefile
-# Bake an image of your development environment
-build:
-	docker build -t my-project:1.0-development --target dev-image .
-
-start:
-	docker run -p 80:80/tcp \
-        -v ${PWD}/src:/var/www/html \
-        -v ${PWD}/data:/tmp/mydata \
-        --rm --name my-project-container \
-        my-project:1.0-development
-
 exec:
-	@read -p "Command to execute: " command; \
-	docker exec my-project-container sh -c "$$command"
-
+	@read -p "Command: " command; \
+	docker exec \
+    my-project-container \
+    sh -c "$$command"
 ````
 
 ##### make exec
 
+The all idea of containerizing a development environment, is to run a project in a predictable environment.  
+Which should resemble as close as possible a production environment.  
+
+<br/>
+
+**make exec** it's a helper command that execute any command you pass to it inside the container, previously started with **make start**
+
+<br/>
+
+###### Example commands you should run with **make exec**:
+
+<Code language="bash" snippet={`composer install`} />
+
+<Code language="bash" snippet={`composer update`} />
+
+<Code language="bash" snippet={`npm install`} />
+
+<Code language="bash" snippet={`ifconfig`} />
+
+<Code language="bash" snippet={`apt install nmap curl`} />
+
 
 ```makefile
-# Bake an image of your development environment
-build:
-	docker build -t my-project:1.0-development --target dev-image .
-
-start:
-	docker run -p 80:80/tcp \
-        -v ${PWD}/src:/var/www/html \
-        -v ${PWD}/data:/tmp/mydata \
-        --rm --name my-project-container \
-        my-project:1.0-development
-
-exec:
-	@read -p "Command to execute: " command; \
-	docker exec my-project-container sh -c "$$command"
-
 stop: 
 	-docker container stop my-project-container
-
 ````
 
 ##### make stop
 
+This command stops the container previously started with **make start*
 
 ```makefile
-# Bake an image of your development environment
-build:
-	docker build -t my-project:1.0-development --target dev-image .
-
-start:
-	docker run -p 80:80/tcp \
-        -v ${PWD}/src:/var/www/html \
-        -v ${PWD}/data:/tmp/mydata \
-        --rm --name my-project-container \
-        my-project:1.0-development
-
-exec:
-	@read -p "Command to execute: " command; \
-	docker exec my-project-container sh -c "$$command"
-
-stop: 
-	-docker container stop my-project-container
-
 clean: stop	
 	-docker container rm my-project-container
 	docker image rm my-project:1.0-development
-
 ````
 
 ##### make clean
+
+This command removes any artifact created during the build by **make build**.  
+
+<br/>
+
+It's usually used by the maintainers of the environment and a CI/CD pipeline.
 
 </CodeWave>
 
@@ -809,15 +811,28 @@ It also helps to spread the knowledge about the product, which is something very
 
 <br/>
 
-I hope this first tutorial has been useful to you.  
-Feel free to share your thoughts with me at <ContactLink/>
-
 <hr/>
+
+### Final thoughts
+
+I hope this first tutorial has been useful to you! Hopefully, you learned what's Docker, and how can it help you and your team.  
+There is still a lot to learn though. This is a single container environment and it's not suitable for production. 
+But it's the corner stone, to modernize processes and stimulate more enjoyable, collaboratively ways of building software together.
+
+<br/>
+
+I did my best to guide you through this introductory exploration of Docker concepts, and a few use cases.
+Above all, I tried to share a few technical tricks to improve collaboration and communication between devs in a team, and between devs and ops teams.
+
+<br/>
+
+Feel free to let me know any comments, critics, or suggestions you might have.  
+You can write me at <ContactLink/>
 
 ### Whats next
 
-In the next post I show you how to build a production version of this image with docker multi-stage builds. 
-How to create sandboxed docker networks to connect multiple containers together. 
+In my next post I'll show you how to build a production version of this environment, with **docker multi-stage builds**. 
+How to create sandboxed **docker networks** to connect multiple containers together. 
 And **docker-compose**, an interesting tool to declare your dev infrastructure in yaml format.
 
 <br/>

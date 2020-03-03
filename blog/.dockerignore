@@ -27,3 +27,5 @@ typings
 .npm
 
 .dockerignore
+
+code-samples

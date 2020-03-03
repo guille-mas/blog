@@ -42,6 +42,7 @@ export const query = graphql`
                intro
                date
                tools
+               blog
              }
            }
          }

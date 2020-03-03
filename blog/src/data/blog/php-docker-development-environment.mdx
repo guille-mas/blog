@@ -1,7 +1,7 @@
 ---
 slug: "build-a-docker-development-environment-for-php-projects/index.html"
 title: "Build a PHP development environment your team will love"
-intro: "Learn to build a containerized development environment with Docker, PHP 7 and XDebug"
+intro: "Build a portable development environment for PHP 7.4 with Docker, packed with powerful features to make development easier"
 tools: "docker gnu-make php xdebug debian-linux"
 date: "03-03-2020"
 publish: true
@@ -15,23 +15,26 @@ import "prismjs/components/prism-docker"
 import "prismjs/components/prism-ini"
 import "prismjs/components/prism-json"
 
-> Welcome! This post it's a work in progress and will be changing during the next few days. 
+> Welcome! This post it's a work in progress, that will be changing during the next few days.  
 > Don't hesitate to write me an email to <ContactLink/> with any comments, critics or advices you might have.
 
 ### Intro
 
-Maybe because I studied psychology, before getting back into software development. 
-I am convinced that human factors outweigh technical ones in the fate of most business ideas. 
-After all, human time is more expensive than computing time.  
+It's usual to see small startups, performing manual setup of development environments. The results are often a fragile mix of operating systems, libraries, and PHP versions. 
+Other times, development environments are maintained by experienced IT teams; 
+Who fiercely protect their infrastructure. Affecting the hability of development teams, to understand the underlying infrastructure, or try new ideas.  
+In those scenarios, evolving internal development practices it's impractical and discouraged.
 
 <br/>
 
-In my opinion, being empathetic while designing software; Whether customer facing or an internal tool. Can have, in different ways, a significant impact on business outcomes.
+In this article, I'll show you how to use Docker, to build a portable development environment for PHP 7.4 applications. With a PHP debugger, profiler, and tracing tools. 
+Where developers can experiment agressively, in a consistent and sandboxed environment, that run fast and locally.
 
-### Goals of this post
+<br/>
 
-In this post I show you how to use Docker to make a great PHP development environment. 
-How to design it, write it, and wrap it, with powerful tools and concise docummentation, so your team can be more effective.
+Long gone are the days, where containers where a privileged practice of a few tech giants; An edgy technology promoted by crazy early adopters.  
+With modern containerization tools like Docker, and orchestration tools like docker-compose, Swarms, or Kubernetes. 
+It is a no brainer for small startups, to adopt some of these technologies. In order to provider better experiences for their customers, and more effective processes for their teams.
 
 ### Requirements
 

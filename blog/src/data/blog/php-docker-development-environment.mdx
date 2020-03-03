@@ -20,25 +20,26 @@ import "prismjs/components/prism-json"
 
 ### Intro
 
-It's usual to see small startups, performing manual setup of development environments. The results are often a fragile mix of operating systems, libraries, and PHP versions. 
-Other times, development environments are maintained by experienced IT teams; 
-Who fiercely protect their infrastructure. Affecting the hability of development teams, to understand the underlying infrastructure, or try new ideas.  
+In these days, It's still usual to see many startups, performing manual setup of development environments. 
+The results are often a fragile mix of operating systems, libraries, and language versions. 
+Other times, development environments are maintained by experienced IT teams, 
+who fiercely protect their infrastructure. Affecting the hability of dev teams, to understand the underlying infrastructure, or try new ideas.  
 In those scenarios, evolving internal development practices it's impractical and discouraged.
 
 <br/>
 
 In this article, I'll show you how to use Docker, to build a portable development environment for PHP 7.4 applications. With a PHP debugger, profiler, and tracing tools. 
-Where developers can experiment agressively, in a consistent and sandboxed environment, that run fast and locally.
+Where developers can experiment agressively, in consistent sandboxed environments, that run fast and locally.
 
 <br/>
 
-Long gone are the days, where containers where a privileged practice of a few tech giants; An edgy technology promoted by crazy early adopters.  
-With modern containerization tools like Docker, and orchestration tools like docker-compose, Swarms, or Kubernetes. 
-It is a no brainer for small startups, to adopt some of these technologies. In order to provider better experiences for their customers, and more effective processes for their teams.
+Long gone are the days when containerized environments where a practice of a few tech giants, or an unstable technology promoted by crazy early adopters.  
+With modern containerization and orchestration tools like Docker, compose, Swarms, or Kubernetes. And modern cloud infrastructure services. 
+It is becoming a no brainer for an increasing number of startups, to adopt some of these technologies. In order to provider better experiences for their customers, and cost effective processes for their teams.
 
 ### Requirements
 
-You need **Docker engine** ( mine is 19.03 ), and **GNU Make**.
+To follow this tutorial you need to install **Docker engine** ( mine is 19.03 ), and **GNU Make**.
 
 <br/>
 
@@ -48,16 +49,16 @@ Linux users can get both via their default package manager. Two popular package 
 
 <br/>
 
-Next, create a DockerHub account, and sign in from the command line.
+Next [create a DockerHub account](https://hub.docker.com/signup), and sign in from the command line.
 
 <Code language="bash" snippet={`docker login`} />  
 
 ### Basic Docker concepts
 
-With docker you can pack applications with their own environment, build it once, and deploy it into any machine running a docker engine.  
+With docker you can pack applications with their own environment, build it once, and deploy it to any number of computers running a docker engine.  
 Containers share the kernel of their host, and usually run a single process, bundled with the minimum operating system, files, and environment variables required. 
 As a result, containers are lighter than virtual machines, and allow detailed resource administration.  
-Instead of long lasting dedicated servers, containerized infrastructure can be ephemeral and disposable.
+Instead of long lasting dedicated servers, containerized infrastructure can be ephemeral and disposable. Opening the door to new ways of automated, resilient cloud infrastructure, that can adapt to varying demands, and recover from errors.
 
 ##### Images
 
@@ -244,6 +245,34 @@ What you write on this file should be the minimal amount of information, needed 
     - Flag files to exclude from Docker's context.
 
 <br/>
+
+#### A containerized workflow example
+
+This is an example workflow a development team could adopt to work with this containerized development infrastructure:
+
+A new stable version of the codebase is ready to be deployed to a production server, containing changes to the infrastructure. We call it version 2.0.  
+The new codebase contains both: the sourcode of the php app, and the source code of the containerized development environment.
+
+1. The new version is deployed to production and tagged v2.0.
+1. A developer in charge of maintaining the development infrastructure's docker image: pulls v1.0 code versions.
+    1. Build a new version of the container.
+    1. Run automated tests locally.
+    1. Push it to the Docker repo with tag v2.0, next to several previous versions of the docker image.
+    1. Updates the upstream branch of the source code.
+1. Next morning, when a developer pull the latest changes from the upstream stable branch, will get as well an updated version for the docker image to use as a development environment.
+1. The dev start the environment, and without knowing it would happen, a new version of the development environment is pulled from the docker repository.
+    1. If another developer is working on an older version of the code, it's development environment won't be updated.
+1. A third developer realize an improvement could be done to the configuration of the development environment v2.0.
+    1. She starts working on the improvement proposal on a new branch.
+    1. Updates the hardcoded version of the docker image to use for that version of the sourcecode, to v2.1, after testing it locally.
+    1. Open a Merge Request docummenting the improvement.
+    1. The maintainer review it, and if approved, the new source code is deployed to production and tagged v2.1.
+
+And the process start again from the beginning.
+
+<br/>
+
+Consider this an example. Each team should adapt their processes to whatever works for them.
 
 <hr/>
 
@@ -820,10 +849,10 @@ It also helps to spread the knowledge about the product, which is something very
 
 ### Final thoughts
 
-I hope this first tutorial has been useful to you!  
+I hope you found this tutorial useful!  
 Hopefully, you learned enough about Docker to build your own development environments.  
 There is still more to learn though. This is a single container environment and it's not suitable for production. 
-But it's the corner stone to modernize processes and stimulate more enjoyable, collaborative ways, of building software together.
+But it's the corner stone to modernize processes and stimulate better, more enjoyable, collaborative ways of building software together.
 
 <br/>
 

@@ -28,20 +28,9 @@ class Post extends React.Component {
       );
     }
 
-    if(!this.props.body) {
-      aside_avatar_section = (
-        <>
-        <Avatar></Avatar>
-        <address>Guillermo Maschwitz</address>
-        <time>{this.props.date}</time>
-        </>
-      );
-    }
-
-    if(aside_avatar_section || intro_section) {
+    if(intro_section) {
       aside_section = (
         <aside>
-          {aside_avatar_section || ""}
           {aside_tech_stack_section || ""}
         </aside>
       );
@@ -56,6 +45,7 @@ class Post extends React.Component {
           <h3>
             <Link to={this.props.slug}>{this.props.title}</Link>
           </h3>
+          <time>{this.props.date}</time>
           {intro_section || ""}
           {aside_section}
         </header>

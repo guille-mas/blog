@@ -3,7 +3,7 @@ slug: "build-a-docker-development-environment-for-php-projects/index.html"
 title: "Build a PHP development environment your team will love"
 intro: "Build a portable development environment for PHP 7.4 with Docker, packed with powerful features to make development easier"
 tools: "docker gnu-make php xdebug debian-linux"
-date: "03-03-2020"
+date: "March 4th, 2020"
 publish: true
 blog: true
 category: tutorial
@@ -23,33 +23,34 @@ import "prismjs/components/prism-json"
 In these days, It's still usual to see many startups, performing manual setup of development environments. 
 The results are often a fragile mix of operating systems, libraries, and language versions. 
 Other times, development environments are maintained by experienced IT teams, 
-who fiercely protect their infrastructure. Affecting the hability of dev teams, to understand the underlying infrastructure, or try new ideas.  
+who fiercely protect their infrastructure. Affecting the ability of dev teams, to understand the underlying infrastructure, or try new ideas.  
 In those scenarios, evolving internal development practices it's impractical and discouraged.
 
 <br/>
 
 In this article, I'll show you how to use Docker, to build a portable development environment for PHP 7.4 applications. With a PHP debugger, profiler, and tracing tools. 
-Where developers can experiment agressively, in consistent sandboxed environments, that run fast and locally.
+Where developers can experiment aggressively, on fast sandboxed environments.
 
 <br/>
 
 Long gone are the days when containerized environments where a practice of a few tech giants, or an unstable technology promoted by crazy early adopters.  
-With modern containerization and orchestration tools like Docker, compose, Swarms, or Kubernetes. And modern cloud infrastructure services. 
-It is becoming a no brainer for an increasing number of startups, to adopt some of these technologies. In order to provider better experiences for their customers, and cost effective processes for their teams.
+With modern containerization and orchestration tools like Docker, docker-compose, Swarms, or Kubernetes. And modern cloud infrastructure services. 
+It is becoming a no brainer for an increasing number of startups, to adopt some of these technologies. 
+To provide better experiences for their customers, and cost-effective processes for their teams.
 
 ### Requirements
 
-To follow this tutorial you need to install **Docker engine** ( mine is 19.03 ), and **GNU Make**.
+To follow this tutorial you need to install the **Docker engine**, and **GNU Make**.
 
 <br/>
 
 The easiest way to setup Docker in Windows and MacOS is by getting [Docker Desktop](https://www.docker.com/products/docker-desktop).  
-GNU Make might be already available in Windows through PowerShell, and its usually present on most popular Linux distros as well as MacOS.  
+GNU Make might be already available in Windows through PowerShell, and it's usually present on most popular Linux distros as well as MacOS.  
 Linux users can get both via their default package manager. Two popular package managers for other environments are brew (MacOS), and chocolatey (Windows).
 
 <br/>
 
-Next [create a DockerHub account](https://hub.docker.com/signup), and sign in from the command line.
+Next, create a [DockerHub account](https://hub.docker.com/signup), and sign in from the command line.
 
 <Code language="bash" snippet={`docker login`} />  
 

@@ -9,7 +9,6 @@ class Post extends React.Component {
   render() {
     let aside_tech_stack_section;
     let intro_section;
-    let aside_avatar_section;
     let aside_section;
 
     if(this.props.tools) {

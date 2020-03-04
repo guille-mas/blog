@@ -2,6 +2,53 @@
 
 
 body.blog {
+
+    /**
+     * This is a hackish approach.
+     * Instead of these rules,
+     * I should define a new layout
+     * for the blog section
+     */
+    .wrapper.contact {
+        @media ($media-medium) {
+            max-width: 70%;
+        }
+    }
+    section.wrapper {
+      position: relative;
+    }
+    header#header {
+        @media ($media-medium) {
+            section#iam {
+                height: 2rem;
+                position: absolute;
+                left: .5rem;
+                top: -3.8rem;
+                margin: 0;
+
+                h1 {
+                    margin: 0;
+                    font-size: 1rem;
+                    font-weight: 500;
+                }
+
+                h2 {
+                    display: none;
+                }
+
+                .avatar {
+                    height: 1.9rem;
+                    width: 1.9rem;
+                }
+
+                > div {
+                    margin-right: 1rem;
+                }
+            }
+        }
+    }
+    /** end of hack */
+
     article {
         .body {
             visibility: hidden;

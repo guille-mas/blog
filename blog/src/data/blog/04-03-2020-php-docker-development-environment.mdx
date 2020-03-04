@@ -50,51 +50,51 @@ Linux users can get both via their default package manager. Two popular package 
 
 <br/>
 
-Next, create a [DockerHub account](https://hub.docker.com/signup), and sign in from the command line.
+Next, create a [DockerHub account](https://hub.docker.com/signup), and sign in from the command-line.
 
 <Code language="bash" snippet={`docker login`} />  
 
 ### Basic Docker concepts
 
-With docker you can pack applications with their own environment, build it once, and deploy it to any number of computers running a docker engine.  
+With docker, you can pack applications with their environment, build it once, and deploy it to any number of computers running a docker engine.  
 Containers share the kernel of their host, and usually run a single process, bundled with the minimum operating system, files, and environment variables required. 
-As a result, containers are lighter than virtual machines, and allow detailed resource administration.  
-Instead of long lasting dedicated servers, containerized infrastructure can be ephemeral and disposable. Opening the door to new ways of automated, resilient cloud infrastructure, that can adapt to varying demands, and recover from errors.
+As a result, containers are lighter than virtual machines and allow detailed resource administration.  
+Instead of long-lasting dedicated servers, containerized infrastructure can be ephemeral and disposable. Opening the door to new ways of automated, resilient cloud infrastructure, that can adapt to varying demands, and recover from errors.
 
 ##### Images
 
 A Docker image it's the blueprint from where containers are created.  
-For those comming from object oriented programming, an image can be seen as a class and a container as an instance. 
+For those coming from object-oriented programming, an image can be seen as a class and a container as an instance. 
 An image it's just a stopped container.  
-Custom images are extended from existing images, and can be shared with others by pushing them to docker repositories.
+Custom images are extended from existing images and can be shared with others by pushing them to docker repositories.
 
 ##### Windows Images vs Linux images
 
 Docker can run two types of images: Linux or Windows images.  
-The difference is the kernel they need to interact with in order to access hardware resources. The machine that provides it's kernel, is called host.  
-It's possible to run Windows images on a computer running Linux, and visceversa, by running a docker engine on top of a virtual machine.  
+The difference is the kernel they need to interact with to access hardware resources. The machine that provides its kernel, is called host.  
+It's possible to run Windows images on a computer running Linux, and visce versa, by running a docker engine on top of a virtual machine.  
 Both Windows and MacOS docker versions, run Linux images by default, on top of a lightweight Linux VM. 
-However Docker for Windows can spin up Windows images natively.
+However, Docker for Windows can spin up Windows images natively.
 
 ##### Image layers
 
-You can copy files into an image from your host, add files from a url, create them by running shell commands, or mount a folder from your host as a volume. 
-Each of those operations add a new layer to a stack that compounds the resulting image. Each of those layers are like commits in source control software, encapsulating the changes made to the image.  
-Every layer is identified with a unique hash ID. And the layer at the top of the stack identifies the image like a GIT branch is identified by it's last commit.  
+You can copy files into an image from your host, add files from a URL, create them by running shell commands, or mount a folder from your host as a volume. 
+Each of those operations adds a new layer to a stack that compounds the resulting image. Each layer it's like a GIT commit, encapsulating the changes made to the image.  
+Every layer is identified with a unique hash ID. And the layer at the top of the stack identifies the image like a GIT branch is identified by its last commit.  
 You can create new containers from any layer on the stack.  
-When a new container is created from a given image tag, or layer ID, it is built by summing every change commited on each layer, into a cohesive environment.
+When a new container is created from a given image tag or layer ID, it is built by summing every layer together, into a cohesive environment.
 
-##### Inmutable vs mutable images
+##### Immutable vs mutable images
 
 Usually, managing state on your applications is harder than not doing so. Because state introduces more variables you have to deal with. 
 Such is the strength of a functional vs object oriented programming paradigm.  
-And something similar happens while building our images; Inmutable images are easier to use than mutable images.
+And something similar happens with infrastructure-as-code; Deployment of immutable images are easier to implement.
 
 <br/>
 
-Inmutability happens when an image is built with every file needed, and you don't modify their state once deployed.  
+Immutability happens when an image is built with every file needed, and you don't modify their state once deployed.  
 Instead of modifying the image while it's running. Once a new version of the code it's available for deployment, you build a new image, deploy it, and remove the old one.  
-Overall, inmutable images allows you to implement simpler deployment processes, at the expense of longer build times.
+Overall, immutable images allows you to implement simpler deployment processes, at the expense of longer build times.
 
 ##### Docker networking
 
@@ -116,14 +116,14 @@ Many other implementations exist maintained by third parties.
 
 <br/>
 
-Bridge networks are the default network type when attaching a Linux container port to a host port, as you will see later. Their Windows counter part is NAT.  
+Bridge networks are the default network type when attaching a Linux container port to a host port, as you will see later. Their Windows counterpart is NAT.  
 
 <br/>
 
 #### Hello World
 
 This website was built inside a nodejs docker image.    
-That means, you can run the same version available at https://guille.cloud, at your local host, without caring or knowing what's under the hoods. 
+That means you can run the same version available at https://guille.cloud, at your localhost, without caring or knowing what's under the hoods. 
 
 ###### Go ahead and try it
 
@@ -142,9 +142,9 @@ An exact version of this website should be available at http://0.0.0.0:8080 or h
 It should work out of the box, cause Docker did all the heavy lifting for you:
 
 1. Attempts to find a local image tagged as **guillermomaschwitz/blog:1-production**
-1. If the image is not found locally, docker will attempt to pull it from it's [Dockerhub repository](https://hub.docker.com/r/guillermomaschwitz/blog).
+1. If the image is not found locally, docker will attempt to pull it from its [Dockerhub repository](https://hub.docker.com/r/guillermomaschwitz/blog).
 1. A new container with label **guillecloud**, gets started from that image.
-1. Localhost's port 8080 gets binded to container's port 8000. 
+1. Binds localhost's port 8080 to container's port 8000.
 1. Logs are streamed to the screen through STDOUT and/or STDERR
 
 ###### List every image pulled by docker
@@ -160,8 +160,8 @@ node                      13.1.0-alpine       f20a6d8b6721        3 months ago  
 `} 
 />
 
-The image with ID **14699ea162d0** belongs to repository **guillermomaschwitz/blog** and have two different tags: **1**, and **1-production**.
-It's base image is **f20a6d8b6721**, from repository **node**, with the tag **13.1.0-alpine**.
+The image with ID **14699ea162d0** belongs to the repository "**guillermomaschwitz/blog**" and have two different tags: "**1**", and "**1-production**".
+Its base image is **f20a6d8b6721**, from the "**node**"" repository , with the tag "**13.1.0-alpine**".
 
 ###### Check if your container is running
 
@@ -224,7 +224,7 @@ This file is the "Rosetta stone" of this tutorial; the recipe used to build a do
 
 ###### Makefile
 
-A high level cli interface other developers can use to interact with the development environment, while they get familiar with docker.  
+A high-level command-line interface other developers can use to interact with the development environment, while they get familiar with docker.  
 This is also the place, external tools should rely on to interact with the docker environment. 
 
 ###### README.md
@@ -252,7 +252,7 @@ What you write on this file should be the minimal amount of information, needed 
 This is an example workflow a development team could adopt to work with this containerized development infrastructure:
 
 A new stable version of the codebase is ready to be deployed to a production server, containing changes to the infrastructure. We call it version 2.0.  
-The new codebase contains both: the sourcode of the php app, and the source code of the containerized development environment.
+The new codebase contains both: the sourcecode of the PHP app, and the source code of the containerized development environment.
 
 1. The new version is deployed to production and tagged v2.0.
 1. A developer in charge of maintaining the development infrastructure's docker image: pulls v1.0 code versions.
@@ -260,20 +260,13 @@ The new codebase contains both: the sourcode of the php app, and the source code
     1. Run automated tests locally.
     1. Push it to the Docker repo with tag v2.0, next to several previous versions of the docker image.
     1. Updates the upstream branch of the source code.
-1. Next morning, when a developer pull the latest changes from the upstream stable branch, will get as well an updated version for the docker image to use as a development environment.
+1. The next morning, when a developer pull the latest changes from the upstream stable branch, will get as well an updated version for the docker image to use as a development environment.
 1. The dev start the environment, and without knowing it would happen, a new version of the development environment is pulled from the docker repository.
     1. If another developer is working on an older version of the code, it's development environment won't be updated.
 1. A third developer realize an improvement could be done to the configuration of the development environment v2.0.
-    1. She starts working on the improvement proposal on a new branch.
-    1. Updates the hardcoded version of the docker image to use for that version of the sourcecode, to v2.1, after testing it locally.
-    1. Open a Merge Request docummenting the improvement.
+    1. She pushes the improvement to a new branch.
+    1. Open a Merge Request and assign it to the maintainer.
     1. The maintainer review it, and if approved, the new source code is deployed to production and tagged v2.1.
-
-And the process start again from the beginning.
-
-<br/>
-
-Consider this an example. Each team should adapt their processes to whatever works for them.
 
 <hr/>
 
@@ -281,7 +274,7 @@ Consider this an example. Each team should adapt their processes to whatever wor
 
 #### config/php-dev.ini
 
-A development environment should help developers understand their codebase, and catch errors as early as possible. 
+A development environment should help developers to understand their codebase, and catch errors as early as possible. 
 The following settings should do the job.
 
 <CodeWave>
@@ -297,7 +290,7 @@ display_errors = On
 
 Developers should have complete visibility over any error or exception that might rise at run time. 
 
-- **error_reporting = E_ALL** enable output of every message sent to php error logs
+- **error_reporting = E_ALL** enable output of every message sent to PHP error logs
 - **display_startup_errors = On** enable PHP's startup errors reporting
 - **display_errors = On** print errors to the screen as part of the output
 
@@ -317,8 +310,8 @@ If you are debugging issues with var_dump() or print_r() you should really try t
 
 <br/>
 
-The thing with this debugger, is that it's not suitable for shared development servers, or servers exposed to the wild. 
-But it is very easy to make it work from a locally running docker container.
+This debugger isn't suitable for shared development servers, or servers exposed to the wild. 
+But it's very easy to make it work from a locally running docker container.
 
 <br/>
 
@@ -329,11 +322,11 @@ You can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/detail/x
 
 ###### This is how a PHP debugging session works:
 
-1. Your must tell your editor to listen on port 9001 for incoming connections. If the editor doesn't support that out of the box, look for a plugin.
-1. An HTTP request containing the param **XDEBUG_SESSION_START** is sent to the web server
-1. XDebug pause the flow of your program, attempts to connect back to your computer at localhost:9001, and waits for your orders.
+1. You must tell your editor to listen on port 9001 for incoming connections. If the editor doesn't support that out of the box, look for a plugin.
+1. An HTTP request containing the param **XDEBUG_SESSION_START** is sent to the webserver
+1. XDebug pauses the flow of your program, attempts to connect back to your computer at localhost:9001, and waits for your orders.
 1. Your editor accepts the connection
-1. If there is a breakpoint in your code, the web server will halt it's execution there, and send to your editor, all the information available about the current context.
+1. If there is a breakpoint in your code, the webserver will halt it's execution there, and send it to your editor, all the information available about the current context.
 
 From there, you will have complete visibility on every variable, constant, object, created on the current context, and every frame of the memory stack of your PHP programs.  
 You can use the debugger like you would use a javascript debugger from your browser.
@@ -346,7 +339,7 @@ You can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/detail/x
 
 <br/>
 
-A few useful resources to setup an IDE or editor to debug requests:
+A few useful resources to set up an IDE or editor to debug requests:
 
 - [Felix Becker PHP Xdebug plugin for VSCode](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug)
 - [How to setup PHP Xdebug in PHPStorm](https://www.jetbrains.com/help/phpstorm/creating-php-web-application-debug-configuration.html)
@@ -409,7 +402,7 @@ XDebug tracer is a powerful tool that gives you the ability to analyze your PHP 
 
 <br/>
 
-Reports are human readable and are stored in container's folder /tmp/mydata.  
+Reports are human-readable and are stored in the container's folder /tmp/mydata.  
 Later I show you how to map that folder with a local folder in your host, to read those reports more easily.
 
 <br/>
@@ -425,7 +418,7 @@ Again, you can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/d
 
 #### The Dockerfile
 
-Docker uses Dockerfiles as recipes to create images. Let's explore it's syntax and a few useful instructions.
+Docker uses Dockerfiles as recipes to create images. Let's explore its syntax and a few useful instructions.
 
 <CodeWave>
 
@@ -447,7 +440,7 @@ Every image is tagged with the following syntax:
 <br/>
 
 
-Docker has a vibrant ecosystem of images you can use. One of the most popular repositories places to look for it's [DockerHub](https://hub.docker.com/), with thousands of publicly available repositories, built by devops practitioners around the world.  
+Docker has a vibrant ecosystem of images you can use. One of the most popular repositories places to look for it's [DockerHub](https://hub.docker.com/), with thousands of publicly available repositories, built by DevOps practitioners around the world.  
 
 <br/>
 
@@ -469,12 +462,12 @@ FROM php:7.4.2-apache AS dev-image
 
 ##### Choose an alias for your image
 
-An alias help you reference one of your images in your build process. In this case the alias is **dev-image**.  
+An alias helps you reference one of your images in your build process. In this case, the alias is "**dev-image**".  
 
 <br/>
 
 Many image definitions can be written on the same Dockerfile.  
-An alias help you identify a specific image.
+An alias helps you identify a specific image.
 
 ```docker
 # My PHP Development environment
@@ -487,7 +480,7 @@ RUN docker-php-ext-enable xdebug
 ##### Run shell commands
 
 First, install [XDebug](https://xdebug.org/); A development PHP extension that packs handy features to make your life easier as a developer.  
-As [docummented here](https://hub.docker.com/_/php), use _pecl_, and _docker-php-ext-enable_ instead of apt-get or other methods.  
+As [documented here](https://hub.docker.com/_/php), use _pecl_, and _docker-php-ext-enable_ instead of apt-get or other methods.  
 
 <br/>
 
@@ -505,7 +498,7 @@ RUN pecl install xdebug-2.9.2 \
 
 ##### Optimize the size of your image
 
-You can chain shell commands together in order to reduce the amount of layers that compound an image.
+You can chain shell commands together to reduce the number of layers that compound an image.
 
 > Unless you want to cache specific steps of your build process, it's a good practice to replace consecutive RUN lines, by a single line of chained sentences
 
@@ -518,7 +511,7 @@ RUN pecl install xdebug-2.9.2 \
     && docker-php-ext-enable xdebug \
 # Create data folders for XDebug
 # tracing and profiling tools
-# and set ownership to www-data
+# and sets the ownership to www-data
     && mkdir -p /tmp/mydata \
     && chown -R www-data:www-data /tmp/mydata
 # copy development settings for PHP
@@ -587,7 +580,7 @@ EXPOSE 80
 
 <br/>
 
-This is just an example, cause there's no need to expose port 80, since it's been done already on the base image.  
+This is just an example, cause there's no need to expose port 80 since it's been done already on the base image.  
 
 <br/>
 
@@ -626,9 +619,9 @@ Check [the Dockerfile reference](https://docs.docker.com/engine/reference/builde
 
 <br/>
 
-### Basic docker workflows
+### How to work with your image
 
-#### Previous Steps
+#### Configure Docker
 
 Before building the environment, allow Docker to read your project's folder.  
 At least in Docker Desktop for MacOS, it goes like this:  
@@ -639,19 +632,19 @@ At least in Docker Desktop for MacOS, it goes like this:
 
 Avoid symlinked folders cause Docker doesn't like them.
 
-#### Let's do it
+#### Commands
 
 ###### Build your image
 
 <Code language="bash" snippet={`docker build -t my-project:1.0-development --target dev-image .`} />
 
 Builds and tags your image as **my-project:1.0-development**.  
-The last parameter ".", is the file system context at your docker host. Any file you want to **COPY** into the image, must be inside the given context. 
+The last parameter ".", is the file system context at your docker host. Any file you want to **COPY** into the image must be inside the given context. 
 You should allow docker to access your project's folder first. See the "File Sharing" settings section in Docker for Desktop.
 
 <br/>
 
-If everything went well, you should see **my-project** custom image between your locally available images.
+If everything went well, you should see the "**my-project**" custom image on that list.
 
 <Code language="bash" snippet={`docker image ls`} />
 
@@ -665,7 +658,7 @@ dockerhub-user/my-project   1.0-development     14699ea162d0        2 minutes ag
 ###### Test it as a standalone container
 
 Test your image before sharing it.  
-Do not mount any volume, because you want to test the image itself as an inmutable artifact.
+Do not mount any volume, because you want to test the image itself as an immutable artifact.
 
 <Code 
 language="bash" 
@@ -719,9 +712,9 @@ snippet={`docker push your-dockerhub-username/my-project`}
 #### Wrapping each workflow into a cohesive interface
 
 Just like you would define an interface, or a group of public methods in a class, to present it as simple as possible to others. 
-You should implement a simple and concise command line interface, so devs and external tools, can interact with the environment.  
-Let's see now how to define a high level cli inteface, by writing a Makefile; a pretty standard approach for IT teams and C projects.  
-GNUMake it's a good fit for this task, because it allows you to write every high level command in a single file, and it's a basic development tool, available on most operating systems.
+You should implement a simple and concise command-line interface, so devs and external tools can interact with the environment.  
+Let's see now how to define a high-level command-line interface, by writing a Makefile; a pretty standard approach for IT teams and C projects.  
+GNUMake it's a good fit for this task, because it allows you to write every high-level command in a single file, and it's a basic development tool, available on most operating systems.
 
 <br/>
 
@@ -783,7 +776,7 @@ exec:
 
 ##### make exec
 
-**make exec** it's a helper command that execute any command you pass to it inside the development environment, removing bugs caused by environments that differ from the production environment.
+**make exec** it's a helper command that executes any command you pass to it inside the development environment, removing bugs caused by environments that differ from the production environment.
 
 <br/>
 
@@ -831,16 +824,16 @@ It's usually used by the maintainers of the environment and a CI/CD pipeline.
 </CodeWave>
 
 It's important to implement a common set of commands across projects to ease understanding and integration with automation tools. 
-I like to use commands like: build, clean, start, stop, deploy, test, all. 
-Because are concise and self descriptive, besides being some of them pretty common across other projects I've seen in the wild.
+I like to use commands like build, clean, start, stop, deploy, test, all. 
+Because they are concise and self-descriptive, besides being some of them pretty common across other projects I've seen in the wild.
 
 <br/>
 
 #### The README.md
 
-Always remember to wrap your environment with a high level docummentation, so those who have to work with it, can move faster without depending on you.  
-Docummentation is critical for communication, and reduce the dependency a team has on the maintainer of the environment.
-It also helps to spread the knowledge about the product, which is something very good if you plan to go on vacations someday.
+Always remember to wrap your environment with a high-level documentation, so those who have to work with it can move faster without depending on you.  
+Documentation is critical for communication, and reduce the dependency a team has on the maintainer of the environment.
+It also helps to spread knowledge about the product, which is something very good if you plan to go on vacation someday.
 
 <br/>
 
@@ -851,7 +844,7 @@ It also helps to spread the knowledge about the product, which is something very
 I hope you found this tutorial useful!  
 Hopefully, you learned enough about Docker to build your own development environments.  
 There is still more to learn though. This is a single container environment and it's not suitable for production. 
-However it's the corner stone to modernize other processes and enable more enjoyable, collaborative ways of building software together.
+However, it's the cornerstone to modernize other processes and enable more enjoyable, collaborative ways of building software together.
 
 <br/>
 
@@ -861,13 +854,13 @@ Above all, I tried to share a few technical tricks to improve collaboration and 
 <br/>
 
 Feel free to let me know any comments, critics, or suggestions you might have.  
-You can write me at <ContactLink/>
+You can write to me at <ContactLink/>
 
-### Whats next
+### What's next
 
-In my next post I'll show you how to build a production version of this environment, with **docker multi-stage builds**. 
+In my next post, I'll show you how to build a production version of this environment, with **docker multi-stage builds**. 
 How to create sandboxed **docker networks** to connect multiple containers together. 
-And **docker-compose**, an interesting tool to declare your dev infrastructure in yaml format.
+And **docker-compose**, an interesting tool to declare your dev infrastructure in YAML format.
 
 <br/>
 

@@ -348,7 +348,7 @@ You can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/detail/x
 A few useful resources to setup an IDE or editor to debug requests:
 
 - [Felix Becker PHP Xdebug plugin for VSCode](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug)
-- [Howto setup PHP Xdebug in PHPStorm](https://www.jetbrains.com/help/phpstorm/creating-php-web-application-debug-configuration.html)
+- [How to setup PHP Xdebug in PHPStorm](https://www.jetbrains.com/help/phpstorm/creating-php-web-application-debug-configuration.html)
 - [PHP Xdebug plugin for Sublime 2 and 3](https://packagecontrol.io/packages/Xdebug%20Client)
 
 This is my VSCode configuration for FelixBecker's plugin, in case you are using VSCode:
@@ -409,7 +409,7 @@ XDebug tracer is a powerful tool that gives you the ability to analyze your PHP 
 <br/>
 
 Reports are human readable and are stored in container's folder /tmp/mydata.  
-Later I show you howto map that folder with a local folder in your host, to read those reports more easily.
+Later I show you how to map that folder with a local folder in your host, to read those reports more easily.
 
 <br/>
 
@@ -717,12 +717,10 @@ snippet={`docker push your-dockerhub-username/my-project`}
 
 #### Wrapping each workflow into a cohesive interface
 
-Just like you would define an interface, or a group of public methods in a PHP class, so others can reuse it, without studying your implementation.  
-You should expose a simple list of commands, so others can use your environment, without knowing about docker.  
-Of course, it's code should be clear and well docummented, to allow anyone curious, to learn more about it.
-Let's see now howto define a high level cli inteface, by writing a Makefile compatible with GNUMake.  
-The list of commands shuld be as similar as possible across projects, to reduce complexity and favor reuse.  
-GNUMake it's a good fit for this task, because it allows you to write every high level command in a single file, and it's a tool available on most operating systems.
+Just like you would define an interface, or a group of public methods in a class, to present it as simple as possible to others. 
+You should implement a simple and concise command line interface, so devs and external tools, can interact with the environment.  
+Let's see now how to define a high level cli inteface, by writing a Makefile; a pretty standard approach for IT teams and C projects.  
+GNUMake it's a good fit for this task, because it allows you to write every high level command in a single file, and it's a basic development tool, available on most operating systems.
 
 <br/>
 
@@ -769,7 +767,7 @@ start:
 
 Use this command to start a local development environment. It's usually used by developers involved in the project.  
 
-- Docker will pull my-project:1.0-development image from acme´s docker repository
+- Docker starts my-project:1.0-development image from acme´s docker repository
 - Map ports with the developer computer
 - Assigns a name to the container (useful to write other commands like "make stop")
 - Mount the source code inside the container so the environment can reflect changes made to the code.
@@ -784,27 +782,27 @@ exec:
 
 ##### make exec
 
-The all idea of containerizing a development environment, is to run a project in a predictable environment.  
-Which should resemble as close as possible a production environment.  
-
-<br/>
-
-**make exec** it's a helper command that execute any command you pass to it inside the container, previously started with **make start**
+**make exec** it's a helper command that execute any command you pass to it inside the development environment, removing bugs caused by environments that differ from the production environment.
 
 <br/>
 
 ###### Example commands you should run with **make exec**:
 
+<Code language="bash" snippet={`composer init`} />
+
 <Code language="bash" snippet={`composer install`} />
 
-<Code language="bash" snippet={`composer update`} />
+<Code language="bash" snippet={`composer update --save`} />
+
+<Code language="bash" snippet={`composer require --save-dev phpunit`} />
+
+<Code language="bash" snippet={`vendor/bin/phpunit your-tests/*.php`} />
 
 <Code language="bash" snippet={`npm install`} />
 
-<Code language="bash" snippet={`ifconfig`} />
+<Code language="bash" snippet={`npm update`} />
 
-<Code language="bash" snippet={`apt install nmap curl`} />
-
+<Code language="bash" snippet={`symfony cache:clear`} />
 
 ```makefile
 stop: 
@@ -852,7 +850,7 @@ It also helps to spread the knowledge about the product, which is something very
 I hope you found this tutorial useful!  
 Hopefully, you learned enough about Docker to build your own development environments.  
 There is still more to learn though. This is a single container environment and it's not suitable for production. 
-But it's the corner stone to modernize processes and stimulate better, more enjoyable, collaborative ways of building software together.
+However it's the corner stone to modernize other processes and enable more enjoyable, collaborative ways of building software together.
 
 <br/>
 

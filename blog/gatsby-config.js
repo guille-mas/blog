@@ -3,7 +3,7 @@ module.exports = {
     title: `Cloud Software Design & Development`,
     description: `Thoughts on software design, infrastructure as code, webapps, software development, industry best practices and devops processes from a developers point of view`,
     author: `Guillermo Maschwitz <guilledevel@gmail.com>`,
-    robots: `noindex`,
+    robots: ``,
     viewport: `width=device-width, initial-scale=1`,
     // Used for social links in the root footer
     social: [

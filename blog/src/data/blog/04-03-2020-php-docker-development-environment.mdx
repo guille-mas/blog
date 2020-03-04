@@ -21,9 +21,9 @@ import "prismjs/components/prism-json"
 ### Intro
 
 In these days, it's quite usual to see startups, performing manual setup of development environments. 
-The results are often a fragile mix of operating systems, libraries, and language versions. 
-On other occasions,  experienced IT teams are responsible for building these environments, protecting them from inexperienced developers.  
-As a side effect, development teams experience blockers, to understand the underlying infrastructure, or try new ideas.
+The results are often a fragile mix of operating systems, libraries, and language versions.  
+On other occasions, experienced IT teams are responsible for building these environments, protecting them from inexperienced developers. 
+As a side effect, development teams experience blockers, to understand the underlying infrastructure, or try new ideas.  
 In those scenarios, evolving internal development practices it's impractical and discouraged.
 
 <br/>
@@ -302,6 +302,10 @@ xdebug.remote_host="host.docker.internal"
 xdebug.remote_mode=req
 xdebug.remote_port=9001
 ````
+
+> **Heads up!** "host.docker.internal" it's a domain pointing to the docker host, but it's provided by Docker for Desktop, and not a native feature in docker. 
+However you can register the domain with the ip of the docker host at /etc/hosts, by using **docker exec** 
+or implementing a command to be executed every time the container starts as I'll show you later. 
 
 ##### PHP Debugger
 

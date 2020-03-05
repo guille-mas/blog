@@ -1,6 +1,6 @@
 <?php
 
-header("application/json");
+header('Content-Type: application/json');
 
 print(json_encode([
     "HTTP_PORT"         => getenv("HTTP_PORT"),

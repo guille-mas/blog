@@ -9,7 +9,7 @@ ARG APP_ROOT_DIR
 
 RUN apt-get update \
     # Install debian packages
-    && apt-get install -yq --no-install-recommends dialog apt-utils openssl ssl-cert \
+    && apt-get install -yq --no-install-recommends dialog apt-utils openssl ssl-cert curl \
     # install php extensions
     && pecl install xdebug-2.9.2 \
     && docker-php-ext-enable xdebug opcache \
@@ -22,6 +22,8 @@ RUN apt-get update \
     # and set ownership to www-data
     && mkdir -p /tmp/${PROJECT_NAME} \
     && chown -R www-data:www-data /tmp/${PROJECT_NAME} \
+    # Install PHP Composer package manager
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer \
     # cleaning...
     && apt-get -y autoremove \
     && apt-get clean \

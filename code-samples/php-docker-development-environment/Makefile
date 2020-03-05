@@ -20,12 +20,13 @@ start:
 		-e APP_ROOT_DIR=${APP_ROOT_DIR} \
 		-e APP_PUBLIC_DIR=${APP_PUBLIC_DIR} \
 		-e IMAGE_VERSION_TAG=${IMAGE_VERSION_TAG} \
+		-e HOME=${APP_ROOT_DIR} \
 		--name ${PROJECT_NAME}-container \
 		${PROJECT_NAME}:${IMAGE_VERSION_TAG}-development
 
 exec:
 	@read -p "Write a command to execute inside your running container: " command; \
-	docker exec ${PROJECT_NAME}-container sh -c "$$command"
+	docker exec -it ${PROJECT_NAME}-container sh -c "$$command"
 
 sudo:
 	@read -p "Write a command to execute inside your running container (AS ROOT): " command; \

@@ -37,3 +37,4 @@ COPY ./config/apache-ports.conf /etc/apache2/ports.conf
 COPY --chown=www-data:www-data ./src ${APP_ROOT_DIR}
 EXPOSE ${HTTP_PORT} ${HTTPS_PORT} 
 USER www-data
+WORKDIR ${APP_ROOT_DIR}

@@ -278,7 +278,7 @@ Someone capable of running deployments drops a few commands at a deployment envi
 snippet={`git checkout master
 git pull origin master
 git tag -a v3.1
-git push origin master
+git push origin --tags
 make test-images    # run automated tests
 make build-images   # create 1 image per runtime environment
 make share-images-with-team  # upload every new image to a privately shared repository for docker images

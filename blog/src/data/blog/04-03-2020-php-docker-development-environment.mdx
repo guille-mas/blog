@@ -1,8 +1,8 @@
 ---
 slug: "build-a-docker-development-environment-for-php-projects/index.html"
 title: "Build a PHP development environment your team will love"
-intro: "Build a portable development environment for PHP 7.4 with Docker, packed with powerful features to make development easier"
-tools: "docker gnu-make php xdebug debian-linux"
+intro: "In this comprehensive introductory guide into Docker fundamentals, you will learn how to build a custom made PHP 7.4 development environment, fully-featured with powerful tools to boost your team's productivity and overall development experience"
+tools: "docker gnu-make php xdebug debian-Linux"
 date: "March 4th, 2020"
 publish: true
 blog: true
@@ -16,14 +16,14 @@ import "prismjs/components/prism-ini"
 import "prismjs/components/prism-json"
 
 > Welcome! This post it's a work in progress, that will be changing during the next few days.  
-> Don't hesitate to write me an email to <ContactLink/> with any comments, critics or advices you might have.
+> Don't hesitate to write me an email to <ContactLink/> with any comments, critics or advice you might have.
 
 ### Intro
 
 In these days, it's quite usual to see startups, performing manual setup of development environments. 
 The results are often a fragile mix of operating systems, libraries, and language versions.  
 On other occasions, experienced IT teams are responsible for building these environments, protecting them from inexperienced developers. 
-As a side effect, development teams experience blockers, to understand the underlying infrastructure, or try new ideas.  
+As a side effect, development teams experience blockers, to understand the underlying environment, or try new ideas.  
 In those scenarios, evolving internal development practices it's impractical and discouraged.
 
 <br/>
@@ -34,7 +34,7 @@ Where developers can experiment aggressively, on fast sandboxed environments.
 <br/>
 
 Long gone are the days when containerized environments where a practice of a few tech giants, or an unstable technology promoted by crazy early adopters.  
-With modern containerization and orchestration tools like Docker, docker-compose, Swarms, or Kubernetes. And modern cloud infrastructure services. 
+With modern containerization and orchestration tools like Docker, docker-compose, Swarms, Kubernetes, and modern cloud infrastructure services. 
 It is becoming a no brainer for an increasing number of startups, to adopt some of these technologies. 
 To provide better experiences for their customers, and cost-effective processes for their teams.
 
@@ -72,7 +72,7 @@ Custom images are extended from existing images and can be shared with others by
 
 Docker can run two types of images: Linux or Windows images.  
 The difference is the kernel they need to interact with to access hardware resources. The machine that provides its kernel, is called host.  
-It's possible to run Windows images on a computer running Linux, and visce versa, by running a docker engine on top of a virtual machine.  
+It's possible to run Windows images on a computer running Linux, and vice versa, by running a docker engine on top of a virtual machine.  
 Both Windows and MacOS docker versions, run Linux images by default, on top of a lightweight Linux VM. 
 However, Docker for Windows can spin up Windows images natively.
 
@@ -87,7 +87,7 @@ When a new container is created from a given image tag or layer ID, it is built 
 ##### Immutable vs mutable images
 
 Usually, managing state on your applications is harder than not doing so. Because state introduces more variables you have to deal with. 
-Such is the strength of a functional vs object oriented programming paradigm.  
+Such is the strength of a functional vs object-oriented programming paradigm.  
 And something similar happens with infrastructure-as-code; Deployment of immutable images are easier to implement.
 
 <br/>
@@ -211,16 +211,20 @@ Because the container was started with the **--rm** flag, docker destroys the co
 
 ### The big picture
 
-The development environment is available for download [at Github](https://github.com/guille-mas/blog/tree/master/code-samples/php-docker-development-environment).  
-It contains several files and folders. The most important ones are briefly explained below:
-
-###### php-dev.ini
-
-Settings to make PHP work like it should in a development environment: exposing errors to the user and enabling powerful debugging tools.
+All the code you are going to see it's available at [my Github repo](https://github.com/guille-mas/awesome-php74-env).
+The project contains a few files and folders. The most important ones are briefly explained below:
 
 ###### Dockerfile
 
 This file is the "Rosetta stone" of this tutorial; the recipe used to build a docker environment.
+
+###### config/php-dev.ini
+
+Settings to make PHP work like it should in a development environment: exposing errors to the user and enabling powerful debugging tools.
+
+###### config/apache-*.conf
+
+Apache configuration files.
 
 ###### Makefile
 
@@ -244,29 +248,31 @@ What you write on this file should be the minimal amount of information, needed 
     - Flag files to exclude from the GIT repo, like credentials, secrets, vendor files, build constructs, etc.
 - **.dockerignore**
     - Flag files to exclude from Docker's context.
+- **.env**
+    - A place to initialize environment variables consumed by the containerized environment
 
 <br/>
 
 #### A containerized workflow example
 
-This is an example workflow a development team could adopt to work with this containerized development infrastructure:
+This is an example workflow a development team could adopt to work with this containerized development environment:
 
-A new stable version of the codebase is ready to be deployed to a production server, containing changes to the infrastructure. We call it version 2.0.  
-The new codebase contains both: the sourcecode of the PHP app, and the source code of the containerized development environment.
+A new stable version of the codebase is ready to be deployed to a production server, containing changes to the environment. We call it version 2.0.  
+The new codebase contains both: the source code of the PHP app, and the source code of the containerized development environment.
 
 1. The new version is deployed to production and tagged v2.0.
-1. A developer in charge of maintaining the development infrastructure's docker image: pulls v1.0 code versions.
+1. A developer in charge of maintaining the docker image: pulls v1.0 code versions.
     1. Build a new version of the container.
     1. Run automated tests locally.
     1. Push it to the Docker repo with tag v2.0, next to several previous versions of the docker image.
     1. Updates the upstream branch of the source code.
-1. The next morning, when a developer pull the latest changes from the upstream stable branch, will get as well an updated version for the docker image to use as a development environment.
+1. The next morning, when a developer pulls the latest changes from the upstream stable branch, it will get as well an updated version for the docker image to use as a development environment.
 1. The dev start the environment, and without knowing it would happen, a new version of the development environment is pulled from the docker repository.
     1. If another developer is working on an older version of the code, it's development environment won't be updated.
-1. A third developer realize an improvement could be done to the configuration of the development environment v2.0.
+1. A third developer realizes an improvement could be done to the configuration of the development environment v2.0.
     1. She pushes the improvement to a new branch.
     1. Open a Merge Request and assign it to the maintainer.
-    1. The maintainer review it, and if approved, the new source code is deployed to production and tagged v2.1.
+    1. The maintainer reviews it, and if approved, the new source code is deployed to production and tagged v2.1.
 
 <hr/>
 
@@ -304,8 +310,7 @@ xdebug.remote_port=9001
 ````
 
 > **Heads up!** "host.docker.internal" it's a domain pointing to the docker host, but it's provided by Docker for Desktop, and not a native feature in docker. 
-However you can register the domain with the ip of the docker host at /etc/hosts, by using **docker exec** 
-or implementing a command to be executed every time the container starts as I'll show you later. 
+However you can register the domain with the ip of the docker host at /etc/hosts at run time with **docker exec**.
 
 ##### PHP Debugger
 
@@ -414,6 +419,32 @@ Later I show you how to map that folder with a local folder in your host, to rea
 To enable the tracer, add the HTTP parameter **XDEBUG_TRACE** to any HTTP request. 
 Again, you can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) to help you attach that param to any request.
 
+
+```ini
+# OPcache
+opcache.enable=1
+opcache.revalidate_freq=0
+opcache.validate_timestamps=1
+opcache.max_accelerated_files=10000
+opcache.memory_consumption=192
+opcache.max_wasted_percentage=10
+opcache.interned_strings_buffer=16
+opcache.fast_shutdown=1
+```
+
+##### PHP OPcache
+
+OPCache its a PHP extension that stores precompiled php scripts as bytecode in shared memory, improving the performance of PHP, because the interpreter doesn't have to parse the same files on each request.  
+These settings aims to make the development experience faster.  
+
+<br/>
+
+<br/>
+
+<br/>
+
+<br/>
+
 </CodeWave>
 
 <br/>
@@ -507,8 +538,8 @@ ENV APP_PUBLIC_DIR=/usr/local/app/public
 
 ##### Configurable images
 
-Containers are atomic infrastructure units, that must interact with a varying context: a cloud service, a localhost, a dedicated server, etc.
-In order to provide the required flexibility, configuration settings must be initialized at the highest possible level, which is the environment itself.  
+Containers are atomic units, that must interact with varying infrastructure: a cloud service, a localhost, a dedicated server, etc.
+To provide the required flexibility, configuration settings must be initialized at the highest possible level, which is the environment itself.  
 
 <br/>
 
@@ -517,7 +548,7 @@ In order to provide the required flexibility, configuration settings must be ini
 <br/>
 
 The dockerfile syntax provides the **ENV** instruction, to define environment variables that can be hardcoded at build time, and available at run time.  
-Any environment variable defined this way, can be overriden at run time, using the **-e VAR_NAME=VALUE** parameter at the moment of running the container.
+Any environment variable defined this way, can be overridden at run time, using the **-e VAR_NAME=VALUE** parameter at the moment of running the container.
 
 ###### Example:
 
@@ -532,7 +563,7 @@ snippet={`docker run --rm
 
 <br/>
 
-But how can we initialize variables at build time, in order to simplify the way we run the container, and at the same time make our build processes more maintainable?  
+But how can we initialize variables at build time, to simplify the way we run the container, and at the same time make our build processes more maintainable?  
 
 <br/>
 
@@ -557,7 +588,7 @@ ENV APP_PUBLIC_DIR=/usr/local/app/public
 
 ##### Build Arguments
 
-Docker, provides a way of configuring variables that will be available only at build time with the **ARG** instruction.  
+Docker provides a way of configuring variables that will be available only at build time with the **ARG** instruction.  
 Variables initialized with **ARG** can be initialized outside the Dockerfile, at the moment of building an image.
 
 ###### Example
@@ -601,11 +632,11 @@ You can wire environment variables with build arguments to achieve default envir
 
 <br/>
 
-The way to do it is by initializing build arguments from your build scripts, and pass those values to environment variables.
+The way to do it is by initializing build arguments from your build scripts and pass those values to environment variables.
 
 <br/>
 
-Remember, those environment variables, can be overriden later by passing new values to **docker run**.
+Remember, those environment variables can be overridden later by passing new values to **docker run**.
 
 <br/>
 
@@ -672,7 +703,7 @@ USER www-data
 
 ##### Linux packages
 
-You need to install a few extra linux packages that are not included with the base image, to implement several valuable features for this image.  
+You need to install a few extra Linux packages that are not included with the base image, to implement several valuable features for this image.  
 The instruction **RUN** allows you to pass commands to the default Linux terminal provided by the base image.  
 
 ```docker
@@ -745,7 +776,7 @@ To provide HTTPS support for your project, set up a self-signed certificate.
 
 <br/>
 
-The easiest way to do it its via the **ssl-cert** linux package, that provides the command **make-ssl-cert** to generate fake self-signed SSL certificates. 
+The easiest way to do it its via the **ssl-cert** Linux package, which provides  the command **make-ssl-cert** to generate fake self-signed SSL certificates. 
 
 <br/>
 
@@ -800,7 +831,7 @@ The global composer folder is the folder where globally available vendors are st
 
 <br/>
 
-www-data it's the default user responsible of running any command at run time. 
+www-data it's the default user responsible for running any command at run time. 
 Assign it as the owner of that folder, so composer doesn't fail to install vendors with the **--global** flag.
 
 
@@ -843,7 +874,7 @@ USER www-data
 
 ##### Create a folder to store temporary data files
 
-PHP's profiler and tracer tools, where configured at config/php-ini.dev to dump their reports as files.  
+PHP's profiler and tracer tools, were configured at config/php-ini.dev to dump their reports as files.  
 
 <br/>
 
@@ -1055,7 +1086,7 @@ USER www-data
 
 **COPY** your local folder src/  inside your images, to run your project inside the containerized environment, and assign the ownership of those files to user www-data.
 
-**--chown=user:group** sets ownership of those files.
+**--chown=user:group** sets the ownership of those files.
 
 
 <br/>
@@ -1111,11 +1142,11 @@ USER www-data
 
 ##### Change the current folder
 
-Like if you where typing **cd** on the console, **WORKDIR** changes the current folder of your image.  
+Like if you were typing **cd** on the console, **WORKDIR** changes the current folder of your image.  
 
 <br/>
 
-This is useful to provide the current context during build time, but's also useful to provide a useful context to execute commands inside a running container.
+This is useful to provide the current context during build time but's also useful to provide a useful context to execute commands inside a running container.
 
 
 ```docker
@@ -1497,7 +1528,7 @@ You can write to me at <ContactLink/>
 
 In my next post, I'll show you how to build a production version of this environment, with **docker multi-stage builds**. 
 How to create sandboxed **docker networks** to connect multiple containers together. 
-And **docker-compose**, an interesting tool to declare your dev infrastructure in YAML format.
+And **docker-compose**, an interesting tool to declare multi-container applications in YAML format.
 
 <br/>
 

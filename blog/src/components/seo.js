@@ -72,10 +72,6 @@ function SEO({ description, lang, meta, title }) {
           name: `robots`,
           content: site.siteMetadata.robots,
         },
-        {
-          name: `cache-control`,
-          content: `public, max-age=1800, must-revalidate`,
-        },
       ].concat(meta)}
     />
   )

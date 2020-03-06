@@ -1302,10 +1302,10 @@ Avoid symlinked folders cause Docker doesn't like them.
 
 <Code language="bash" 
 snippet={`docker build 
-    -t dockerhub-username/awesome-php-image:1.0-development 
+    -t username/my-project:1.0 
     --target dev-image .`} />
 
-Builds and tags your image as **my-project:1.0-development**.  
+Builds and tags your image as **my-project:1.0**.  
 The last parameter ".", is the file system context at your docker host. Any file you want to **COPY** into the image must be inside the given context. 
 You should allow docker to access your project's folder first. See the "File Sharing" settings section in Docker for Desktop.
 
@@ -1318,8 +1318,8 @@ If everything went well, you should see the "**my-project**" custom image on tha
 <Code 
 language="bash" 
 snippet={`
-REPOSITORY                              TAG                 IMAGE ID            CREATED             SIZE
-dockerhub-username/awesome-php-image    1.0-development     14699ea162d0        2 minutes ago       454MB
+REPOSITORY            TAG     IMAGE ID            CREATED             SIZE
+username/my-project   1.0     14699ea162d0        2 minutes ago       454MB
 `} />
 
 ###### Test it as a standalone container
@@ -1333,7 +1333,7 @@ snippet={`docker run --rm
     -p 8080:8080/tcp 
     -p 8081:8081/tcp 
     --name my-immutable-container 
-    dockerhub-username/awesome-php-image:1.0-development`} 
+    username/my-project:1.0`} 
 />
 
 ###### Run it as a development environment
@@ -1352,11 +1352,12 @@ You should also use **--rm** to tell Docker to discard the container after using
 <Code 
 language="bash" 
 snippet={`docker run --rm 
-    -p 80:80/tcp
+    -p 8080:8080/tcp
+    -p 8081:8081/tcp
     -v "$PWD"/src:/usr/local/project 
-    -v "$PWD"/data:/tmp/mydata 
-    --name my-dev-container 
-    dockerhub-username/awesome-php-image:1.0-development`} 
+    -v "$PWD"/data:/tmp/my-project 
+    --name my-container 
+    username/my-project:1.0`} 
 />
 
 ###### Share your image
@@ -1370,7 +1371,7 @@ snippet={`docker login`}
 
 <Code 
 language="bash" 
-snippet={`docker push dockerhub-username/awesome-php-image`}
+snippet={`docker push username/my-project`}
 />
 
 <br/>
@@ -1399,10 +1400,14 @@ These are a few commands I like to define for projects in general:
 <CodeWave>
 
 ```makefile
+# Bake a new image
 build:
-	docker build \
-    -t my-project:1.0-development \
-    --target dev-image .
+	docker build -t username/my-project:1.0 \
+		--build-arg HTTP_PORT=8080 \
+		--build-arg HTTPS_PORT=8081 \
+		--build-arg PROJECT_NAME=my-project \
+		--build-arg APP_ROOT_DIR=/usr/local/project \
+		--target dev-image .
 ````
 
 ##### make build
@@ -1416,30 +1421,32 @@ This command is used by the maintainers of the environment, and a CI/CD pipeline
 
 
 ```makefile
+# Start the development environment as it is
 start:
 	docker run --rm \
-    -p 80:80/tcp \
-    -v ${PWD}/src:/var/www/html \
-    -v ${PWD}/data:/tmp/mydata \
-    --name my-project-container \
-    acme/my-project:1.0-development
+        -p 8080:8080/tcp \
+        -p 8081:8081/tcp \
+		-v ${PWD}/src:/usr/local/project \
+		-v ${PWD}/data:/tmp/my-project \
+		--name my-container \
+		my-project:1.0
 ````
 
 ##### make start
 
 Use this command to start a local development environment. It's usually used by developers involved in the project.  
 
-- Docker starts my-project:1.0-development image from acme´s docker repository
+- Docker starts my-project:1.0 image from acme´s docker repository
 - Map ports with the developer computer
 - Assigns a name to the container (useful to write other commands like "make stop")
 - Mount the source code inside the container so the environment can reflect changes made to the code.
 
 ```makefile
+# Execute a command inside the container as user www-data 
 exec:
-	@read -p "Command: " command; \
-	docker exec \
-    my-project-container \
-    sh -c "$$command"
+	@read -p "Your command: " command; \
+	docker exec -it my-container sh -c "$$command"
+
 ````
 
 ##### make exec
@@ -1467,8 +1474,9 @@ exec:
 <Code language="bash" snippet={`symfony cache:clear`} />
 
 ```makefile
+# Stops the container
 stop: 
-	-docker container stop my-project-container
+	-docker container stop my-container
 ````
 
 ##### make stop
@@ -1476,9 +1484,10 @@ stop:
 This command stops the container previously started with **make start*
 
 ```makefile
+# Delete the image and its container
 clean: stop	
-	-docker container rm my-project-container
-	docker image rm my-project:1.0-development
+	-docker container rm my-container
+	docker image rm my-project:1.0
 ````
 
 ##### make clean

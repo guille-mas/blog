@@ -760,8 +760,10 @@ RUN apt-get install -yq --no-install-recommends \
     curl git unzip libzip-dev
 RUN pecl install xdebug-2.9.2 zip
 RUN docker-php-ext-enable xdebug opcache zip
-RUN make-ssl-cert generate-default-snakeoil --force-overwrite
-RUN chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private
+RUN make-ssl-cert generate-default-snakeoil \
+    --force-overwrite
+RUN chown -R www-data:www-data \
+    /etc/ssl/certs /etc/ssl/private
 RUN a2enmod ssl
 
 USER www-data
@@ -805,8 +807,10 @@ RUN apt-get install -yq --no-install-recommends \
     curl git unzip libzip-dev
 RUN pecl install xdebug-2.9.2 zip
 RUN docker-php-ext-enable xdebug opcache zip
-RUN make-ssl-cert generate-default-snakeoil --force-overwrite
-RUN chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private
+RUN make-ssl-cert generate-default-snakeoil \
+    --force-overwrite
+RUN chown -R www-data:www-data \
+    /etc/ssl/certs /etc/ssl/private
 RUN a2enmod ssl
 RUN curl -sS https://getcomposer.org/installer | \
     php -- --install-dir=/usr/bin/ --filename=composer
@@ -856,8 +860,10 @@ RUN apt-get install -yq --no-install-recommends \
     curl git unzip libzip-dev
 RUN pecl install xdebug-2.9.2 zip
 RUN docker-php-ext-enable xdebug opcache zip
-RUN make-ssl-cert generate-default-snakeoil --force-overwrite
-RUN chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private
+RUN make-ssl-cert generate-default-snakeoil \
+    --force-overwrite
+RUN chown -R www-data:www-data \
+    /etc/ssl/certs /etc/ssl/private
 RUN a2enmod ssl
 RUN curl -sS https://getcomposer.org/installer | \
     php -- --install-dir=/usr/bin/ --filename=composer
@@ -903,8 +909,10 @@ RUN apt-get update \
     && curl git unzip libzip-dev \
     && pecl install xdebug-2.9.2 zip \
     && docker-php-ext-enable xdebug opcache zip \
-    && make-ssl-cert generate-default-snakeoil --force-overwrite \
-    && chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private \
+    && make-ssl-cert generate-default-snakeoil \
+        --force-overwrite \
+    && chown -R www-data:www-data \
+        /etc/ssl/certs /etc/ssl/private \
     && a2enmod ssl \
     && curl -sS https://getcomposer.org/installer | \
     php -- --install-dir=/usr/bin/ --filename=composer \
@@ -953,8 +961,10 @@ RUN apt-get update \
     && curl git unzip libzip-dev \
     && pecl install xdebug-2.9.2 zip \
     && docker-php-ext-enable xdebug opcache zip \
-    && make-ssl-cert generate-default-snakeoil --force-overwrite \
-    && chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private \
+    && make-ssl-cert generate-default-snakeoil \
+        --force-overwrite \
+    && chown -R www-data:www-data \
+        /etc/ssl/certs /etc/ssl/private \
     && a2enmod ssl \
     && curl -sS https://getcomposer.org/installer | \
     php -- --install-dir=/usr/bin/ --filename=composer \
@@ -1004,8 +1014,10 @@ RUN apt-get update \
     && curl git unzip libzip-dev \
     && pecl install xdebug-2.9.2 zip \
     && docker-php-ext-enable xdebug opcache zip \
-    && make-ssl-cert generate-default-snakeoil --force-overwrite \
-    && chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private \
+    && make-ssl-cert generate-default-snakeoil \
+        --force-overwrite \
+    && chown -R www-data:www-data \
+        /etc/ssl/certs /etc/ssl/private \
     && a2enmod ssl \
     && curl -sS https://getcomposer.org/installer | \
     php -- --install-dir=/usr/bin/ --filename=composer \
@@ -1018,8 +1030,10 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./config/php-dev.ini /usr/local/etc/php/conf.d/
-COPY ./config/apache-vhost.conf /etc/apache2/sites-enabled/000-default.conf
-COPY ./config/apache-ports.conf /etc/apache2/ports.conf
+COPY ./config/apache-vhost.conf 
+    /etc/apache2/sites-enabled/000-default.conf
+COPY ./config/apache-ports.conf 
+    /etc/apache2/ports.conf
 
 USER www-data
 ```
@@ -1057,8 +1071,10 @@ RUN apt-get update \
     && curl git unzip libzip-dev \
     && pecl install xdebug-2.9.2 zip \
     && docker-php-ext-enable xdebug opcache zip \
-    && make-ssl-cert generate-default-snakeoil --force-overwrite \
-    && chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private \
+    && make-ssl-cert generate-default-snakeoil \
+        --force-overwrite \
+    && chown -R www-data:www-data \
+        /etc/ssl/certs /etc/ssl/private \
     && a2enmod ssl \
     && curl -sS https://getcomposer.org/installer | \
     php -- --install-dir=/usr/bin/ --filename=composer \
@@ -1071,8 +1087,10 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./config/php-dev.ini /usr/local/etc/php/conf.d/
-COPY ./config/apache-vhost.conf /etc/apache2/sites-enabled/000-default.conf
-COPY ./config/apache-ports.conf /etc/apache2/ports.conf
+COPY ./config/apache-vhost.conf 
+    /etc/apache2/sites-enabled/000-default.conf
+COPY ./config/apache-ports.conf 
+    /etc/apache2/ports.conf
 
 COPY --chown=www-data:www-data ./src ${APP_ROOT_DIR}
 
@@ -1113,8 +1131,10 @@ RUN apt-get update \
     && curl git unzip libzip-dev \
     && pecl install xdebug-2.9.2 zip \
     && docker-php-ext-enable xdebug opcache zip \
-    && make-ssl-cert generate-default-snakeoil --force-overwrite \
-    && chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private \
+    && make-ssl-cert generate-default-snakeoil \
+        --force-overwrite \
+    && chown -R www-data:www-data \
+        /etc/ssl/certs /etc/ssl/private \
     && a2enmod ssl \
     && curl -sS https://getcomposer.org/installer | \
     php -- --install-dir=/usr/bin/ --filename=composer \
@@ -1127,8 +1147,10 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./config/php-dev.ini /usr/local/etc/php/conf.d/
-COPY ./config/apache-vhost.conf /etc/apache2/sites-enabled/000-default.conf
-COPY ./config/apache-ports.conf /etc/apache2/ports.conf
+COPY ./config/apache-vhost.conf 
+    /etc/apache2/sites-enabled/000-default.conf
+COPY ./config/apache-ports.conf 
+    /etc/apache2/ports.conf
 
 COPY --chown=www-data:www-data ./src ${APP_ROOT_DIR}
 
@@ -1170,8 +1192,10 @@ RUN apt-get update \
     && curl git unzip libzip-dev \
     && pecl install xdebug-2.9.2 zip \
     && docker-php-ext-enable xdebug opcache zip \
-    && make-ssl-cert generate-default-snakeoil --force-overwrite \
-    && chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private \
+    && make-ssl-cert generate-default-snakeoil \
+        --force-overwrite \
+    && chown -R www-data:www-data \
+        /etc/ssl/certs /etc/ssl/private \
     && a2enmod ssl \
     && curl -sS https://getcomposer.org/installer | \
     php -- --install-dir=/usr/bin/ --filename=composer \
@@ -1184,8 +1208,10 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY ./config/php-dev.ini /usr/local/etc/php/conf.d/
-COPY ./config/apache-vhost.conf /etc/apache2/sites-enabled/000-default.conf
-COPY ./config/apache-ports.conf /etc/apache2/ports.conf
+COPY ./config/apache-vhost.conf 
+    /etc/apache2/sites-enabled/000-default.conf
+COPY ./config/apache-ports.conf 
+    /etc/apache2/ports.conf
 COPY --chown=www-data:www-data ./src ${APP_ROOT_DIR}
 
 WORKDIR ${APP_ROOT_DIR}

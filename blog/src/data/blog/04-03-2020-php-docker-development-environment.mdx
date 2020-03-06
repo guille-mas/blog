@@ -207,7 +207,11 @@ Because the container was started with the **--rm** flag, docker destroys the co
 
 ### The big picture
 
-Every code sample its based on [the code](https://github.com/guille-mas/awesome-php74-env) from a docker image.
+Every code sample its based on a containerized development environment for PHP 7.4 projects I'm maintaining at its [Github repository](https://github.com/guille-mas/awesome-php74-env).  
+A pre built docker image it's available at its [Dockerhub repo](https://hub.docker.com/r/guillermomaschwitz/awesome-php)  
+
+<br/>
+
 The project contains a few files and folders. The most relevant are briefly explained below:
 
 ###### Dockerfile
@@ -229,7 +233,8 @@ This is also the place, external tools should rely on to interact with the docke
 
 ###### README.md
 
-Every project that you pass to other devs, should have a clear and concise README file in the root folder. I won't cover this file's content, but you can read it at the root of the project.  
+Every software project maintained by more than a single person, should have a clear and concise README file in the root folder.  
+I won't cover its content, but you can read an example at its [Github repository](https://github.com/guille-mas/awesome-php74-env).  
 What you write on this file should be the minimal amount of information, needed to introduce others on every basic development workflow.  
 
 ###### Other files in the project
@@ -251,7 +256,7 @@ What you write on this file should be the minimal amount of information, needed 
 
 #### A containerized workflow example
 
-At Imaginary, a group of engineers work together on a tight loop, deploying several daily changes to their product.
+At Imaginary startup, a group of engineers work together on a tight loop, deploying several daily changes to their product.
 Today, a new service for its customers it's ready to go live, requiring the implementation of new endpoints on their API, with very specific hardware requirements.
 The team decides to split a single cluster, into two, to run the API.
 The traffic will be routed by URL, with a load balancer, operating at the 7th OSI layer.  
@@ -267,7 +272,7 @@ The day has come to deliver the service their customers expect, and they have be
 
 <br/>
 
-Someone capable of running deployments drops a few lines at the command line.
+Someone capable of running deployments drops a few commands at a deployment environment.
 
 <Code language="bash"
 snippet={`git checkout master
@@ -279,8 +284,11 @@ make build-images   # create 1 image per runtime environment
 make share-images-with-team  # upload every new image to a privately shared repository for docker images
 make deploy # roll infrastructure changes`} />
 
-Two clusters of machines are deployed, next to the previous cluster that was previously running.
-Once the new infrastructure is ready to go, the load balancer redirects the traffic to the new infrastructure, and stops the old one an hour later.  
+Next to the old API, two new clusters are deployed.
+Once the new infrastructure is ready to go, and the new version of the API is running on them. The load balancer redirects the traffic to the new infrastructure, and stops the old one an hour later.  
+
+<br/>
+
 This is called a blue/green deployment and should provide an uninterrupted user experience to their customers, while deployments happen in the background.
 
 <br/>

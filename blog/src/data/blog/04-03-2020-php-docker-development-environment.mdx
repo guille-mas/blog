@@ -251,24 +251,23 @@ What you write on this file should be the minimal amount of information, needed 
 
 #### A containerized workflow example
 
-At Imaginary startup, a small group of engineers work together on a tight loop, delivering daily changes to their SaaS source code.  
-Today, a new service for their customers, will be deployed to production.  
-This service requires the implementation of new endpoints on their API, which are expected to process a 10% of their total requests, consuming several more resources than other enpoints.
-The team decides to split the production infrastructure cluster in charge of handling their API.
+At Imaginary, a group of engineers work together on a tight loop, deploying several daily changes to their product.
+Today, a new service for its customers it's ready to go live, requiring the implementation of new endpoints on their API, with very specific hardware requirements.
+The team decides to split a single cluster, into two, to run the API.
+The traffic will be routed by URL, with a load balancer, operating at the 7th OSI layer.  
 
 <br/>
 
-Because they where few, they choose not long ago, to start declaring their infrastructure as code. 
+Because they where few, they choose not long ago, to start declaring their infrastructure as code.  
 And because the task was hard, they decided to use a monorepo, to keep their deployments more manageable.
 
 <br/>
 
-So the day has come to deliver the service their customers expect, and they have been working out a semi automated process to deploy it.
+The day has come to deliver the service their customers expect, and they have been working out a semi-automated deployment process.
 
 <br/>
 
-The traffic must split between two clusters of groups of containerized API workers, running behind a load balancer, operating at the 7th OSI layer.
-Someone capable of running deployments, drops a few lines at the command line.
+Someone capable of running deployments drops a few lines at the command line.
 
 <Code language="bash"
 snippet={`git checkout master

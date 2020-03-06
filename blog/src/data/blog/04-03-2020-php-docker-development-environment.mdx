@@ -427,7 +427,6 @@ Docker uses Dockerfiles as recipes to create images. Let's explore its syntax an
 <CodeWave>
 
 ```docker
-# My PHP Development environment
 FROM php:7.4.2-apache
 ```
 
@@ -460,7 +459,6 @@ To protect your image from upstream's breaking changes, always use explicit vers
 <br/>
 
 ```docker
-# My PHP Development environment
 FROM php:7.4.2-apache AS dev-image
 ```
 
@@ -471,36 +469,432 @@ An alias helps you reference one of your images in your build process. In this c
 <br/>
 
 Many image definitions can be written on the same Dockerfile.  
-An alias helps you identify a specific image.
+An alias helps you identify a specific image in the build process.
+
+<br/>
+
+<Code 
+language="bash"
+snippet={`docker build 
+    -f ./Dockerfile 
+    -t guillermomaschwitz/blog:1.0-production 
+    --target blog-production ./`} />
+
+<br/>
+
+<Code 
+language="bash"
+snippet={`docker build 
+    -f ./Dockerfile 
+    -t guillermomaschwitz/blog:1.0-development 
+    --target blog-development ./`} />
+
+<br/>
+
+<br/>
 
 ```docker
-# My PHP Development environment
 FROM php:7.4.2-apache AS dev-image
-# Install XDebug
-RUN pecl install xdebug-2.8.1
-RUN docker-php-ext-enable xdebug
+
+ENV COMPOSER_HOME=/usr/local/composer/global
+ENV HOME=/usr/local/app
+ENV HTTP_PORT=80
+ENV HTTPS_PORT=443
+ENV PROJECT_NAME=my-project
+ENV APP_ROOT_DIR=/usr/local/app
+ENV APP_PUBLIC_DIR=/usr/local/app/public
 ```
 
-##### Run shell commands
+##### Configurable images
 
-First, install [XDebug](https://xdebug.org/); A development PHP extension that packs handy features to make your life easier as a developer.  
-As [documented here](https://hub.docker.com/_/php), use _pecl_, and _docker-php-ext-enable_ instead of apt-get or other methods.  
+Containers are atomic infrastructure units, that must interact with a varying context: a cloud service, a localhost, a dedicated server, etc.
+In order to provide the required flexibility, configuration settings must be initialized at the highest possible level, which is the environment itself.  
 
 <br/>
 
-You can use RUN as many times as you want, but keep in mind it will generate a new layer, increasing the resulting image's size.
+**Environment variables** are a natural fit for this. 
+
+<br/>
+
+The dockerfile syntax provides the **ENV** instruction, to define environment variables that can be hardcoded at build time, and available at run time.  
+Any environment variable defined this way, can be overriden at run time, using the **-e VAR_NAME=VALUE** parameter at the moment of running the container.
+
+###### Example:
+
+<Code 
+language="bash" 
+snippet={`docker run --rm 
+	-e HTTPS_PORT=4430 
+	-e HTTP_PORT=8000 
+	guillermomaschwitz/awesome-php:7.4-development
+`} />
+
+
+<br/>
+
+But how can we initialize variables at build time, in order to simplify the way we run the container, and at the same time make our build processes more maintainable?  
 
 <br/>
 
 ```docker
-# My PHP Development environment
 FROM php:7.4.2-apache AS dev-image
-# Install XDebug
-RUN pecl install xdebug-2.9.2 \
-    && docker-php-ext-enable xdebug
+
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG PROJECT_NAME
+ARG APP_ROOT_DIR
+ARG APP_PUBLIC_DIR
+ARG PROJECT_NAME
+
+ENV COMPOSER_HOME=/usr/local/composer/global
+ENV HOME=/usr/local/app
+ENV HTTP_PORT=80
+ENV HTTPS_PORT=443
+ENV PROJECT_NAME=my-project
+ENV APP_ROOT_DIR=/usr/local/app
+ENV APP_PUBLIC_DIR=/usr/local/app/public
+```
+
+##### Build Arguments
+
+Docker, provides a way of configuring variables that will be available only at build time with the **ARG** instruction.  
+Variables initialized with **ARG** can be initialized outside the Dockerfile, at the moment of building an image.
+
+###### Example
+
+<Code 
+language="bash" 
+snippet={`docker build 
+    --build-arg COMPOSER_HOME=/usr/local/composer/global
+    --build-arg HOME=/usr/local/app
+    --build-arg HTTP_PORT=8080
+    --build-arg HTTPS_PORT=8081
+    --build-arg PROJECT_NAME=my-project
+    --build-arg APP_ROOT_DIR=/usr/local/app
+    --build-arg APP_PUBLIC_DIR=/usr/local/app/public
+     -t guillermomaschwitz/awesome-php:7.4-development .
+`} />
+
+
+```docker
+FROM php:7.4.2-apache AS dev-image
+
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG PROJECT_NAME
+ARG APP_ROOT_DIR
+ARG APP_PUBLIC_DIR
+ARG PROJECT_NAME
+
+ENV COMPOSER_HOME=/usr/local/composer/global
+ENV HOME=${APP_ROOT_DIR}
+ENV HTTP_PORT=${HTTP_PORT}
+ENV HTTPS_PORT=${HTTPS_PORT}
+ENV PROJECT_NAME=${PROJECT_NAME}
+ENV APP_ROOT_DIR=${APP_ROOT_DIR}
+ENV APP_PUBLIC_DIR=${APP_PUBLIC_DIR}
+```
+
+##### Configure environment variables at build time
+
+You can wire environment variables with build arguments to achieve default environment variables, configurable at build time.
+
+<br/>
+
+The way to do it is by initializing build arguments from your build scripts, and pass those values to environment variables.
+
+<br/>
+
+Remember, those environment variables, can be overriden later by passing new values to **docker run**.
+
+<br/>
+
+
+```docker
+FROM php:7.4.2-apache AS dev-image
+
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG PROJECT_NAME
+ARG APP_ROOT_DIR
+ARG APP_PUBLIC_DIR
+ARG PROJECT_NAME
+
+ENV COMPOSER_HOME=/usr/local/composer/global
+ENV HOME=${APP_ROOT_DIR}
+ENV HTTP_PORT=${HTTP_PORT}
+ENV HTTPS_PORT=${HTTPS_PORT}
+ENV PROJECT_NAME=${PROJECT_NAME}
+ENV APP_ROOT_DIR=${APP_ROOT_DIR}
+ENV APP_PUBLIC_DIR=${APP_PUBLIC_DIR}
+
+USER www-data
+```
+
+##### Avoid using root when running containers
+
+To protect your infrastructure from errors, malicious code in vendors libraries, and other attack vectors, always set a less privileged default user to run your containers.  
+
+<br/>
+
+Set that **USER** once you finish performing any other task for which you need more privileges.
+
+<br/>
+
+<br/>
+
+
+```docker
+FROM php:7.4.2-apache AS dev-image
+
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG PROJECT_NAME
+ARG APP_ROOT_DIR
+ARG APP_PUBLIC_DIR
+ARG PROJECT_NAME
+
+ENV COMPOSER_HOME=/usr/local/composer/global
+ENV HOME=${APP_ROOT_DIR}
+ENV HTTP_PORT=${HTTP_PORT}
+ENV HTTPS_PORT=${HTTPS_PORT}
+ENV PROJECT_NAME=${PROJECT_NAME}
+ENV APP_ROOT_DIR=${APP_ROOT_DIR}
+ENV APP_PUBLIC_DIR=${APP_PUBLIC_DIR}
+
+RUN apt-get update
+RUN apt-get install -yq --no-install-recommends \
+    dialog apt-utils openssl ssl-cert \
+    curl git unzip libzip-dev
+
+USER www-data
+```
+
+##### Linux packages
+
+You need to install a few extra linux packages that are not included with the base image, to implement several valuable features for this image.  
+The instruction **RUN** allows you to pass commands to the default Linux terminal provided by the base image.  
+
+```docker
+FROM php:7.4.2-apache AS dev-image
+
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG PROJECT_NAME
+ARG APP_ROOT_DIR
+ARG APP_PUBLIC_DIR
+ARG PROJECT_NAME
+
+ENV COMPOSER_HOME=/usr/local/composer/global
+ENV HOME=${APP_ROOT_DIR}
+ENV HTTP_PORT=${HTTP_PORT}
+ENV HTTPS_PORT=${HTTPS_PORT}
+ENV PROJECT_NAME=${PROJECT_NAME}
+ENV APP_ROOT_DIR=${APP_ROOT_DIR}
+ENV APP_PUBLIC_DIR=${APP_PUBLIC_DIR}
+
+RUN apt-get update
+RUN apt-get install -yq --no-install-recommends \
+    dialog apt-utils openssl ssl-cert \
+    curl git unzip libzip-dev
+RUN pecl install xdebug-2.9.2 zip
+RUN docker-php-ext-enable xdebug opcache zip
+
+USER www-data
+```
+
+##### Install PHP extensions
+
+Install [XDebug](https://xdebug.org/); A development PHP extension that packs handy features to make your life easier as a developer. And zip, an extension required by composer.  
+As [documented here](https://hub.docker.com/_/php), use _pecl_, and _docker-php-ext-enable_ instead of apt-get or other methods.  
+
+```docker
+FROM php:7.4.2-apache AS dev-image
+
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG PROJECT_NAME
+ARG APP_ROOT_DIR
+ARG APP_PUBLIC_DIR
+ARG PROJECT_NAME
+
+ENV COMPOSER_HOME=/usr/local/composer/global
+ENV HOME=${APP_ROOT_DIR}
+ENV HTTP_PORT=${HTTP_PORT}
+ENV HTTPS_PORT=${HTTPS_PORT}
+ENV PROJECT_NAME=${PROJECT_NAME}
+ENV APP_ROOT_DIR=${APP_ROOT_DIR}
+ENV APP_PUBLIC_DIR=${APP_PUBLIC_DIR}
+
+RUN apt-get update
+RUN apt-get install -yq --no-install-recommends \
+    dialog apt-utils openssl ssl-cert \
+    curl git unzip libzip-dev
+RUN pecl install xdebug-2.9.2 zip
+RUN docker-php-ext-enable xdebug opcache zip
+RUN make-ssl-cert generate-default-snakeoil --force-overwrite
+RUN chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private
+RUN a2enmod ssl
+
+USER www-data
+```
+
+##### SSL Setup
+
+To provide HTTPS support for your project, set up a self-signed certificate.  
+
+<br/>
+
+The easiest way to do it its via the **ssl-cert** linux package, that provides the command **make-ssl-cert** to generate fake self-signed SSL certificates. 
+
+<br/>
+
+Set the ownership of the generated SSL certs, to the user that will be in charge of running the image main process; the Apache server. 
+Finally, enable the SSL apache module.
+
+
+```docker
+FROM php:7.4.2-apache AS dev-image
+
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG PROJECT_NAME
+ARG APP_ROOT_DIR
+ARG APP_PUBLIC_DIR
+ARG PROJECT_NAME
+
+ENV COMPOSER_HOME=/usr/local/composer/global
+ENV HOME=${APP_ROOT_DIR}
+ENV HTTP_PORT=${HTTP_PORT}
+ENV HTTPS_PORT=${HTTPS_PORT}
+ENV PROJECT_NAME=${PROJECT_NAME}
+ENV APP_ROOT_DIR=${APP_ROOT_DIR}
+ENV APP_PUBLIC_DIR=${APP_PUBLIC_DIR}
+
+RUN apt-get update
+RUN apt-get install -yq --no-install-recommends \
+    dialog apt-utils openssl ssl-cert \
+    curl git unzip libzip-dev
+RUN pecl install xdebug-2.9.2 zip
+RUN docker-php-ext-enable xdebug opcache zip
+RUN make-ssl-cert generate-default-snakeoil --force-overwrite
+RUN chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private
+RUN a2enmod ssl
+RUN curl -sS https://getcomposer.org/installer | \
+    php -- --install-dir=/usr/bin/ --filename=composer
+RUN mkdir -p /usr/local/composer/global
+RUN chown -R www-data:www-data /usr/local/composer/global
+
+USER www-data
+```
+
+##### Install composer
+
+Composer is the de-facto standard for PHP vendor management.  
+
+<br/>
+
+Install composer globally, with the provided installer from their website.  
+
+The global composer folder is the folder where globally available vendors are stored.  
+
+<br/>
+
+www-data it's the default user responsible of running any command at run time. 
+Assign it as the owner of that folder, so composer doesn't fail to install vendors with the **--global** flag.
+
+
+```docker
+FROM php:7.4.2-apache AS dev-image
+
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG PROJECT_NAME
+ARG APP_ROOT_DIR
+ARG APP_PUBLIC_DIR
+ARG PROJECT_NAME
+
+ENV COMPOSER_HOME=/usr/local/composer/global
+ENV HOME=${APP_ROOT_DIR}
+ENV HTTP_PORT=${HTTP_PORT}
+ENV HTTPS_PORT=${HTTPS_PORT}
+ENV PROJECT_NAME=${PROJECT_NAME}
+ENV APP_ROOT_DIR=${APP_ROOT_DIR}
+ENV APP_PUBLIC_DIR=${APP_PUBLIC_DIR}
+
+RUN apt-get update
+RUN apt-get install -yq --no-install-recommends \
+    dialog apt-utils openssl ssl-cert \
+    curl git unzip libzip-dev
+RUN pecl install xdebug-2.9.2 zip
+RUN docker-php-ext-enable xdebug opcache zip
+RUN make-ssl-cert generate-default-snakeoil --force-overwrite
+RUN chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private
+RUN a2enmod ssl
+RUN curl -sS https://getcomposer.org/installer | \
+    php -- --install-dir=/usr/bin/ --filename=composer
+RUN mkdir -p /usr/local/composer/global
+RUN chown -R www-data:www-data /usr/local/composer/global
+RUN mkdir -p /tmp/${PROJECT_NAME}
+RUN chown -R www-data:www-data /tmp/${PROJECT_NAME}
+
+USER www-data
+```
+
+##### Create a folder to store temporary data files
+
+PHP's profiler and tracer tools, where configured at config/php-ini.dev to dump their reports as files.  
+
+<br/>
+
+Create a folder for those files, and assign ownership to the container's default user
+
+<br/>
+
+```docker
+FROM php:7.4.2-apache AS dev-image
+
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG PROJECT_NAME
+ARG APP_ROOT_DIR
+ARG APP_PUBLIC_DIR
+ARG PROJECT_NAME
+
+ENV COMPOSER_HOME=/usr/local/composer/global
+ENV HOME=${APP_ROOT_DIR}
+ENV HTTP_PORT=${HTTP_PORT}
+ENV HTTPS_PORT=${HTTPS_PORT}
+ENV PROJECT_NAME=${PROJECT_NAME}
+ENV APP_ROOT_DIR=${APP_ROOT_DIR}
+ENV APP_PUBLIC_DIR=${APP_PUBLIC_DIR}
+
+RUN apt-get update \
+    && apt-get install -yq --no-install-recommends \
+    && dialog apt-utils openssl ssl-cert \
+    && curl git unzip libzip-dev \
+    && pecl install xdebug-2.9.2 zip \
+    && docker-php-ext-enable xdebug opcache zip \
+    && make-ssl-cert generate-default-snakeoil --force-overwrite \
+    && chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private \
+    && a2enmod ssl \
+    && curl -sS https://getcomposer.org/installer | \
+    php -- --install-dir=/usr/bin/ --filename=composer \
+    && mkdir -p /usr/local/composer/global \
+    && chown -R www-data:www-data /usr/local/composer/global \
+    && mkdir -p /tmp/${PROJECT_NAME} \
+    && chown -R www-data:www-data /tmp/${PROJECT_NAME}
+
+USER www-data
 ```
 
 ##### Optimize the size of your image
+
+Each time you use **RUN**, a new image layer is created to isolate the changes made to the file system.
+
+<br/>
+
+You can use RUN as many times as you want, but keep in mind that each a new layer, increases the resulting image's size.
 
 You can chain shell commands together to reduce the number of layers that compound an image.
 
@@ -508,118 +902,353 @@ You can chain shell commands together to reduce the number of layers that compou
 
 
 ```docker
-# My PHP Development environment
 FROM php:7.4.2-apache AS dev-image
-# Install XDebug
-RUN pecl install xdebug-2.9.2 \
-    && docker-php-ext-enable xdebug \
-# Create data folders for XDebug
-# tracing and profiling tools
-# and sets the ownership to www-data
-    && mkdir -p /tmp/mydata \
-    && chown -R www-data:www-data /tmp/mydata
-# copy development settings for PHP
-COPY ./config/development.ini /usr/local/etc/php/conf.d/
+
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG PROJECT_NAME
+ARG APP_ROOT_DIR
+ARG APP_PUBLIC_DIR
+ARG PROJECT_NAME
+
+ENV COMPOSER_HOME=/usr/local/composer/global
+ENV HOME=${APP_ROOT_DIR}
+ENV HTTP_PORT=${HTTP_PORT}
+ENV HTTPS_PORT=${HTTPS_PORT}
+ENV PROJECT_NAME=${PROJECT_NAME}
+ENV APP_ROOT_DIR=${APP_ROOT_DIR}
+ENV APP_PUBLIC_DIR=${APP_PUBLIC_DIR}
+
+RUN apt-get update \
+    && apt-get install -yq --no-install-recommends \
+    && dialog apt-utils openssl ssl-cert \
+    && curl git unzip libzip-dev \
+    && pecl install xdebug-2.9.2 zip \
+    && docker-php-ext-enable xdebug opcache zip \
+    && make-ssl-cert generate-default-snakeoil --force-overwrite \
+    && chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private \
+    && a2enmod ssl \
+    && curl -sS https://getcomposer.org/installer | \
+    php -- --install-dir=/usr/bin/ --filename=composer \
+    && mkdir -p /usr/local/composer/global \
+    && chown -R www-data:www-data /usr/local/composer/global \
+    && mkdir -p /tmp/${PROJECT_NAME} \
+    && chown -R www-data:www-data /tmp/${PROJECT_NAME} \
+    && apt-get -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+USER www-data
 ```
 
-##### Configure PHP and XDebug
+###### Optimize size even more by removing temporary files generated by apt-get
 
-**COPY** allows you to copy files and folders from your host into your image.
+This trick would not work if executed on a different layer, because the previous layers would contain those temporary files already. 
+An attempt to remove them from a different layer, to decrease size image, would be futile.
 
-1. Let's **RUN** a command to create a folder  /tmp/mydata inside your image; The place to store output files generated with XDebug tracer and profiler (see config/development.ini).
-1. **COPY** the file config/development.ini into /usr/local/etc/php/conf.d/ inside your image, so PHP can load your settings automatically
+<br/>
+
+But since every command is executed on a single layer, you can remove them, decreasing the resulting size of the specific image layer created by **RUN**.
+
+<br/>
+
+```docker
+FROM php:7.4.2-apache AS dev-image
+
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG PROJECT_NAME
+ARG APP_ROOT_DIR
+ARG APP_PUBLIC_DIR
+ARG PROJECT_NAME
+
+ENV COMPOSER_HOME=/usr/local/composer/global
+ENV HOME=${APP_ROOT_DIR}
+ENV HTTP_PORT=${HTTP_PORT}
+ENV HTTPS_PORT=${HTTPS_PORT}
+ENV PROJECT_NAME=${PROJECT_NAME}
+ENV APP_ROOT_DIR=${APP_ROOT_DIR}
+ENV APP_PUBLIC_DIR=${APP_PUBLIC_DIR}
+
+RUN apt-get update \
+    && apt-get install -yq --no-install-recommends \
+    && dialog apt-utils openssl ssl-cert \
+    && curl git unzip libzip-dev \
+    && pecl install xdebug-2.9.2 zip \
+    && docker-php-ext-enable xdebug opcache zip \
+    && make-ssl-cert generate-default-snakeoil --force-overwrite \
+    && chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private \
+    && a2enmod ssl \
+    && curl -sS https://getcomposer.org/installer | \
+    php -- --install-dir=/usr/bin/ --filename=composer \
+    && mkdir -p /usr/local/composer/global \
+    && chown -R www-data:www-data /usr/local/composer/global \
+    && mkdir -p /tmp/${PROJECT_NAME} \
+    && chown -R www-data:www-data /tmp/${PROJECT_NAME} \
+    && apt-get -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY ./config/php-dev.ini /usr/local/etc/php/conf.d/
+COPY ./config/apache-vhost.conf /etc/apache2/sites-enabled/000-default.conf
+COPY ./config/apache-ports.conf /etc/apache2/ports.conf
+
+USER www-data
+```
+
+##### Override Apache and PHP settings with custom settings
+
+Use **COPY** to copy your own PHP and Apache's configuration files into your image, to override default settings; enabling features such as HTTPS, error reporting, opcache settings, xdebug tools, etc.
+
+<br/>
+
+<br/>
 
 
 ```docker
-# My PHP Development environment
 FROM php:7.4.2-apache AS dev-image
-# Install XDebug
-RUN pecl install xdebug-2.9.2 \
-    && docker-php-ext-enable xdebug \
-# Create data folders for XDebug
-# tracing and profiling tools
-# and set ownership to www-data
-    && mkdir -p /tmp/mydata \
-    && chown -R www-data:www-data /tmp/mydata
-# copy development settings for PHP
-COPY ./config/development.ini /usr/local/etc/php/conf.d/
-# copy the PHP source code inside your image
-COPY --chown=www-data:www-data ./src /usr/local/project
-# symling your project folder 
-# with default's public apache folder
-RUN ln -s /usr/local/project/public /var/www/html
+
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG PROJECT_NAME
+ARG APP_ROOT_DIR
+ARG APP_PUBLIC_DIR
+ARG PROJECT_NAME
+
+ENV COMPOSER_HOME=/usr/local/composer/global
+ENV HOME=${APP_ROOT_DIR}
+ENV HTTP_PORT=${HTTP_PORT}
+ENV HTTPS_PORT=${HTTPS_PORT}
+ENV PROJECT_NAME=${PROJECT_NAME}
+ENV APP_ROOT_DIR=${APP_ROOT_DIR}
+ENV APP_PUBLIC_DIR=${APP_PUBLIC_DIR}
+
+RUN apt-get update \
+    && apt-get install -yq --no-install-recommends \
+    && dialog apt-utils openssl ssl-cert \
+    && curl git unzip libzip-dev \
+    && pecl install xdebug-2.9.2 zip \
+    && docker-php-ext-enable xdebug opcache zip \
+    && make-ssl-cert generate-default-snakeoil --force-overwrite \
+    && chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private \
+    && a2enmod ssl \
+    && curl -sS https://getcomposer.org/installer | \
+    php -- --install-dir=/usr/bin/ --filename=composer \
+    && mkdir -p /usr/local/composer/global \
+    && chown -R www-data:www-data /usr/local/composer/global \
+    && mkdir -p /tmp/${PROJECT_NAME} \
+    && chown -R www-data:www-data /tmp/${PROJECT_NAME} \
+    && apt-get -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY ./config/php-dev.ini /usr/local/etc/php/conf.d/
+COPY ./config/apache-vhost.conf /etc/apache2/sites-enabled/000-default.conf
+COPY ./config/apache-ports.conf /etc/apache2/ports.conf
+
+COPY --chown=www-data:www-data ./src ${APP_ROOT_DIR}
+
+USER www-data
 ```
 
 ##### Copy your project source code inside the image
 
-1. **COPY** your local folder src/ into /usr/local/project inside your images, and assign the ownership of those files to user www-data
-2. Then use **RUN** to symlink /var/www/html to /usr/local/project/public folder
+**COPY** your local folder src/  inside your images, to run your project inside the containerized environment, and assign the ownership of those files to user www-data.
 
 **--chown=user:group** sets ownership of those files.
 
+
+<br/>
+
+
 ```docker
-# My PHP Development environment
 FROM php:7.4.2-apache AS dev-image
-# Install XDebug
-RUN pecl install xdebug-2.9.2 \
-    && docker-php-ext-enable xdebug \
-# Create data folders for XDebug
-# tracing and profiling tools
-# and set ownership to www-data
-    && mkdir -p /tmp/mydata \
-    && chown -R www-data:www-data /tmp/mydata
-# copy development settings for PHP
-COPY ./config/development.ini /usr/local/etc/php/conf.d/
-# copy the PHP source code inside your image
-COPY --chown=www-data:www-data ./src /usr/local/project
-# symling your project folder 
-# with default's public apache folder
-RUN ln -s /usr/local/project/public /var/www/html
-EXPOSE 80
+
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG PROJECT_NAME
+ARG APP_ROOT_DIR
+ARG APP_PUBLIC_DIR
+ARG PROJECT_NAME
+
+ENV COMPOSER_HOME=/usr/local/composer/global
+ENV HOME=${APP_ROOT_DIR}
+ENV HTTP_PORT=${HTTP_PORT}
+ENV HTTPS_PORT=${HTTPS_PORT}
+ENV PROJECT_NAME=${PROJECT_NAME}
+ENV APP_ROOT_DIR=${APP_ROOT_DIR}
+ENV APP_PUBLIC_DIR=${APP_PUBLIC_DIR}
+
+RUN apt-get update \
+    && apt-get install -yq --no-install-recommends \
+    && dialog apt-utils openssl ssl-cert \
+    && curl git unzip libzip-dev \
+    && pecl install xdebug-2.9.2 zip \
+    && docker-php-ext-enable xdebug opcache zip \
+    && make-ssl-cert generate-default-snakeoil --force-overwrite \
+    && chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private \
+    && a2enmod ssl \
+    && curl -sS https://getcomposer.org/installer | \
+    php -- --install-dir=/usr/bin/ --filename=composer \
+    && mkdir -p /usr/local/composer/global \
+    && chown -R www-data:www-data /usr/local/composer/global \
+    && mkdir -p /tmp/${PROJECT_NAME} \
+    && chown -R www-data:www-data /tmp/${PROJECT_NAME} \
+    && apt-get -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY ./config/php-dev.ini /usr/local/etc/php/conf.d/
+COPY ./config/apache-vhost.conf /etc/apache2/sites-enabled/000-default.conf
+COPY ./config/apache-ports.conf /etc/apache2/ports.conf
+
+COPY --chown=www-data:www-data ./src ${APP_ROOT_DIR}
+
+WORKDIR ${APP_ROOT_DIR}
+
+USER www-data
+```
+
+##### Change the current folder
+
+Like if you where typing **cd** on the console, **WORKDIR** changes the current folder of your image.  
+
+<br/>
+
+This is useful to provide the current context during build time, but's also useful to provide a useful context to execute commands inside a running container.
+
+
+```docker
+FROM php:7.4.2-apache AS dev-image
+
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG PROJECT_NAME
+ARG APP_ROOT_DIR
+ARG APP_PUBLIC_DIR
+ARG PROJECT_NAME
+
+ENV COMPOSER_HOME=/usr/local/composer/global
+ENV HOME=${APP_ROOT_DIR}
+ENV HTTP_PORT=${HTTP_PORT}
+ENV HTTPS_PORT=${HTTPS_PORT}
+ENV PROJECT_NAME=${PROJECT_NAME}
+ENV APP_ROOT_DIR=${APP_ROOT_DIR}
+ENV APP_PUBLIC_DIR=${APP_PUBLIC_DIR}
+
+RUN apt-get update \
+    && apt-get install -yq --no-install-recommends \
+    && dialog apt-utils openssl ssl-cert \
+    && curl git unzip libzip-dev \
+    && pecl install xdebug-2.9.2 zip \
+    && docker-php-ext-enable xdebug opcache zip \
+    && make-ssl-cert generate-default-snakeoil --force-overwrite \
+    && chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private \
+    && a2enmod ssl \
+    && curl -sS https://getcomposer.org/installer | \
+    php -- --install-dir=/usr/bin/ --filename=composer \
+    && mkdir -p /usr/local/composer/global \
+    && chown -R www-data:www-data /usr/local/composer/global \
+    && mkdir -p /tmp/${PROJECT_NAME} \
+    && chown -R www-data:www-data /tmp/${PROJECT_NAME} \
+    && apt-get -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY ./config/php-dev.ini /usr/local/etc/php/conf.d/
+COPY ./config/apache-vhost.conf /etc/apache2/sites-enabled/000-default.conf
+COPY ./config/apache-ports.conf /etc/apache2/ports.conf
+COPY --chown=www-data:www-data ./src ${APP_ROOT_DIR}
+
+WORKDIR ${APP_ROOT_DIR}
+
+EXPOSE ${HTTP_PORT} ${HTTPS_PORT}
+
+USER www-data
 ```
 
 ##### Expose ports
 
-**EXPOSE** open one or multiple ports in the container.
+**EXPOSE** open ports for HTTP and HTTPS
 
 <br/>
 
-This is just an example, cause there's no need to expose port 80 since it's been done already on the base image.  
-
 <br/>
 
-```docker
-# My PHP Development environment
-FROM php:7.4.2-apache AS dev-image
-# Install XDebug
-RUN pecl install xdebug-2.9.2 \
-    && docker-php-ext-enable xdebug \
-# Create data folders for XDebug
-# tracing and profiling tools
-# and set ownership to www-data
-    && mkdir -p /tmp/mydata \
-    && chown -R www-data:www-data /tmp/mydata
-# copy development settings for PHP
-COPY ./config/development.ini /usr/local/etc/php/conf.d/
-# copy the PHP source code inside your image
-COPY --chown=www-data:www-data ./src /usr/local/project
-# symling your project folder 
-# with default's public apache folder
-RUN ln -s /usr/local/project/public /var/www/html
-EXPOSE 80
-```
+
+
+</CodeWave>
+
+<br/>
 
 ##### And that's it!
 
-You can now use this Dockerfile to build your custom image.
+You can now use this Dockerfile to build your custom image:
+
+<Code language="dockerfile"
+snippet={`
+FROM php:7.4.2-apache AS dev-image
+\n# arguments available at build time
+ARG HTTP_PORT
+ARG HTTPS_PORT
+ARG PROJECT_NAME
+ARG APP_ROOT_DIR
+ARG APP_PUBLIC_DIR
+ARG PROJECT_NAME
+\n# environment variables available at build time and run time
+ENV COMPOSER_HOME=/usr/local/composer/global
+ENV HOME=$\{APP_ROOT_DIR\}
+ENV HTTP_PORT=$\{HTTP_PORT\}
+ENV HTTPS_PORT=$\{HTTPS_PORT\}
+ENV PROJECT_NAME=$\{PROJECT_NAME\}
+ENV APP_ROOT_DIR=$\{APP_ROOT_DIR\}
+ENV APP_PUBLIC_DIR=$\{APP_PUBLIC_DIR\}
+\n# Install debian packages
+RUN apt-get update \\
+    && apt-get install -yq --no-install-recommends \\
+    && dialog apt-utils openssl ssl-cert \\
+    && curl git unzip libzip-dev \\
+# install php extensions
+    && pecl install xdebug-2.9.2 zip \\
+    && docker-php-ext-enable xdebug opcache zip \\
+# set up self signed cert (the easy way)
+    && make-ssl-cert generate-default-snakeoil --force-overwrite \\
+    && chown -R www-data:www-data /etc/ssl/certs /etc/ssl/private \\
+# enable SSL apache module
+    && a2enmod ssl \\
+# Install PHP Composer package manager
+    && curl -sS https://getcomposer.org/installer | \\
+    php -- --install-dir=/usr/bin/ --filename=composer \\
+    && mkdir -p /usr/local/composer/global \\
+    && chown -R www-data:www-data /usr/local/composer/global \\
+# Create data folders for XDebug
+# tracing and profiling tools
+# and set ownership to www-data
+    && mkdir -p /tmp/$\{PROJECT_NAME\} \\
+    && chown -R www-data:www-data /tmp/$\{PROJECT_NAME\} \\
+# cleaning...
+    && apt-get -y autoremove \\
+    && apt-get clean \\
+    && rm -rf /var/lib/apt/lists/*
+\n# copy development settings for PHP
+COPY ./config/php-dev.ini /usr/local/etc/php/conf.d/
+\n# override default apache configuration
+COPY ./config/apache-vhost.conf /etc/apache2/sites-enabled/000-default.conf
+COPY ./config/apache-ports.conf /etc/apache2/ports.conf
+\n# copy the PHP source code inside your image
+COPY --chown=www-data:www-data ./src $\{APP_ROOT_DIR\}
+\n# change the context
+WORKDIR $\{APP_ROOT_DIR\}
+\n# expose HTTP and HTTPS ports
+EXPOSE $\{HTTP_PORT\} $\{HTTPS_PORT\}
+\n# set a less privileged default user to run this image
+USER www-data
+`} />
 
 <br/>
 
 Check [the Dockerfile reference](https://docs.docker.com/engine/reference/builder/) for a deep dive into every option available to write your own images, or customize this example.
 
-</CodeWave>
-
-<br/>
 
 <br/>
 
@@ -640,7 +1269,10 @@ Avoid symlinked folders cause Docker doesn't like them.
 
 ###### Build your image
 
-<Code language="bash" snippet={`docker build -t my-project:1.0-development --target dev-image .`} />
+<Code language="bash" 
+snippet={`docker build 
+    -t dockerhub-username/awesome-php-image:1.0-development 
+    --target dev-image .`} />
 
 Builds and tags your image as **my-project:1.0-development**.  
 The last parameter ".", is the file system context at your docker host. Any file you want to **COPY** into the image must be inside the given context. 
@@ -655,8 +1287,8 @@ If everything went well, you should see the "**my-project**" custom image on tha
 <Code 
 language="bash" 
 snippet={`
-REPOSITORY                  TAG                 IMAGE ID            CREATED             SIZE
-dockerhub-user/my-project   1.0-development     14699ea162d0        2 minutes ago       885MB
+REPOSITORY                              TAG                 IMAGE ID            CREATED             SIZE
+dockerhub-username/awesome-php-image    1.0-development     14699ea162d0        2 minutes ago       454MB
 `} />
 
 ###### Test it as a standalone container
@@ -667,9 +1299,10 @@ Do not mount any volume, because you want to test the image itself as an immutab
 <Code 
 language="bash" 
 snippet={`docker run --rm 
-    -p 80:80/tcp 
-    --name my-project-container 
-    my-project:1.0-development`} 
+    -p 8080:8080/tcp 
+    -p 8081:8081/tcp 
+    --name my-immutable-container 
+    dockerhub-username/awesome-php-image:1.0-development`} 
 />
 
 ###### Run it as a development environment
@@ -691,8 +1324,8 @@ snippet={`docker run --rm
     -p 80:80/tcp
     -v "$PWD"/src:/usr/local/project 
     -v "$PWD"/data:/tmp/mydata 
-    --name my-project-container 
-    my-project:1.0-development`} 
+    --name my-dev-container 
+    dockerhub-username/awesome-php-image:1.0-development`} 
 />
 
 ###### Share your image
@@ -706,7 +1339,7 @@ snippet={`docker login`}
 
 <Code 
 language="bash" 
-snippet={`docker push your-dockerhub-username/my-project`}
+snippet={`docker push dockerhub-username/awesome-php-image`}
 />
 
 <br/>

@@ -18,22 +18,23 @@ import "prismjs/components/prism-json"
 ### Intro
 
 In these days, it's quite usual to see startups, performing manual setup of development environments. 
-The results are often a fragile mix of operating systems, libraries, and language versions.  
+The results are often a fragile mix of operating systems, libraries, and language versions. Making it difficult to understand the source of many bugs.  
 On other occasions, experienced IT teams are responsible for building these environments, protecting them from inexperienced developers. 
 As a side effect, development teams experience blockers, to understand the underlying environment, or try new ideas.  
-In those scenarios, evolving internal development practices it's impractical and discouraged.
+In both scenarios, evolving software development practices to increase business outcomes, it's impractical and discouraged.
 
 <br/>
 
 In this article, I'll show you how to use Docker, to build a portable development environment for PHP 7.4 applications. With a PHP debugger, profiler, and tracing tools. 
-Where developers can experiment aggressively, on fast sandboxed environments.
+Where developers can experiment aggressively, on fast sandboxed environments.  
+If something breaks, developers can replace their broken environment by a new one in seconds.
 
 <br/>
 
-Long gone are the days when containerized environments where a practice of a few tech giants, or an unstable technology promoted by crazy early adopters.  
+Long gone are the days when containerized environments where a practice of a few tech giants, or an unstable technology promoted by early adopters.  
 With modern containerization and orchestration tools like Docker, docker-compose, Swarms, Kubernetes, and modern cloud infrastructure services. 
 It is becoming a no brainer for an increasing number of startups, to adopt some of these technologies. 
-To provide better experiences for their customers, and cost-effective processes for their teams.
+Providing better experiences for their customers, and cost-effective processes for their teams.
 
 ### Requirements
 
@@ -53,16 +54,15 @@ Next, create a [DockerHub account](https://hub.docker.com/signup), and sign in f
 
 ### Basic Docker concepts
 
-With docker, you can pack applications with their environment, build it once, and deploy it to any number of computers running a docker engine.  
+With docker, you can pack applications with their environment, build it once, and deploy it automatically, to any number of computers running a docker engine.  
 Containers share the kernel of their host, and usually run a single process, bundled with the minimum operating system, files, and environment variables required. 
 As a result, containers are lighter than virtual machines and allow detailed resource administration.  
-Instead of long-lasting dedicated servers, containerized infrastructure can be ephemeral and disposable. Opening the door to new ways of automated, resilient cloud infrastructure, that can adapt to varying demands, and recover from errors.
+Instead of long-lasting dedicated servers, containerized infrastructure can be ephemeral and disposable. Opening the door to new ways of infrastructure: automated, resilient, that can adapt to varying demands, and recover from errors.
 
 ##### Images
 
-A Docker image it's the blueprint from where containers are created.  
+A Docker image it's the blueprint from where containers are created. An image it's just a stopped container.  
 For those coming from object-oriented programming, an image can be seen as a class and a container as an instance. 
-An image it's just a stopped container.  
 Custom images are extended from existing images and can be shared with others by pushing them to docker repositories.
 
 ##### Windows Images vs Linux images
@@ -156,8 +156,8 @@ node                      13.1.0-alpine       f20a6d8b6721        3 months ago  
 `} 
 />
 
-The image with ID **14699ea162d0** belongs to the repository "**guillermomaschwitz/blog**" and have two different tags: "**1**", and "**1-production**".
-Its base image is **f20a6d8b6721**, from the "**node**"" repository , with the tag "**13.1.0-alpine**".
+The image with ID **14699ea162d0** belongs to the repository **guillermomaschwitz/blog** and have two different tags: **1**, and **1-production**.
+Its base image is **f20a6d8b6721**, from the **node** repository , with the tag **13.1.0-alpine**.
 
 ###### Check if your container is running
 
@@ -207,7 +207,55 @@ Because the container was started with the **--rm** flag, docker destroys the co
 
 ### The big picture
 
-Every code sample its based on a containerized development environment for PHP 7.4 projects I'm maintaining at its [Github repository](https://github.com/guille-mas/awesome-php74-env).  
+#### An introduction into DevOps processes
+
+At Imaginary startup, a group of engineers work together on a tight loop with other teams, deploying several daily changes to their product.
+Today, a new service for its customers it's ready to go live, requiring the implementation of new endpoints on their API, with very specific hardware requirements.
+The team decides to split a single cluster, into two, to run the API.
+The traffic will be routed by URL, with a load balancer, operating at the 7th OSI layer.  
+
+<br/>
+
+Because they where few, they choose not long ago, to start declaring their infrastructure as code. And they decided to use a monorepo, to keep their deployments more manageable.
+
+<br/>
+
+The day has come to deliver the service their customers expect, and they have been working out a semi-automated deployment process.
+
+<br/>
+
+Someone capable of running deployments drops a few commands at a deployment environment.
+
+<Code language="bash"
+snippet={`git checkout master
+git pull origin master
+make build            # create 1 image per runtime environment
+make test             # run automated tests on the final run time environment
+git tag -a v3.1              # once all test passes, a new tag is added to the app and infrastructure code
+git push origin --tags       # updated upstream tags
+make share-images-with-team  # upload every new image to a privately shared repository for docker images
+make deploy                  # roll infrastructure changes`} />
+
+At production, next to the old API, two new clusters are deployed.
+Once the new infrastructure is ready to go, and the new version of the API is running on them. The load balancer redirects the traffic to the new infrastructure, and stops the old one an hour later.  
+
+<br/>
+
+This is called a blue/green deployment and should provide an uninterrupted user experience to their customers, while deployments happen in the background.
+
+<br/>
+
+Minutes after the last deployment, another developer pulls the code from the master branch, and updates her development environment: A development docker container, based on the production one, with different settings, plus extra tools to ease debugging and development.
+
+<Code language="bash" snippet={`make stop       # stop the development environment
+git pull origin master       # dowload the new version of the app and its environments
+make start       # start the development environment`} />
+
+<hr/>
+
+### Example project overview
+
+The code samples are based on a containerized development environment for PHP 7.4 projects I'm maintaining at its [Github repository](https://github.com/guille-mas/awesome-php74-env).  
 A pre built docker image it's available at its [Dockerhub repo](https://hub.docker.com/r/guillermomaschwitz/awesome-php)  
 
 <br/>
@@ -254,53 +302,7 @@ What you write on this file should be the minimal amount of information, needed 
 
 <br/>
 
-#### A containerized workflow example
-
-At Imaginary startup, a group of engineers work together on a tight loop, deploying several daily changes to their product.
-Today, a new service for its customers it's ready to go live, requiring the implementation of new endpoints on their API, with very specific hardware requirements.
-The team decides to split a single cluster, into two, to run the API.
-The traffic will be routed by URL, with a load balancer, operating at the 7th OSI layer.  
-
-<br/>
-
-Because they where few, they choose not long ago, to start declaring their infrastructure as code.  
-And because the task was hard, they decided to use a monorepo, to keep their deployments more manageable.
-
-<br/>
-
-The day has come to deliver the service their customers expect, and they have been working out a semi-automated deployment process.
-
-<br/>
-
-Someone capable of running deployments drops a few commands at a deployment environment.
-
-<Code language="bash"
-snippet={`git checkout master
-git pull origin master
-git tag -a v3.1
-git push origin --tags
-make test-images    # run automated tests
-make build-images   # create 1 image per runtime environment
-make share-images-with-team  # upload every new image to a privately shared repository for docker images
-make deploy # roll infrastructure changes`} />
-
-Next to the old API, two new clusters are deployed.
-Once the new infrastructure is ready to go, and the new version of the API is running on them. The load balancer redirects the traffic to the new infrastructure, and stops the old one an hour later.  
-
-<br/>
-
-This is called a blue/green deployment and should provide an uninterrupted user experience to their customers, while deployments happen in the background.
-
-<br/>
-
-Minutes after the last deployment, another developer pulls the code from the master branch, and updates her development environment: A development docker container, based on the production one, with different settings and added tools to ease debugging and development.
-
-<Code language="bash" snippet={`git pull origin master
-make reload-dev-environment`} />
-
-<hr/>
-
-### Core files
+### Deep dive into a few critical files
 
 #### config/php-dev.ini
 
@@ -501,7 +503,7 @@ Docker has a vibrant ecosystem of images you can use. One of the most popular re
 <br/>
 
 The image you choose must exist and you need to have access to it.  
-Use the [official PHP image, bundled with Apache](https://hub.docker.com/_/php), whose name its "php", and its version "7.4.2-apache". 
+Use the [official PHP image, bundled with Apache](https://hub.docker.com/_/php), whose name its **php**, and its version **7.4.2-apache**. 
 If you want to check it's source code, [read its Dockerfile from Github](https://github.com/docker-library/php/blob/master/7.4/buster/apache/Dockerfile).  
 To protect your image from upstream's breaking changes, always use explicit version tags. This principle applies to every external dependency you use in your projects, from Docker images to composer and npm packages.
 
@@ -517,7 +519,7 @@ FROM php:7.4.2-apache AS dev-image
 
 ##### Choose an alias for your image
 
-An alias helps you reference one of your images in your build process. In this case, the alias is "**dev-image**".  
+An alias helps you reference one of your images in your build process. In this case, the alias is **dev-image**.  
 
 <br/>
 
@@ -691,8 +693,6 @@ To protect your infrastructure from errors, malicious code in vendors libraries,
 <br/>
 
 Set that **USER** once you finish performing any other task for which you need more privileges.
-
-<br/>
 
 <br/>
 
@@ -1128,9 +1128,18 @@ USER www-data
 
 **--chown=user:group** sets the ownership of those files.
 
+<br/>
+
+**COPY** creates a new layer, containing every copied file.  
+Because docker build only those layers that changed since the last built, and every subsequent layer. To speed up your builds, order the build process implemented in a Dockerfile, to create those layers that change most often, at the bottom of the Dockerfile. 
+Usually, the layer that change more often in the life of a docker image, its the sourcecode of the application. Infrastructure changes are not so common as the software they run.  
+Because of this, the layer where your sourcecode its copied to a docker image, it's usually one of the last steps of your image build process.
 
 <br/>
 
+> To speed up your image's build process, copy your sourcecode as late as possible
+
+<br/>
 
 ```docker
 FROM php:7.4.2-apache AS dev-image
@@ -1252,8 +1261,10 @@ USER www-data
 
 <br/>
 
-<br/>
+Since you set www-data as the non-root user to run your image, you will have to choose port numbers grether than 1024 to expose in your container.  
+You can map those ports to whatever ports you like at your docker host.
 
+<br/>
 
 
 </CodeWave>
@@ -1262,7 +1273,7 @@ USER www-data
 
 ##### And that's it!
 
-You can now use this Dockerfile to build your custom image:
+You can now use this Dockerfile to build your custom image, every time your sourcecode or development infrastructure changes:
 
 <Code language="dockerfile"
 snippet={`
@@ -1430,7 +1441,7 @@ snippet={`docker push username/my-project`}
 
 Just like you would define an interface, or a group of public methods in a class, to present it as simple as possible to others. 
 You should implement a simple and concise command-line interface, so devs and external tools can interact with the environment.  
-Let's see now how to define a high-level command-line interface, by writing a Makefile; a pretty standard approach for IT teams and C projects.  
+Let's see now how to define a high-level command-line interface, by writing a Makefile; a pretty standard approach for IT teams, that helps integrating opeartions and development processes.  
 GNUMake it's a good fit for this task, because it allows you to write every high-level command in a single file, and it's a basic development tool, available on most operating systems.
 
 <br/>
@@ -1586,6 +1597,15 @@ You can write to me at <ContactLink/>
 In my next post, I'll show you how to build a production version of this environment, with **docker multi-stage builds**. 
 How to create sandboxed **docker networks** to connect multiple containers together. 
 And **docker-compose**, an interesting tool to declare multi-container applications in YAML format.
+
+<br/>
+
+On a third post, I'll show you how to automate the creation of production ready, auto-scalable, AWS ECS infrastructure. 
+And how to deploy your docker production images to the cloud, using Terraform and GNUMake.
+
+<br/>
+
+Keep in mind I will need some extra time to write both guides, because my youngest son as born a few days ago. And I won't work for at least the next month on this website.  
 
 <br/>
 

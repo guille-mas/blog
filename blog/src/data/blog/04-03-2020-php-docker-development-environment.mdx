@@ -1130,14 +1130,21 @@ USER www-data
 
 <br/>
 
-**COPY** creates a new layer, containing every copied file.  
-Because docker build only those layers that changed since the last built, and every subsequent layer. To speed up your builds, order the build process implemented in a Dockerfile, to create those layers that change most often, at the bottom of the Dockerfile. 
-Usually, the layer that change more often in the life of a docker image, its the sourcecode of the application. Infrastructure changes are not so common as the software they run.  
-Because of this, the layer where your sourcecode its copied to a docker image, it's usually one of the last steps of your image build process.
+Keep in mind the instruction **COPY** adds a new layer to the image.
 
 <br/>
 
-> To speed up your image's build process, copy your sourcecode as late as possible
+To speed up your builds, group layers that change most often at the bottom of your Dockerfile.
+
+<br/>
+
+Usually, the layer that changes more often in the life of a docker image, its the application's source code; 
+Infrastructure change less often.  
+
+
+<br/>
+
+> To speed up your image's build process, copy your source code as late as possible.
 
 <br/>
 
@@ -1261,7 +1268,7 @@ USER www-data
 
 <br/>
 
-Since you set www-data as the non-root user to run your image, you will have to choose port numbers grether than 1024 to expose in your container.  
+Since you set www-data as the non-root user to run your image, you will have to choose port numbers higher than 1024 to expose in your container.  
 You can map those ports to whatever ports you like at your docker host.
 
 <br/>
@@ -1273,7 +1280,7 @@ You can map those ports to whatever ports you like at your docker host.
 
 ##### And that's it!
 
-You can now use this Dockerfile to build your custom image, every time your sourcecode or development infrastructure changes:
+You can now use this Dockerfile to build your custom image, every time your source code or development infrastructure changes:
 
 <Code language="dockerfile"
 snippet={`
@@ -1575,40 +1582,28 @@ It also helps to spread knowledge about the product, which is something very goo
 
 <hr/>
 
-### Final thoughts
+### Conclusion
 
-I hope you found this tutorial useful!  
-Hopefully, you learned enough about Docker to build your own development environments.  
-There is still more to learn though. This is a single container environment and it's not suitable for production. 
-However, it's the cornerstone to modernize other processes and enable more enjoyable, collaborative ways of building software together.
-
-<br/>
-
-I did my best to guide you through this introductory exploration of Docker concepts, and a few use cases.
-Above all, I tried to share a few technical tricks to improve collaboration and communication.
+In this article, you learned how to pack and share an application with its development run-time environment. 
+The importance of pragmatical documentation and  high-level interfaces, to ease the learning curve required to be proficient with the tools you build. 
+And how to configure Apache, PHP, and XDebug, to set up a great development environment. 
+But the main goal has been to show you, how I use some tools and write some docs, to unlock new or better ways of collaboration, aimed at increasing business outcomes while reducing operational costs.
 
 <br/>
 
-Feel free to let me know any comments, critics, or suggestions you might have.  
-You can write to me at <ContactLink/>
+If you have any inputs, please write to me at <ContactLink/>
 
 ### What's next
 
-In my next post, I'll show you how to build a production version of this environment, with **docker multi-stage builds**. 
-How to create sandboxed **docker networks** to connect multiple containers together. 
-And **docker-compose**, an interesting tool to declare multi-container applications in YAML format.
+In my next post, I'll show you how to write different versions of the environment with **multi-stage builds**; How to use docker to define the **network topology** for this project; And **docker-compose**, 
+a great tool to declare single-host environments with multiple containers.
 
 <br/>
 
-On a third post, I'll show you how to automate the creation of production ready, auto-scalable, AWS ECS infrastructure. 
-And how to deploy your docker production images to the cloud, using Terraform and GNUMake.
-
-<br/>
-
-Keep in mind I will need some extra time to write both guides, because my youngest son as born a few days ago. And I won't work for at least the next month on this website.  
+Later, I plan to show you how to automate the creation of a production-ready, auto-scalable AWS ECS infrastructure to run your containers. 
+And how to automate and document your infrastructure-as-code with GNUMake and Terraform, 
+a great tool, similar to CloudFormation, that once adopted, introduces as well, the possibility of automating hybrid clouds infrastructure.
 
 <br/>
 
 **Stay tuned!**
-
-

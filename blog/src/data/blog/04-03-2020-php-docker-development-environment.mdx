@@ -128,7 +128,7 @@ language="bash"
 snippet={`docker run --rm 
     -p 8080:8000 
     --name guillecloud 
-    guillermomaschwitz/blog:1-production`} 
+    guillermomaschwitz/blog:2-production`} 
 />  
 
 An exact version of this website should be available at http://0.0.0.0:8080 or http://localhost:8080.
@@ -137,7 +137,7 @@ An exact version of this website should be available at http://0.0.0.0:8080 or h
 
 It should work out of the box, cause Docker did all the heavy lifting for you:
 
-1. Attempts to find a local image tagged as **guillermomaschwitz/blog:1-production**
+1. Attempts to find a local image tagged as **guillermomaschwitz/blog:2-production**
 1. If the image is not found locally, docker will attempt to pull it from its [Dockerhub repository](https://hub.docker.com/r/guillermomaschwitz/blog).
 1. A new container with label **guillecloud**, gets started from that image.
 1. Binds localhost's port 8080 to container's port 8000.
@@ -167,7 +167,7 @@ Its base image is **f20a6d8b6721**, from the **node** repository , with the tag 
 language="terminal"
 snippet={`
 CONTAINER ID        IMAGE                                  COMMAND                  CREATED             STATUS              PORTS                    NAMES
-7ecd413bdf91        guillermomaschwitz/blog:1-production   "docker-entrypoint.s…"   23 minutes ago      Up 23 minutes       0.0.0.0:8000->8000/tcp   guillecloud
+7ecd413bdf91        guillermomaschwitz/blog:2-production   "docker-entrypoint.s…"   23 minutes ago      Up 23 minutes       0.0.0.0:8000->8000/tcp   guillecloud
 `}/>  
 
 If everything went well, you should see a similar list in your terminal; A running container with a unique ID and NAME.
@@ -229,8 +229,8 @@ Someone capable of running deployments drops a few commands at a deployment envi
 <Code language="bash"
 snippet={`git checkout master
 git pull origin master
-make build            # create 1 image per runtime environment
-make test             # run automated tests on the final run time environment
+make build                   # create 1 image per runtime environment
+make test                    # run automated tests on the final run time environment
 git tag -a v3.1              # once all test passes, a new tag is added to the app and infrastructure code
 git push origin --tags       # updated upstream tags
 make share-images-with-team  # upload every new image to a privately shared repository for docker images
@@ -532,7 +532,7 @@ An alias helps you identify a specific image in the build process.
 language="bash"
 snippet={`docker build 
     -f ./Dockerfile 
-    -t guillermomaschwitz/blog:1.0-production 
+    -t guillermomaschwitz/blog:2.0-production 
     --target blog-production ./`} />
 
 <br/>
@@ -541,7 +541,7 @@ snippet={`docker build
 language="bash"
 snippet={`docker build 
     -f ./Dockerfile 
-    -t guillermomaschwitz/blog:1.0-development 
+    -t guillermomaschwitz/blog:2.0-development 
     --target blog-development ./`} />
 
 <br/>
@@ -1600,8 +1600,8 @@ a great tool to declare single-host environments with multiple containers.
 
 <br/>
 
-Later, I plan to show you how to automate the creation of a production-ready, auto-scalable AWS ECS infrastructure to run your containers. 
-And how to automate and document your infrastructure-as-code with GNUMake and Terraform, 
+Later, I plan to show you how to automate the creation of a production-ready, auto-scalable [AWS ECS](https://aws.amazon.com/ecs/) infrastructure to run your containers. 
+And how to automate and document your infrastructure-as-code with GNUMake and [Terraform](https://www.terraform.io/), 
 a great tool, similar to CloudFormation, that once adopted, introduces as well, the possibility of automating hybrid clouds infrastructure.
 
 <br/>

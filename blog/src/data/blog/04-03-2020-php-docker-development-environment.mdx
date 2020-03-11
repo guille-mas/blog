@@ -530,18 +530,18 @@ An alias helps you identify a specific image in the build process.
 
 <Code 
 language="bash"
-snippet={`docker build 
-    -f ./Dockerfile 
-    -t guillermomaschwitz/blog:2-production 
+snippet={`docker build \\
+    -f ./Dockerfile \\
+    -t guillermomaschwitz/blog:2-production \\
     --target blog-production ./`} />
 
 <br/>
 
 <Code 
 language="bash"
-snippet={`docker build 
-    -f ./Dockerfile 
-    -t guillermomaschwitz/blog:2-development 
+snippet={`docker build \\
+    -f ./Dockerfile \\
+    -t guillermomaschwitz/blog:2-development \\
     --target blog-development ./`} />
 
 <br/>
@@ -578,9 +578,9 @@ Any environment variable defined this way, can be overridden at run time, using 
 
 <Code 
 language="bash" 
-snippet={`docker run --rm 
-	-e HTTPS_PORT=4430 
-	-e HTTP_PORT=8000 
+snippet={`docker run --rm \\
+	-e HTTPS_PORT=4430 \\
+	-e HTTP_PORT=8000 \\
 	guillermomaschwitz/awesome-php:7.4-development
 `} />
 
@@ -619,14 +619,14 @@ Variables initialized with **ARG** can be initialized outside the Dockerfile, at
 
 <Code 
 language="bash" 
-snippet={`docker build 
-    --build-arg COMPOSER_HOME=/usr/local/composer/global
-    --build-arg HOME=/usr/local/app
-    --build-arg HTTP_PORT=8080
-    --build-arg HTTPS_PORT=8081
-    --build-arg PROJECT_NAME=my-project
-    --build-arg APP_ROOT_DIR=/usr/local/app
-    --build-arg APP_PUBLIC_DIR=/usr/local/app/public
+snippet={`docker build \\
+    --build-arg COMPOSER_HOME=/usr/local/composer/global \\
+    --build-arg HOME=/usr/local/app \\
+    --build-arg HTTP_PORT=8080 \\
+    --build-arg HTTPS_PORT=8081 \\
+    --build-arg PROJECT_NAME=my-project \\
+    --build-arg APP_ROOT_DIR=/usr/local/app \\
+    --build-arg APP_PUBLIC_DIR=/usr/local/app/public \\
      -t guillermomaschwitz/awesome-php:7.4-development .
 `} />
 
@@ -1367,8 +1367,8 @@ Avoid symlinked folders cause Docker doesn't like them.
 ###### Build your image
 
 <Code language="bash" 
-snippet={`docker build 
-    -t username/my-project:1.0 
+snippet={`docker build \\
+    -t username/my-project:1.0 \\
     --target dev-image .`} />
 
 Builds and tags your image as **my-project:1.0**.  
@@ -1395,10 +1395,10 @@ Do not mount any volume, because you want to test the image itself as an immutab
 
 <Code 
 language="bash" 
-snippet={`docker run --rm 
-    -p 8080:8080/tcp 
-    -p 8081:8081/tcp 
-    --name my-immutable-container 
+snippet={`docker run --rm \\
+    -p 8080:8080/tcp \\
+    -p 8081:8081/tcp \\
+    --name my-immutable-container \\
     username/my-project:1.0`} 
 />
 
@@ -1417,12 +1417,12 @@ You should also use **--rm** to tell Docker to discard the container after using
 
 <Code 
 language="bash" 
-snippet={`docker run --rm 
-    -p 8080:8080/tcp
-    -p 8081:8081/tcp
-    -v "$PWD"/src:/usr/local/project 
-    -v "$PWD"/data:/tmp/my-project 
-    --name my-container 
+snippet={`docker run --rm \\
+    -p 8080:8080/tcp \\
+    -p 8081:8081/tcp \\
+    -v "$PWD"/src:/usr/local/project \\
+    -v "$PWD"/data:/tmp/my-project \\
+    --name my-container \\
     username/my-project:1.0`} 
 />
 

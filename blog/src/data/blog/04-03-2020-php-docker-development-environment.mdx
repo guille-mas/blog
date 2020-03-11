@@ -3,7 +3,7 @@ slug: "build-a-docker-development-environment-for-php-projects/index.html"
 title: "Build a PHP development environment your team will love"
 intro: "In this comprehensive introductory guide into Docker fundamentals, you will learn how to build a custom made PHP 7.4 development environment, fully-featured with powerful tools to boost your team's productivity and overall development experience"
 tools: "docker gnu-make php xdebug debian-Linux"
-date: "March 4th, 2020"
+date: "March 11th, 2020"
 publish: true
 blog: true
 category: tutorial
@@ -125,9 +125,9 @@ That means you can run the same version available at https://guille.cloud, at yo
 
 <Code 
 language="bash" 
-snippet={`docker run --rm 
-    -p 8080:8000 
-    --name guillecloud 
+snippet={`docker run --rm \\
+    -p 8080:8000 \\
+    --name guillecloud \\
     guillermomaschwitz/blog:2-production`} 
 />  
 
@@ -150,8 +150,8 @@ It should work out of the box, cause Docker did all the heavy lifting for you:
 <Code language="terminal" 
 snippet={`
 REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
-guillermomaschwitz/blog   1                   14699ea162d0        2 hours ago         885MB
-guillermomaschwitz/blog   1-production        14699ea162d0        2 hours ago         885MB
+guillermomaschwitz/blog   2                   14699ea162d0        2 hours ago         885MB
+guillermomaschwitz/blog   2-production        14699ea162d0        2 hours ago         885MB
 node                      13.1.0-alpine       f20a6d8b6721        3 months ago        105MB
 `} 
 />
@@ -532,7 +532,7 @@ An alias helps you identify a specific image in the build process.
 language="bash"
 snippet={`docker build 
     -f ./Dockerfile 
-    -t guillermomaschwitz/blog:2.0-production 
+    -t guillermomaschwitz/blog:2-production 
     --target blog-production ./`} />
 
 <br/>
@@ -541,7 +541,7 @@ snippet={`docker build
 language="bash"
 snippet={`docker build 
     -f ./Dockerfile 
-    -t guillermomaschwitz/blog:2.0-development 
+    -t guillermomaschwitz/blog:2-development 
     --target blog-development ./`} />
 
 <br/>

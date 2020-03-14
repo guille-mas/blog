@@ -1487,7 +1487,7 @@ This command is used by the maintainers of the environment, and a CI/CD pipeline
 
 
 ```makefile
-# Start the development environment as it is
+# Start the development environment
 start:
 	docker run --rm \
         -p 8080:8080/tcp \
@@ -1512,7 +1512,6 @@ Use this command to start a local development environment. It's usually used by 
 exec:
 	@read -p "Your command: " command; \
 	docker exec -it my-container sh -c "$$command"
-
 ````
 
 ##### make exec

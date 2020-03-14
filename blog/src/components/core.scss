@@ -249,6 +249,7 @@ ul {
 
   li {
     margin-bottom: .3rem;
+    line-height: 1.8rem;
     
     dl, 
     ol, 
@@ -267,21 +268,21 @@ ol {
     content: counter(li); 
     color: white;
     display: inline-block;
-    width: 1.2rem;
-    height: 1.2rem;
-    line-height: 1.2rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    line-height: 1.5rem;
     font-size: .9rem;
     font-weight: bold;
     text-align: center;
     background-color: $red;
     border-radius: 50%;
     position: absolute;
-    top: .2rem;
-    left: -1.5rem;
+    top: .15rem;
+    left: -2rem;
   }
   li {
     counter-increment: li;
-    margin-left: 1.2rem;
+    margin-left: 2rem;
     position: relative;
   }
 }

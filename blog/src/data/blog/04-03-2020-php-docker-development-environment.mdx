@@ -245,9 +245,9 @@ This is called a blue/green deployment and should provide an uninterrupted user 
 
 Minutes after the last deployment, another developer pulls the code from the master branch, and updates her development environment: A development docker container, based on the production one, with different settings, plus extra tools to ease debugging and development.
 
-<Code language="bash" snippet={`make stop       # stop the development environment
-git pull origin master       # dowload the new version of the app and its environments
-make start       # start the development environment`} />
+<Code language="bash" snippet={`make stop               # stop the development environment
+git pull origin master  # dowload the new version of the app and its environments
+make start              # start the development environment`} />
 
 <hr/>
 
@@ -365,7 +365,7 @@ You can use the debugger like you would use a javascript debugger from your brow
 
 You can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc "Download XDebug Helper extension for Google Chrome") to help you attach that param to any request.
 
-> Using the PHP debugger **will increase your productivity** as a PHP developer !!
+> Using the PHP debugger **increases your productivity** !!
 
 <br/>
 

@@ -491,7 +491,7 @@ Every image is tagged with the following syntax:
 <br/>
 
 
-Docker has a vibrant ecosystem of images you can use. One of the most popular repositories places to look for it's [DockerHub](https://hub.docker.com/ "DockerHub website"), with thousands of publicly available repositories, built by DevOps practitioners around the world.  
+Docker has a vibrant ecosystem of images you can use. The most popular place to look for it's [DockerHub](https://hub.docker.com/ "DockerHub website"), with thousands of publicly available repositories, built by DevOps practitioners around the world.  
 
 <br/>
 
@@ -948,7 +948,7 @@ Each time you use **RUN**, a new image layer is created to isolate the changes m
 
 <br/>
 
-You can use RUN as many times as you want, but keep in mind that each a new layer, increases the resulting image's size.
+You can use RUN as many times as you want, but keep in mind that each new layer, increases the resulting image's size.
 
 You can chain shell commands together to reduce the number of layers that compound an image.
 
@@ -1000,7 +1000,7 @@ USER www-data
 ###### Optimize size by removing temporary files
 
 This trick would not work if executed on a different layer, because the previous layers would contain those temporary files already. 
-An attempt to remove them from a different layer, to decrease size image, would be futile.
+An attempt to remove them from a different layer, to decrease the size of the resulting image, would be futile.
 
 <br/>
 
@@ -1344,7 +1344,7 @@ Check [the Dockerfile reference](https://docs.docker.com/engine/reference/builde
 
 ### Use your image
 
-#### Configure Docker first
+#### Previous steps
 
 Before building the environment, allow Docker to read your project's folder.  
 At least in Docker Desktop for MacOS, it goes like this:  
@@ -1437,7 +1437,7 @@ snippet={`docker push username/my-project`}
 
 <br/>
 
-#### Wrapping each workflow into a cohesive interface
+#### Wrapping every workflow into a cohesive interface
 
 Just like you would define an interface, or a group of public methods in a class, to present it as simple as possible to others. 
 You should implement a simple and concise command-line interface, so devs and external tools can interact with the environment.  
@@ -1501,10 +1501,10 @@ Use this command to start a local development environment. It's usually used by 
 - Mount the source code inside the container so the environment can reflect changes made to the code.
 
 ```makefile
-# Execute a command inside the container as user www-data 
+# Execute a command inside the container 
 exec:
-	@read -p "Your command: " command; \
-	docker exec -it my-container sh -c "$$command"
+	@read -p "Your command: " cmd; \
+	docker exec -it my-container sh -c "$$cmd"
 ````
 
 ##### make exec
@@ -1539,7 +1539,7 @@ stop:
 
 ##### make stop
 
-This command stops the container previously started with **make start*
+This command stops the container previously started with **make start**
 
 ```makefile
 # Delete the image and its container
@@ -1576,7 +1576,7 @@ It also helps to spread knowledge about the product, which is something very goo
 
 ### Conclusion
 
-In this article, you learned how to pack and share an application with its development run-time environment. 
+In this article, you learned how to pack and share an application with its development environment. 
 The importance of pragmatical documentation and  high-level interfaces, to ease the learning curve required to be proficient with the tools you build. 
 And how to configure Apache, PHP, and XDebug, to set up a great development environment. 
 But the main goal has been to show you, how I use some tools and write some docs, to unlock new or better ways of collaboration, aimed at increasing business outcomes while reducing operational costs.

@@ -19,6 +19,7 @@ const IndexPage = ({data}) => {
           title={node.childMdx.frontmatter.title}
           date={node.childMdx.frontmatter.date}
           slug={node.childMdx.frontmatter.slug}
+          tools={node.childMdx.frontmatter.tools}
         />
       ))}
     </Layout>
@@ -44,6 +45,7 @@ export const query = graphql`
                      title
                      date
                      slug
+                     tools
                    }
                  }
                }

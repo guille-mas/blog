@@ -8,6 +8,7 @@ const ContactMenu = () => (
         target="_blank"
         rel="noopener noreferrer"
         className="linkedin"
+        title="Guillermo Maschwitz's LinkedIn Profile"
         href="https://www.linkedin.com/in/guillermomas/"
       >
         LinkedIn
@@ -16,6 +17,7 @@ const ContactMenu = () => (
         target="_blank"
         rel="noopener noreferrer"
         className="github"
+        title="Guillermo Maschwitz's Github Profile"
         href="https://github.com/guille-mas"
       >
         Github
@@ -24,6 +26,7 @@ const ContactMenu = () => (
         target="_blank"
         rel="noopener noreferrer"
         className="stackoverflow"
+        title="Guillermo Maschwitz's StackOverflow Profile"
         href="https://stackoverflow.com/users/1607360/guillermo-maschwitz"
       >
         StackOverflow
@@ -32,6 +35,7 @@ const ContactMenu = () => (
         target="_blank"
         rel="noopener noreferrer"
         className="dockerhub"
+        title="Guillermo Maschwitz's Docker Images"
         href="https://hub.docker.com/u/guillermomaschwitz"
       >
         DockerHub

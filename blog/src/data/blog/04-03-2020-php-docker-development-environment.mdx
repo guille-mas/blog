@@ -2,7 +2,7 @@
 slug: "build-a-docker-development-environment-for-php-projects/index.html"
 title: "Build a PHP development environment your team will love"
 intro: "In this comprehensive introductory guide into Docker fundamentals, you will learn how to build a custom made PHP 7.4 development environment, fully-featured with powerful tools to boost your team's productivity and overall development experience"
-tools: "docker gnu-make php xdebug debian-Linux"
+tools: "docker gnumake php apache"
 date: "March 11th, 2020"
 publish: true
 blog: true
@@ -42,13 +42,13 @@ To follow this tutorial you need to install the **Docker engine**, and **GNU Mak
 
 <br/>
 
-The easiest way to setup Docker in Windows and MacOS is by getting [Docker Desktop](https://www.docker.com/products/docker-desktop).  
+The easiest way to setup Docker in Windows and MacOS is by getting [Docker Desktop](https://www.docker.com/products/docker-desktop "Docker for Desktop download").  
 GNU Make might be already available in Windows through PowerShell, and it's usually present on most popular Linux distros as well as MacOS.  
 Linux users can get both via their default package manager. Two popular package managers for other environments are brew (MacOS), and chocolatey (Windows).
 
 <br/>
 
-Next, create a [DockerHub account](https://hub.docker.com/signup), and sign in from the command-line.
+Next, create a [DockerHub account](https://hub.docker.com/signup "DockerHub signup"), and sign in from the command-line.
 
 <Code language="bash" snippet={`docker login`} />  
 
@@ -138,7 +138,7 @@ An exact version of this website should be available at http://0.0.0.0:8080 or h
 It should work out of the box, cause Docker did all the heavy lifting for you:
 
 1. Attempts to find a local image tagged as **guillermomaschwitz/blog:2-production**
-1. If the image is not found locally, docker will attempt to pull it from its [Dockerhub repository](https://hub.docker.com/r/guillermomaschwitz/blog).
+1. If the image is not found locally, docker will attempt to pull it from its [Dockerhub repository](https://hub.docker.com/r/guillermomaschwitz/blog "Public docker image used to build this website").
 1. A new container with label **guillecloud**, gets started from that image.
 1. Binds localhost's port 8080 to container's port 8000.
 1. Logs are streamed to the screen through STDOUT and/or STDERR
@@ -205,9 +205,7 @@ Because the container was started with the **--rm** flag, docker destroys the co
 
 ## The development environment
 
-### The big picture
-
-#### An introduction into DevOps processes
+#### The big picture
 
 At Imaginary startup, a group of engineers work together on a tight loop with other teams, deploying several daily changes to their product.
 Today, a new service for its customers it's ready to go live, requiring the implementation of new endpoints on their API, with very specific hardware requirements.
@@ -253,10 +251,9 @@ make start       # start the development environment`} />
 
 <hr/>
 
-### Example project overview
+### Project overview
 
-The code samples are based on a containerized development environment for PHP 7.4 projects I'm maintaining at its [Github repository](https://github.com/guille-mas/awesome-php74-env).  
-A pre built docker image it's available at its [Dockerhub repo](https://hub.docker.com/r/guillermomaschwitz/awesome-php)  
+The code samples are based on a containerized development environment for PHP 7.4 projects I'm maintaining at its [Github repository](https://github.com/guille-mas/awesome-php74-env "Demo project code").  
 
 <br/>
 
@@ -282,7 +279,7 @@ This is also the place, external tools should rely on to interact with the docke
 ###### README.md
 
 Every software project maintained by more than a single person, should have a clear and concise README file in the root folder.  
-I won't cover its content, but you can read an example at its [Github repository](https://github.com/guille-mas/awesome-php74-env).  
+I won't cover its content, but you can read an example at its [Github repository](https://github.com/guille-mas/awesome-php74-env "Demo project code").  
 What you write on this file should be the minimal amount of information, needed to introduce others on every basic development workflow.  
 
 ###### Other files in the project
@@ -351,7 +348,7 @@ But it's very easy to make it work from a locally running docker container.
 <br/>
 
 With these settings, an HTTP request, containing the parameter **XDEBUG_SESSION_START** will start a debugging session.  
-You can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) to help you attach that param to any request.
+You can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc "Download XDebug Helper extension for Google Chrome") to help you attach that param to any request.
 
 <br/>
 
@@ -366,7 +363,7 @@ You can use the debugger like you would use a javascript debugger from your brow
 
 <br/>
 
-You can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) to help you attach that param to any request.
+You can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc "Download XDebug Helper extension for Google Chrome") to help you attach that param to any request.
 
 > Using the PHP debugger **will increase your productivity** as a PHP developer !!
 
@@ -374,9 +371,9 @@ You can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/detail/x
 
 A few useful resources to set up an IDE or editor to debug requests:
 
-- [Felix Becker PHP Xdebug plugin for VSCode](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug)
-- [How to setup PHP Xdebug in PHPStorm](https://www.jetbrains.com/help/phpstorm/creating-php-web-application-debug-configuration.html)
-- [PHP Xdebug plugin for Sublime 2 and 3](https://packagecontrol.io/packages/Xdebug%20Client)
+- [Felix Becker PHP Xdebug plugin for VSCode](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug "Download XDebug plugin for VSCode")
+- [How to setup PHP Xdebug in PHPStorm](https://www.jetbrains.com/help/phpstorm/creating-php-web-application-debug-configuration.html  "How to use XDebug debugger with PHPStorm")
+- [PHP Xdebug plugin for Sublime 2 and 3](https://packagecontrol.io/packages/Xdebug%20Client "Download XDebug plugin for Sublime 2 and 3")
 
 This is my VSCode configuration for FelixBecker's plugin, in case you are using VSCode:
 
@@ -416,7 +413,7 @@ xdebug.profiler_output_name="cachegrind.out.%H.%t.%p"
 
 Enabled by an HTTP parameter **XDEBUG_PROFILE**. 
 XDebug's PHP profiler will produce a complete report of the messages passed between functions and/or objects in your PHP programs during a specific request.
-Then you can open those reports with [KCacheGrind](https://kcachegrind.github.io/), [QCacheGrind](http://sourceforge.net/projects/qcachegrindwin/), [WinCacheGrind](http://ceefour.github.io/wincachegrind/), or [WebGrind](https://github.com/jokkedk/webgrind) .  
+Then you can open those reports with [KCacheGrind](https://kcachegrind.github.io/ "KCacheGrind Github Project"), [QCacheGrind](http://sourceforge.net/projects/qcachegrindwin/ "QCacheGrind Github Project"), [WinCacheGrind](http://ceefour.github.io/wincachegrind/ "WinCacheGrind Github Project"), or [WebGrind](https://github.com/jokkedk/webgrind "WebGrind Github Project") .  
 This is useful when you want to understand what happens on a new project, or how a framework works under the hoods.
 
 
@@ -441,7 +438,7 @@ Later I show you how to map that folder with a local folder in your host, to rea
 <br/>
 
 To enable the tracer, add the HTTP parameter **XDEBUG_TRACE** to any HTTP request. 
-Again, you can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc) to help you attach that param to any request.
+Again, you can use [Chrome's XDebug Helper](https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc "Download XDebug Helper extension for Google Chrome") to help you attach that param to any request.
 
 
 ```ini
@@ -498,18 +495,18 @@ Every image is tagged with the following syntax:
 <br/>
 
 
-Docker has a vibrant ecosystem of images you can use. One of the most popular repositories places to look for it's [DockerHub](https://hub.docker.com/), with thousands of publicly available repositories, built by DevOps practitioners around the world.  
+Docker has a vibrant ecosystem of images you can use. One of the most popular repositories places to look for it's [DockerHub](https://hub.docker.com/ "DockerHub website"), with thousands of publicly available repositories, built by DevOps practitioners around the world.  
 
 <br/>
 
 The image you choose must exist and you need to have access to it.  
-Use the [official PHP image, bundled with Apache](https://hub.docker.com/_/php), whose name its **php**, and its version **7.4.2-apache**. 
-If you want to check it's source code, [read its Dockerfile from Github](https://github.com/docker-library/php/blob/master/7.4/buster/apache/Dockerfile).  
+Use the [official PHP image, bundled with Apache](https://hub.docker.com/_/php "Docker PHP official repository webpage"), whose name its **php**, and its version **7.4.2-apache**. 
+If you want to check it's source code, [read its Dockerfile from Github](https://github.com/docker-library/php/blob/master/7.4/buster/apache/Dockerfile "source for PHP 7.4 with Apache Dockerfile").  
 To protect your image from upstream's breaking changes, always use explicit version tags. This principle applies to every external dependency you use in your projects, from Docker images to composer and npm packages.
 
 <br/>
 
-> For improved security and stability, your custom images should rely on [official images](https://docs.docker.com/docker-hub/official_images/); A curated list of images maintained by stricter quality standards
+> For improved security and stability, your custom images should rely on [official images](https://docs.docker.com/docker-hub/official_images/ "What is an official docker image?"); A curated list of images maintained by stricter quality standards
 
 <br/>
 
@@ -758,8 +755,8 @@ USER www-data
 
 ##### Install PHP extensions
 
-Install [XDebug](https://xdebug.org/); A development PHP extension that packs handy features to make your life easier as a developer. And zip, an extension required by composer.  
-As [documented here](https://hub.docker.com/_/php), use _pecl_, and _docker-php-ext-enable_ instead of apt-get or other methods.  
+Install [XDebug](https://xdebug.org/ "XDebug website"); A development PHP extension that packs handy features to make your life easier as a developer. And zip, an extension required by composer.  
+As [documented here](https://hub.docker.com/_/php "Official PHP Docker image documentation"), use _pecl_, and _docker-php-ext-enable_ instead of apt-get or other methods.  
 
 ```docker
 FROM php:7.4.2-apache AS dev-image
@@ -1344,7 +1341,7 @@ USER www-data
 
 <br/>
 
-Check [the Dockerfile reference](https://docs.docker.com/engine/reference/builder/) for a deep dive into every option available to write your own images, or customize this example.
+Check [the Dockerfile reference](https://docs.docker.com/engine/reference/builder/ "Dockerfile reference official documentation") for a deep dive into every option available to write your own images, or customize this example.
 
 
 <br/>
@@ -1599,8 +1596,8 @@ a great tool to declare single-host environments with multiple containers.
 
 <br/>
 
-Later, I plan to show you how to automate the creation of a production-ready, auto-scalable [AWS ECS](https://aws.amazon.com/ecs/) infrastructure to run your containers. 
-And how to automate and document your infrastructure-as-code with GNUMake and [Terraform](https://www.terraform.io/), 
+Later, I plan to show you how to automate the creation of a production-ready, auto-scalable [AWS ECS](https://aws.amazon.com/ecs/ "Amazon Web Services - Elastic Cloud Service") infrastructure to run your containers. 
+And how to automate and document your infrastructure-as-code with GNUMake and [Terraform](https://www.terraform.io/ "Terraform website"), 
 a great tool, similar to CloudFormation, that once adopted, introduces as well, the possibility of automating hybrid clouds infrastructure.
 
 <br/>

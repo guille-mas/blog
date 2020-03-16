@@ -6,7 +6,7 @@ import "./iam-section.scss"
 const IamSection = () => (
   <section id="iam">
     <div>
-      <Link to="/">
+      <Link to="/" title="Link to home page">
         <Avatar></Avatar>
       </Link>
     </div>

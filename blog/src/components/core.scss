@@ -181,6 +181,11 @@ h6 {
   margin-bottom: 1rem;
   margin-top: 1rem;
   text-align: left;
+  font-weight: 500;
+
+  a {
+    font-weight: 500;
+  }
 }
 
 h1 {
@@ -339,14 +344,13 @@ article {
   time {
     font-size: 1rem;
     font-style: italic;
-    color: $light-grey;
+    color: $black;
     font-weight: 400;
   }
 
   aside.tech-stack {
-    margin-top: 1rem;
     span {
-      @include badge($white, $light-grey);
+      @include badge($white, $light-grey, $grey);
     }
   }
 
@@ -358,7 +362,7 @@ article {
   }
 
   section {
-    margin-top: 1rem;
+    margin: 1rem 0;
     h3,h4,h5,h6 {
       margin-top: 2rem;
     }
@@ -384,14 +388,23 @@ article {
 blockquote {
   text-align: left;
   margin: 3rem 1.2rem;
-  padding: 3rem 0;
+  padding: 3rem;
   font-style: italic;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  line-height: 2rem;
   font-weight: 400;
-  color: $light-grey;
-  border: 1px solid $lightest-grey;
+  background-color: $darker-white;
   border-left: none;
   border-right: none;
+  border-radius: 0.3rem;
+  @include box-shadow-big($darker-white);
+
+  strong {
+    color: $black;
+  }
+  a {
+    font-weight: 600;
+  }
 }
 
 hr {

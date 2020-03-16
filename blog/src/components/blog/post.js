@@ -10,6 +10,7 @@ class Post extends React.Component {
     let aside_tech_stack_section;
     let intro_section;
     let aside_section;
+    let title_section;
 
     if(this.props.tools) {
       aside_tech_stack_section = (
@@ -27,26 +28,23 @@ class Post extends React.Component {
       );
     }
 
-    if(intro_section) {
-      aside_section = (
-        <aside>
-          {aside_tech_stack_section || ""}
-        </aside>
+    if(this.props.title) {
+      title_section = (
+        <h3>
+          <Link to={this.props.slug} name={this.props.title}>{this.props.title}</Link>
+        </h3>
       );
-    } else {
-      aside_section = ""
     }
-
 
     return (
       <article className="blog-post">
         <header>
-          <h3>
-            <Link to={this.props.slug}>{this.props.title}</Link>
-          </h3>
+          {title_section || ""}
           <time>{this.props.date}</time>
           {intro_section || ""}
-          {aside_section}
+          <aside>
+            {aside_tech_stack_section || ""}
+          </aside>
         </header>
         {this.props.body && <MDXRenderer className="body">{this.props.body}</MDXRenderer>}
       </article>

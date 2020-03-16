@@ -1,9 +1,9 @@
 @import "shadows.scss";
 
-@mixin badge($background_color, $border_color) {
-  color: $border_color;
+@mixin badge($background_color, $border_color, $font_color) {
+  color: $font_color;
   font-weight: 600;
-  font-size: .7rem;
+  font-size: .8rem;
   line-height: .8rem;
   letter-spacing: 0.05rem;
   background-color: $background_color;
@@ -19,4 +19,8 @@
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Chrome, Opera and Firefox */
   @include box-shadow-big($border_color);
+
+  &:hover {
+    @include box-shadow-big($font_color);
+  }
 }

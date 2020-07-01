@@ -5,7 +5,7 @@ FROM node:13.1.0-alpine AS blog-production
 ENV TERM=xterm-256color
 ENV GATSBY_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
-RUN apk add --update --no-cache alpine-sdk gettext libtool autoconf automake make libpng-dev libjpeg-turbo-dev libc6-compat mesa-gl libx11 libxxf86vm libxi g++ nasm && \
+RUN apk add --update --no-cache alpine-sdk gettext libtool autoconf automake make libpng-dev libjpeg-turbo-dev libc6-compat mesa-gl libx11 libxxf86vm libxi g++ nasm sysstat && \
     npm install -g node-gyp gatsby-cli
 USER node
 COPY --chown=node:node ./blog /home/node/blog

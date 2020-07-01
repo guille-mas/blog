@@ -10,7 +10,7 @@ const Avatar = () => {
         childImageSharp {
           # Specify a fluid image and fragment
           # The default maxWidth is 800 pixels
-          fluid(maxWidth: 120, quality: 85) {
+          fluid(maxWidth: 120, quality: 100) {
             ...GatsbyImageSharpFluid
           }
         }

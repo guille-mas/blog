@@ -1,7 +1,7 @@
 module.exports = {
   siteMetadata: {
     title: `Cloud Software Design & Development`,
-    description: `Thoughts on software design, infrastructure as code, webapps, software development, industry best practices and devops processes from a developers point of view`,
+    description: `Thoughts on software design, infrastructure as code, web apps, software development, industry best practices and DevOps processes from a developers point of view`,
     author: `Guillermo Maschwitz <guilledevel@gmail.com>`,
     robots: `User-agent: *`,
     viewport: `width=device-width, initial-scale=1`,

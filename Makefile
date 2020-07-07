@@ -1,20 +1,19 @@
 include .env .secrets
 # speed up builds and improve build UI by enabling Docker Buildkit
 export DOCKER_BUILDKIT=0
-export WEB_PORT=8000
 
 standalone-prod:
-	docker run -p ${WEB_PORT}:${WEB_PORT} guillermomaschwitz/blog:${PROJECT_VERSION}-production
+	docker run --rm -p ${PORT}:${PORT} guillermomaschwitz/blog:${PROJECT_VERSION}-production
 
 standalone-dev:
-	docker run -p ${WEB_PORT}:${WEB_PORT} guillermomaschwitz/blog:${PROJECT_VERSION}-development
+	docker run --rm -p ${PORT}:${PORT} guillermomaschwitz/blog:${PROJECT_VERSION}-development
 
 start:
 	docker-compose up
 
 build:
-	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION} -t guillermomaschwitz/blog:${PROJECT_VERSION}-production --target blog-production ./
-	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION}-development --target blog-development ./
+	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION} -t guillermomaschwitz/blog:${PROJECT_VERSION}-production --target blog-production --build-arg PORT=${PORT} ./blog
+	docker build -f ./Dockerfile -t guillermomaschwitz/blog:${PROJECT_VERSION}-development --target blog-development --build-arg PORT=${PORT} ./blog
 
 push:
 	docker login -u guillermomaschwitz -p "${DOCKER_REPO_CREDENTIALS}"
@@ -27,7 +26,7 @@ clean:
 
 run:
 	@read -p "Write a command to run inside your docker environment: " command; \
-	docker-compose run blog sh -c "$$command"
+	docker-compose run --rm blog sh -c "$$command"
 
 deploy:
 # install any missing terraform plugin
@@ -37,7 +36,7 @@ deploy:
 # remove if needed previous container
 	- rm -rf /tmp/guille-cloud-blog-dist
 # start production container
-	docker run -d --name blog-prod guillermomaschwitz/blog:${PROJECT_VERSION}-production
+	docker run --rm -d --name blog-prod guillermomaschwitz/blog:${PROJECT_VERSION}-production
 # copy prod files from docker container to dist folder
 	docker cp blog-prod:/home/node/blog/public /tmp/guille-cloud-blog-dist
 # stop container
@@ -52,7 +51,7 @@ push-code:
 # remove if needed previous container
 	- rm -rf /tmp/guille-cloud-blog-dist
 # start production container
-	docker run -d --name blog-prod guillermomaschwitz/blog:${PROJECT_VERSION}-production
+	docker run --rm -d --name blog-prod guillermomaschwitz/blog:${PROJECT_VERSION}-production
 # copy prod files from docker container to dist folder
 	docker cp blog-prod:/home/node/blog/public /tmp/guille-cloud-blog-dist
 # stop container

@@ -41,11 +41,8 @@ deploy:
 	docker cp blog-prod:/home/node/blog/public /tmp/guille-cloud-blog-dist
 # stop container
 	docker stop blog-prod
-# remove container
-	docker rm blog-prod
 # upload ./dist folder to s3
 	aws s3 sync /tmp/guille-cloud-blog-dist s3://website-guille-dot-cloud-2
-#	aws s3 sync/tmp/guille-cloud-blog-dist s3://www.guille.cloud
 
 push-code:
 # remove if needed previous container
@@ -56,11 +53,8 @@ push-code:
 	docker cp blog-prod:/home/node/blog/public /tmp/guille-cloud-blog-dist
 # stop container
 	docker stop blog-prod
-# remove container
-	docker rm blog-prod
 # upload ./dist folder to s3
 	aws s3 sync /tmp/guille-cloud-blog-dist s3://website-guille-dot-cloud-2
-#	aws s3 sync/tmp/guille-cloud-blog-dist s3://www.guille.cloud
 
 
 all: build push deploy

@@ -1,5 +1,4 @@
 import React from "react"
-import Avatar from "../avatar"
 import { Link } from "gatsby"
 import "prismjs/themes/prism-tomorrow.css"
 import { MDXRenderer } from "gatsby-plugin-mdx"
@@ -9,7 +8,6 @@ class Post extends React.Component {
   render() {
     let aside_tech_stack_section;
     let intro_section;
-    let aside_section;
     let title_section;
 
     if(this.props.tools) {

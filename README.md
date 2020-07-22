@@ -5,9 +5,9 @@ I plan to write thoughts on software design, infrastructure as code, webapps, so
 
 ## You could run the blog locally
 
-If you have [Docker](https://www.docker.com/get-started) installed, you can spin up an instance of this blog at http://localhost:8000 by running the following command on a terminal: `docker run -p 8000:8000/tcp guillermomaschwitz/blog:1`
+If you have [Docker](https://www.docker.com/get-started) installed, you can spin up an instance of this blog at http://localhost:8000 by running the following command on a terminal: `docker run -p 8000:8000/tcp guillermomaschwitz/blog:4`
 
-If you would like to run the development image instead, the command should be `docker run -p 8000:8000/tcp guillermomaschwitz/blog:1-development`
+If you would like to run the development image instead, the command should be `docker run -p 8000:8000/tcp guillermomaschwitz/blog:4-development`
 
 To wire the development environment to your local folder, run it like this: `docker-compose run blog`. Although remember to install vendors locally the first time by first running: `docker-compose run blog npm install`
 
@@ -15,7 +15,7 @@ To wire the development environment to your local folder, run it like this: `doc
 
 - `make standalone-prod` \
 Helper method to run a standalone local container of the production environment
-- `make standalone-prod` \
+- `make standalone-dev` \
 Helper method to run a standalone local container of the development environment
 - `docker-compose up` \
 Starts a fully working local development environment at http://localhost:8000 \
@@ -28,7 +28,7 @@ Runs any command inside the composer development environment, from within blog/ 
 - `make build` \
 Build inmutable Docker images like those available at [my Dockerhub account](https://hub.docker.com/r/guillermomaschwitz/blog)
 - `make push` \
-Push locall images to docker hub
+Push local images to docker hub
 - `make deploy` \
 Creates or updates the aws infrastructure needed for this blog, and uploads the last production build available at dockerhub to AWS S3
 

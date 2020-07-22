@@ -40,9 +40,11 @@ exports.onCreatePage = ({ page, actions }, { suffix }) => {
 
   return new Promise(resolve => {
     const oldPage = Object.assign({}, page);
+    /*
     if(page.path.length >= 1 && page.path.charAt(page.path.length-1) == "/") {
       page.path += 'index.html';
     }
+    */
     if (page.path !== oldPage.path) {
       deletePage(oldPage);
       createPage(page);

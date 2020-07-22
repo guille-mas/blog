@@ -29,7 +29,7 @@ class Post extends React.Component {
     if(this.props.title) {
       title_section = (
         <h3>
-          <Link to={this.props.slug} name={this.props.title}>{this.props.title}</Link>
+          <Link to={"/"+this.props.slug} name={this.props.title}>{this.props.title}</Link>
         </h3>
       );
     }

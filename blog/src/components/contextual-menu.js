@@ -8,8 +8,8 @@ import "./contextual-menu.scss"
 const ContextualMenu = () => (
   <nav id="contextual-menu">
     <Link to="/" title="Home page">Home</Link>
-    <Link to="/about/index.html" title="About Guillermo Maschwitz and his website">About</Link>
-    <Link to="/blog/index.html" title="Guillermo Maschwitz's technical blog">Blog</Link>
+    <Link to="/about" title="About Guillermo Maschwitz and his website">About</Link>
+    <Link to="/blog" title="Guillermo Maschwitz's technical blog">Blog</Link>
   </nav>
 )
 

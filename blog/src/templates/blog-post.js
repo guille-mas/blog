@@ -10,11 +10,14 @@ export default ({ data }) => {
 
   const bodyClass = data.mdx.frontmatter.blog ?  "blog post animate" : "";
 
+  const golangPackage = data.mdx.frontmatter.golangPackage ?  "<meta name=\"go-import\" content=\"guille.cloud/" + data.mdx.frontmatter.golangPackage + " git https://github.com/guille-mas/" + data.mdx.frontmatter.golangPackage + "\" />" : "";
+
   return (
     <Layout>
       <SEO title="Blog" />
       <Helmet>
         <body className={bodyClass} />
+        {golangPackage}
       </Helmet>
       
       <section className="body">

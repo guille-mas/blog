@@ -10,7 +10,6 @@ const NotFoundPage = () => (
     <Helmet>
       <body className="error" />
     </Helmet>
-    <h3>Woops!</h3>
     <h4>This page doesn&#39;t exist</h4>
   </Layout>
 )

@@ -1,7 +1,7 @@
 version: '3'
 services:
   blog:
-    image: guillermomaschwitz/blog:${PROJECT_VERSION}-development
+    image: guillermomaschwitz/blog:3-development
     container_name: blog
     volumes:
       - ./blog:/home/node/blog

@@ -39,10 +39,10 @@
     "react-dom": "^16.11.0",
     "react-helmet": "^5.2.1",
     "resolve-url-loader": "^3.1.1",
-    "theme-ui": "^0.2.52"
+    "theme-ui": "^0.2.52",
+    "gatsby-plugin-remove-trailing-slashes": "^2.3.11"
   },
   "devDependencies": {
-    "gatsby-plugin-remove-trailing-slashes": "^2.3.11",
     "prettier": "^1.19.1"
   },
   "peerDependencies": {

@@ -10,14 +10,17 @@ export default ({ data }) => {
 
   const bodyClass = data.mdx.frontmatter.blog ?  "blog post animate" : "";
 
-  const golangPackage = data.mdx.frontmatter.golangPackage ?  "<meta name=\"go-import\" content=\"guille.cloud/" + data.mdx.frontmatter.golangPackage + " git https://github.com/guille-mas/" + data.mdx.frontmatter.golangPackage + "\" />" : "";
+  const golangPackage = typeof data.mdx.frontmatter.golangPackage == "string";
 
   return (
     <Layout>
+      {golangPackage
+        ? <meta name="go-import" content={`guille.cloud/${data.mdx.frontmatter.golangPackage} git https://github.com/guille-mas/kubernetes-custom-resource`} />
+        : null
+      }
       <SEO title="Blog" />
       <Helmet>
         <body className={bodyClass} />
-        {golangPackage}
       </Helmet>
       
       <section className="body">
@@ -46,6 +49,7 @@ export const query = graphql`
                date
                tools
                blog
+               golangPackage
              }
            }
          }

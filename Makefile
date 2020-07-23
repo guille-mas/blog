@@ -41,6 +41,8 @@ deploy:
 	docker cp blog-prod:/home/node/blog/public /tmp/guille-cloud-blog-dist
 # stop container
 	docker stop blog-prod
+# remove previous deployment
+	aws s3 rm s3://website-guille-dot-cloud-2 --recursive
 # upload ./dist folder to s3
 	aws s3 sync /tmp/guille-cloud-blog-dist s3://website-guille-dot-cloud-2
 
